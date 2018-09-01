@@ -52,7 +52,6 @@ echo '<div class="pagehelp">'.$thispage_description.'</div>'.K_NEWLINE;
 
 echo '</div>'.K_NEWLINE;
 
-<<<<<<< HEAD
 
 echo "
 
@@ -67,8 +66,6 @@ $(function(){
 ";
 
 
-=======
->>>>>>> origin/develop
 require_once('tce_page_footer.php');
 
 //============================================================+

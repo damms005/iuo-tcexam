@@ -11,3 +11,9 @@ Edit the IUO header logo such that its messy display @public area is fixed
 Bootstrap designs: buttons, etc...
 
 Set password for all users at once
+
+Mege scores (Generate scores based on list of pre-selected scores?)
+
+SQL LIMIT number of students displayed in dropdown list to prevent hanging UI
+
+Everything looks so 1984. Can we do some bootstrapping?

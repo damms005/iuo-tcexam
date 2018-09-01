@@ -82,15 +82,14 @@ echo '<meta name="author" content="nick"/>'.K_NEWLINE;
 echo '<meta name="reply-to" content="'.htmlspecialchars($thispage_reply, ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
 echo '<meta name="keywords" content="'.htmlspecialchars($thispage_keywords, ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
 echo '<link rel="stylesheet" href="'.$thispage_style.'" type="text/css" />'.K_NEWLINE;
-<<<<<<< HEAD
+
+
 echo '<link rel="stylesheet" href="'. K_BOOTSTRAP_CSS .'" type="text/css" />'.K_NEWLINE;
 echo '<link rel="shortcut icon" href="'.$thispage_icon.'" />'.K_NEWLINE;
-
 echo '<script type="text/javascript" src="../js/jquery.js"></script>'.K_NEWLINE;
-=======
-echo '<link rel="shortcut icon" href="'.$thispage_icon.'" />'.K_NEWLINE;
->>>>>>> origin/develop
 // calendar
+
+
 if (isset($enable_calendar) and $enable_calendar) {
     echo '<style type="text/css">@import url('.K_PATH_SHARED_JSCRIPTS.'jscalendar/calendar-blue.css);</style>'.K_NEWLINE;
     echo '<script type="text/javascript" src="'.K_PATH_SHARED_JSCRIPTS.'jscalendar/calendar.js"></script>'.K_NEWLINE;

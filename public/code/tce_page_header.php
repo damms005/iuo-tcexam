@@ -57,7 +57,6 @@ echo '</div>'.K_NEWLINE;
 
 echo '<div class="body">'.K_NEWLINE;
 
-<<<<<<< HEAD
 
         echo "<div style='float:right'>";
         echo "<table>";
@@ -88,8 +87,6 @@ echo '<div class="body">'.K_NEWLINE;
         echo "</table>";
         echo "</div>";
 
-=======
->>>>>>> origin/develop
 echo '<a name="topofdoc" id="topofdoc"></a>'.K_NEWLINE;
 echo '<h1>'.htmlspecialchars($thispage_title, ENT_NOQUOTES, $l['a_meta_charset']).'</h1>'.K_NEWLINE;
 
