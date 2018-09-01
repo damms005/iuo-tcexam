@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #oringinal list of ignores by tcexam origin
 admin/config/
 shared/config/
@@ -15,3 +16,8 @@ public/config/
 
 # 011 -first
 # 057- zenith
+=======
+admin/config/
+shared/config/
+public/config/
+>>>>>>> origin/develop

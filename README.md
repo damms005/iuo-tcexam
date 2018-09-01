@@ -20,7 +20,11 @@ PLEASE CONTACT INFO@TECNICK.COM TO PURCHASE A LICENSE.
 * Support - Help:
 	Please use support Issues at https://github.com/tecnickcom/tcexam
 * Software License:
+<<<<<<< HEAD
 	* Copyright (C) 2004-2017 Nicola Asuni - Tecnick.com LTD
+=======
+	* Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+>>>>>>> origin/develop
 	* See LICENSE.TXT file for more information.
 
 

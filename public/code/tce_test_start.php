@@ -40,7 +40,11 @@ $thispage_description = $l['hp_test_info'];
 require_once('../../shared/code/tce_authorization.php');
 require_once('../code/tce_page_header.php');
 
+<<<<<<< HEAD
 echo '<div class="popupcontainer"> '.K_NEWLINE;
+=======
+echo '<div class="popupcontainer">'.K_NEWLINE;
+>>>>>>> origin/develop
 if (isset($_REQUEST['testid']) and ($_REQUEST['testid'] > 0)) {
     require_once('../../shared/code/tce_functions_test.php');
     $test_id = intval($_REQUEST['testid']);

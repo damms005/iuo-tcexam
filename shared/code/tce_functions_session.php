@@ -34,7 +34,11 @@
  */
 
 // PHP session settings
+<<<<<<< HEAD
 // ini_set('session.save_handler', 'user');
+=======
+ini_set('session.save_handler', 'user');
+>>>>>>> origin/develop
 ini_set('session.name', 'PHPSESSID');
 //ini_set('session.gc_maxlifetime', K_SESSION_LIFE);
 //ini_set('session.cookie_lifetime', K_COOKIE_EXPIRE);
@@ -238,7 +242,11 @@ function getPasswordHash($password)
  * Verifies that a password matches a hash
  * @param $password (string) The password to verify
  * @param $hash (string) Password hash
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> origin/develop
  * @return boolean
  */
 function checkPassword($password, $hash)

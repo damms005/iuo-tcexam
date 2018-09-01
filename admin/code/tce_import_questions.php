@@ -47,6 +47,7 @@ if (!isset($type) or (empty($type))) {
     $type = intval($type);
 }
 
+<<<<<<< HEAD
 if(isset($_POST['uploadable_module'])){
 	$lines = explode( "\n" , trim(str_replace( "\r\n", "\n", $_POST['uploadable_module'] ) ) );
 	$qimp = F_TSVQuestionImporter_Process($lines);
@@ -59,6 +60,8 @@ if(isset($_POST['uploadable_module'])){
 }
 
 
+=======
+>>>>>>> origin/develop
 if (isset($menu_mode) and ($menu_mode == 'upload')) {
     if ($_FILES['userfile']['name']) {
         require_once('../code/tce_functions_upload.php');
@@ -94,9 +97,12 @@ if (isset($menu_mode) and ($menu_mode == 'upload')) {
 echo '<div class="container">'.K_NEWLINE;
 
 echo '<div class="tceformbox">'.K_NEWLINE;
+<<<<<<< HEAD
 
 echo "<a href='converter.php'>convert questions file</a>";
 
+=======
+>>>>>>> origin/develop
 echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_importquestions">'.K_NEWLINE;
 
 echo '<div class="row">'.K_NEWLINE;
@@ -167,6 +173,7 @@ require_once('../code/tce_page_footer.php');
  * @param $tsvfile (string) TSV (tab delimited text) file name
  * @return boolean TRUE in case of success, FALSE otherwise
  */
+<<<<<<< HEAD
  function F_TSVQuestionImporter($tsvfile)
  {
 	 global $l, $db;
@@ -184,22 +191,40 @@ require_once('../code/tce_page_footer.php');
   * @return boolean TRUE in case of success, FALSE otherwise
   */
 function F_TSVQuestionImporter_Process($lines_in_file)
+=======
+function F_TSVQuestionImporter($tsvfile)
+>>>>>>> origin/develop
 {
     global $l, $db;
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_auth_sql.php');
     $qtype = array('S' => 1, 'M' => 2, 'T' => 3, 'O' => 4);
+<<<<<<< HEAD
 
+=======
+    $tsvfp = fopen($tsvfile, 'r');
+    if ($tsvfp === false) {
+        return false;
+    }
+>>>>>>> origin/develop
     $current_module_id = 0;
     $current_subject_id = 0;
     $current_question_id = 0;
     $current_answer_id = 0;
     $questionhash = array();
     // for each row
+<<<<<<< HEAD
     foreach ($lines_in_file as $qdata_) {
     	$qdata = explode( "\t" , $qdata_ );
 
 		// get data in array
+=======
+    while ($qdata=fgetcsv($tsvfp, 0, "\t", '"')) {
+        if ($qdata === null) {
+            continue;
+        }
+        // get user data into array
+>>>>>>> origin/develop
         switch ($qdata[0]) {
             case 'M': { // MODULE
                 $current_module_id = 0;

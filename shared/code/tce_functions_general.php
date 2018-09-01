@@ -114,7 +114,10 @@ function F_check_unique($table, $where, $fieldname = false, $fieldid = false)
     require_once('../config/tce_config.php');
     global $l, $db;
     $sqlc = 'SELECT * FROM '.$table.' WHERE '.$where.' LIMIT 1';
+<<<<<<< HEAD
     //exit($sqlc);
+=======
+>>>>>>> origin/develop
     if ($rc = F_db_query($sqlc, $db)) {
         if (($fieldname === false) and ($fieldid === false) and (F_count_rows($table, 'WHERE '.$where) > 0)) {
             return false;

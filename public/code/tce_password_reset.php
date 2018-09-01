@@ -2,7 +2,11 @@
 //============================================================+
 // File name   : tce_password_reset.php
 // Begin       : 2012-04-14
+<<<<<<< HEAD
 // Last Update : 2012-04-14
+=======
+// Last Update : 2018-07-06
+>>>>>>> origin/develop
 //
 // Description : Password Reset form.
 //
@@ -15,7 +19,11 @@
 //               info@tecnick.com
 //
 // License:
+<<<<<<< HEAD
 //    Copyright (C) 2004-2012 Nicola Asuni - Tecnick.com LTD
+=======
+//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+>>>>>>> origin/develop
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -45,6 +53,14 @@ $thispage_title = $l['t_password_assistance'];
 require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 
+<<<<<<< HEAD
+=======
+// comma separated list of required fields
+$_REQUEST['ff_required'] = 'user_email';
+$_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_email'], ENT_COMPAT, $l['a_meta_charset']);;
+
+
+>>>>>>> origin/develop
 if (isset($_POST['resetpassword'])) { // process submited data
 
     if ($formstatus = F_check_form_fields()) { // check submitted form fields
@@ -91,15 +107,22 @@ echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipar
 
 echo '<p>'.$l['d_reset_password'].'</p>'.K_NEWLINE;
 
+<<<<<<< HEAD
 echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', '', '^([a-zA-Z0-9_\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', 255, false, false, false, '');
+=======
+echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', '', K_EMAIL_RE_PATTERN, 255, false, false, false, '');
+>>>>>>> origin/develop
 
 echo '<div class="row">'.K_NEWLINE;
 
 F_submit_button('resetpassword', $l['w_submit'], $l['h_submit']);
 
+<<<<<<< HEAD
 // comma separated list of required fields
 echo '<input type="hidden" name="ff_required" id="ff_required" value="user_email" />'.K_NEWLINE;
 echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="'.$l['w_email'].'" />'.K_NEWLINE;
+=======
+>>>>>>> origin/develop
 echo '</div>'.K_NEWLINE;
 
 echo '</form>'.K_NEWLINE;

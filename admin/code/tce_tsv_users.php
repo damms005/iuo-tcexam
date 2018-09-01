@@ -61,7 +61,11 @@ echo F_tsv_export_users();
  */
 function F_tsv_export_users()
 {
+<<<<<<< HEAD
     global $l, $db, $departments, $colleges, $year_level ;
+=======
+    global $l, $db;
+>>>>>>> origin/develop
     require_once('../config/tce_config.php');
 
     $tsv = ''; // TSV data to be returned
@@ -75,10 +79,13 @@ function F_tsv_export_users()
     $tsv .= K_TAB.'user_ip';
     $tsv .= K_TAB.'user_firstname';
     $tsv .= K_TAB.'user_lastname';
+<<<<<<< HEAD
     $tsv .= K_TAB.'user_college';
     $tsv .= K_TAB.'user_department';
     $tsv .= K_TAB.'user_year_level';
     $tsv .= K_TAB.'user_passport';
+=======
+>>>>>>> origin/develop
     $tsv .= K_TAB.'user_birthdate';
     $tsv .= K_TAB.'user_birthplace';
     $tsv .= K_TAB.'user_regnumber';
@@ -90,7 +97,10 @@ function F_tsv_export_users()
 
     $sql = 'SELECT * FROM '.K_TABLE_USERS.' WHERE (user_id>1)';
     if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop
         // filter for level
         $sql .= ' AND ((user_level<'.$_SESSION['session_user_level'].') OR (user_id='.$_SESSION['session_user_id'].'))';
         // filter for groups
@@ -111,10 +121,13 @@ function F_tsv_export_users()
             $tsv .= K_TAB.$m['user_ip'];
             $tsv .= K_TAB.$m['user_firstname'];
             $tsv .= K_TAB.$m['user_lastname'];
+<<<<<<< HEAD
             $tsv .= K_TAB.$departments[ $m['user_department']];
             $tsv .= K_TAB.$colleges[ $m['user_college']];
             $tsv .= K_TAB.$year_level[ $m['user_year_level']];
             $tsv .= K_TAB.$m['user_passport'];
+=======
+>>>>>>> origin/develop
             $tsv .= K_TAB.substr($m['user_birthdate'], 0, 10);
             $tsv .= K_TAB.$m['user_birthplace'];
             $tsv .= K_TAB.$m['user_regnumber'];

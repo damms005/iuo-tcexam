@@ -1,7 +1,11 @@
 <?php
 //============================================================+
 // File name   : tcpdf.php
+<<<<<<< HEAD
 // Version     : 6.2.12
+=======
+// Version     : 6.2.13
+>>>>>>> origin/develop
 // Begin       : 2002-08-03
 // Last Update : 2015-06-18
 // Author      : Nicola Asuni - Tecnick.com LTD - www.tecnick.com - info@tecnick.com
@@ -1822,9 +1826,15 @@ class TCPDF {
 	/**
 	 * This is the class constructor.
 	 * It allows to set up the page format, the orientation and the measure unit used in all the methods (except for the font sizes).
+<<<<<<< HEAD
 	 * 
 	 * IMPORTANT: Please note that this method sets the mb_internal_encoding to ASCII, so if you are using the mbstring module functions with TCPDF you need to correctly set/unset the mb_internal_encoding when needed.
 	 * 
+=======
+	 *
+	 * IMPORTANT: Please note that this method sets the mb_internal_encoding to ASCII, so if you are using the mbstring module functions with TCPDF you need to correctly set/unset the mb_internal_encoding when needed.
+	 *
+>>>>>>> origin/develop
 	 * @param $orientation (string) page orientation. Possible values are (case insensitive):<ul><li>P or Portrait (default)</li><li>L or Landscape</li><li>'' (empty string) for automatic orientation</li></ul>
 	 * @param $unit (string) User measure unit. Possible values are:<ul><li>pt: point</li><li>mm: millimeter (default)</li><li>cm: centimeter</li><li>in: inch</li></ul><br />A point equals 1/72 of inch, that is to say about 0.35 mm (an inch being 2.54 cm). This is a very common unit in typography; font sizes are expressed in that unit.
 	 * @param $format (mixed) The format used for pages. It can be either: one of the string values specified at getPageSizeFromFormat() or an array of parameters specified at setPageFormat().
@@ -4691,7 +4701,11 @@ class TCPDF {
 	 * Defines the page and position a link points to.
 	 * @param $link (int) The link identifier returned by AddLink()
 	 * @param $y (float) Ordinate of target position; -1 indicates the current position. The default value is 0 (top of page)
+<<<<<<< HEAD
 	 * @param $page (int) Number of target page; -1 indicates the current page (default value). If you prefix a page number with the * character, then this page will not be changed when adding/deleting/moving pages. 
+=======
+	 * @param $page (int) Number of target page; -1 indicates the current page (default value). If you prefix a page number with the * character, then this page will not be changed when adding/deleting/moving pages.
+>>>>>>> origin/develop
 	 * @public
 	 * @since 1.5
 	 * @see AddLink()
@@ -5944,7 +5958,13 @@ class TCPDF {
 			if ($startpage == $endpage) {
 				// single page
 				for ($column = $startcolumn; $column <= $endcolumn; ++$column) { // for each column
+<<<<<<< HEAD
 					$this->selectColumn($column);
+=======
+					if ($column != $this->current_column) {
+						$this->selectColumn($column);
+					}
+>>>>>>> origin/develop
 					if ($this->rtl) {
 						$this->x -= $mc_margin['R'];
 					} else {
@@ -5973,7 +5993,13 @@ class TCPDF {
 				} // end for each column
 			} elseif ($page == $startpage) { // first page
 				for ($column = $startcolumn; $column < $this->num_columns; ++$column) { // for each column
+<<<<<<< HEAD
 					$this->selectColumn($column);
+=======
+					if ($column != $this->current_column) {
+						$this->selectColumn($column);
+					}
+>>>>>>> origin/develop
 					if ($this->rtl) {
 						$this->x -= $mc_margin['R'];
 					} else {
@@ -5992,7 +6018,13 @@ class TCPDF {
 				} // end for each column
 			} elseif ($page == $endpage) { // last page
 				for ($column = 0; $column <= $endcolumn; ++$column) { // for each column
+<<<<<<< HEAD
 					$this->selectColumn($column);
+=======
+					if ($column != $this->current_column) {
+						$this->selectColumn($column);
+					}
+>>>>>>> origin/develop
 					if ($this->rtl) {
 						$this->x -= $mc_margin['R'];
 					} else {
@@ -8151,7 +8183,13 @@ class TCPDF {
 						$annots .= ' /FT /'.$pl['opt']['ft'];
 						$formfield = true;
 					}
+<<<<<<< HEAD
 					$annots .= ' /Contents '.$this->_textstring($pl['txt'], $annot_obj_id);
+=======
+					if ($pl['opt']['subtype'] !== 'Link') {
+						$annots .= ' /Contents '.$this->_textstring($pl['txt'], $annot_obj_id);
+					}
+>>>>>>> origin/develop
 					$annots .= ' /P '.$this->page_obj_id[$n].' 0 R';
 					$annots .= ' /NM '.$this->_datastring(sprintf('%04u-%04u', $n, $key), $annot_obj_id);
 					$annots .= ' /M '.$this->_datestring($annot_obj_id, $this->doc_modification_timestamp);
@@ -8358,7 +8396,11 @@ class TCPDF {
 							break;
 						}
 						case 'link': {
+<<<<<<< HEAD
 							if (is_string($pl['txt'])) {
+=======
+							if (is_string($pl['txt']) && !empty($pl['txt'])) {
+>>>>>>> origin/develop
 								if ($pl['txt'][0] == '#') {
 									// internal destination
 									$annots .= ' /Dest /'.TCPDF_STATIC::encodeNameObject(substr($pl['txt'], 1));
@@ -9798,7 +9840,11 @@ class TCPDF {
 			//$out .= ' /XFA ';
 			$out .= ' >>';
 			// signatures
+<<<<<<< HEAD
 			if ($this->sign AND isset($this->signature_data['cert_type']) 
+=======
+			if ($this->sign AND isset($this->signature_data['cert_type'])
+>>>>>>> origin/develop
 				AND (empty($this->signature_data['approval']) OR ($this->signature_data['approval'] != 'A'))) {
 				if ($this->signature_data['cert_type'] > 0) {
 					$out .= ' /Perms << /DocMDP '.($this->sig_obj_id + 1).' 0 R >>';
@@ -12576,7 +12622,11 @@ class TCPDF {
 		$k = $this->k;
 		$this->javascript .= sprintf("f".$name."=this.addField('%s','%s',%u,[%F,%F,%F,%F]);", $name, $type, $this->PageNo()-1, $x*$k, ($this->h-$y)*$k+1, ($x+$w)*$k, ($this->h-$y-$h)*$k+1)."\n";
 		$this->javascript .= 'f'.$name.'.textSize='.$this->FontSizePt.";\n";
+<<<<<<< HEAD
 		while (list($key, $val) = each($prop)) {
+=======
+		foreach($prop as $key => $val) {
+>>>>>>> origin/develop
 			if (strcmp(substr($key, -5), 'Color') == 0) {
 				$val = TCPDF_COLORS::_JScolor($val);
 			} else {
@@ -15184,7 +15234,11 @@ class TCPDF {
 	 * @since 3.1.000 (2008-06-09)
 	 * @public
 	 */
+<<<<<<< HEAD
 	public function write1DBarcode($code, $type, $x='', $y='', $w='', $h='', $xres='', $style='', $align='') {
+=======
+	public function write1DBarcode($code, $type, $x='', $y='', $w='', $h='', $xres='', $style=array(), $align='') {
+>>>>>>> origin/develop
 		if (TCPDF_STATIC::empty_string(trim($code))) {
 			return;
 		}
@@ -15503,7 +15557,11 @@ class TCPDF {
 	 * @since 4.5.037 (2009-04-07)
 	 * @public
 	 */
+<<<<<<< HEAD
 	public function write2DBarcode($code, $type, $x='', $y='', $w='', $h='', $style='', $align='', $distort=false) {
+=======
+	public function write2DBarcode($code, $type, $x='', $y='', $w='', $h='', $style=array(), $align='', $distort=false) {
+>>>>>>> origin/develop
 		if (TCPDF_STATIC::empty_string(trim($code))) {
 			return;
 		}
@@ -16539,9 +16597,15 @@ class TCPDF {
 					// get attributes
 					preg_match_all('/([^=\s]*)[\s]*=[\s]*"([^"]*)"/', $element, $attr_array, PREG_PATTERN_ORDER);
 					$dom[$key]['attribute'] = array(); // reset attribute array
+<<<<<<< HEAD
 					while (list($id, $name) = each($attr_array[1])) {
 						$dom[$key]['attribute'][strtolower($name)] = $attr_array[2][$id];
 					}
+=======
+                    foreach($attr_array[1] as $id => $name) {
+                        $dom[$key]['attribute'][strtolower($name)] = $attr_array[2][$id];
+                    }
+>>>>>>> origin/develop
 					if (!empty($css)) {
 						// merge CSS style to current style
 						list($dom[$key]['csssel'], $dom[$key]['cssdata']) = TCPDF_STATIC::getCSSdataArray($dom, $key, $css);
@@ -16552,10 +16616,17 @@ class TCPDF {
 						// get style attributes
 						preg_match_all('/([^;:\s]*):([^;]*)/', $dom[$key]['attribute']['style'], $style_array, PREG_PATTERN_ORDER);
 						$dom[$key]['style'] = array(); // reset style attribute array
+<<<<<<< HEAD
 						while (list($id, $name) = each($style_array[1])) {
 							// in case of duplicate attribute the last replace the previous
 							$dom[$key]['style'][strtolower($name)] = trim($style_array[2][$id]);
 						}
+=======
+                        foreach($style_array[1] as $id => $name) {
+                            // in case of duplicate attribute the last replace the previous
+                            $dom[$key]['style'][strtolower($name)] = trim($style_array[2][$id]);
+                        }
+>>>>>>> origin/develop
 						// --- get some style attributes ---
 						// text direction
 						if (isset($dom[$key]['style']['direction'])) {
@@ -17170,10 +17241,17 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		if ($cell) {
 			if ($this->rtl) {
 				$this->x -= $this->cell_padding['R'];
+<<<<<<< HEAD
 				$this->lMargin += $this->cell_padding['R'];
 			} else {
 				$this->x += $this->cell_padding['L'];
 				$this->rMargin += $this->cell_padding['L'];
+=======
+				$this->lMargin += $this->cell_padding['L'];
+			} else {
+				$this->x += $this->cell_padding['L'];
+				$this->rMargin += $this->cell_padding['R'];
+>>>>>>> origin/develop
 			}
 		}
 		if ($this->customlistindent >= 0) {
@@ -17723,7 +17801,11 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 										$spacew = ($spacewidth * $ns);
 									}
 									$offset = $strpiece[2][1] + strlen($strpiece[2][0]);
+<<<<<<< HEAD
 									$epsposend = strpos($pmid, $this->epsmarker.'Q', $offset);				
+=======
+									$epsposend = strpos($pmid, $this->epsmarker.'Q', $offset);
+>>>>>>> origin/develop
 									if ($epsposend !== null) {
 										$epsposend += strlen($this->epsmarker.'Q');
 										$epsposbeg = strpos($pmid, 'q'.$this->epsmarker, $offset);
@@ -19749,7 +19831,11 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				break;
 			}
 			case 'a': {
+<<<<<<< HEAD
 				$this->HREF = '';
+=======
+				$this->HREF = array();
+>>>>>>> origin/develop
 				break;
 			}
 			case 'sup': {
@@ -21505,7 +21591,11 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			} else {
 				// placemark to be replaced with the correct number
 				$pagenum = '{#'.($outline['p']).'}';
+<<<<<<< HEAD
 				if ($templates['F'.$outline['l']]) {
+=======
+				if (isset($templates['F'.$outline['l']]) && $templates['F'.$outline['l']]) {
+>>>>>>> origin/develop
 					$pagenum = '{'.$pagenum.'}';
 				}
 				$maxpage = max($maxpage, $outline['p']);
@@ -23681,7 +23771,11 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		}
 		return $name;
 	}
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> origin/develop
 	/**
 	 * Sets the opening SVG element handler function for the XML parser. (*** TO BE COMPLETED ***)
 	 * @param $parser (resource) The first parameter, parser, is a reference to the XML parser calling the handler.

@@ -2,7 +2,11 @@
 //============================================================+
 // File name   : tce_user_registration.php
 // Begin       : 2008-03-30
+<<<<<<< HEAD
 // Last Update : 2012-11-22
+=======
+// Last Update : 2018-07-06
+>>>>>>> origin/develop
 //
 // Description : User registration form.
 //
@@ -15,7 +19,11 @@
 //               info@tecnick.com
 //
 // License:
+<<<<<<< HEAD
 //    Copyright (C) 2004-2012 Nicola Asuni - Tecnick.com LTD
+=======
+//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+>>>>>>> origin/develop
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -48,6 +56,35 @@ $thispage_description = $l['hp_user_registration'];
 require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 
+<<<<<<< HEAD
+=======
+// set fields descriptions for error messages
+$fielddesc = array (
+    'user_name' => $l['w_name'],
+    'newpassword' => $l['w_password'],
+    'newpassword_repeat' => $l['w_password'],
+    'user_email' => $l['w_email'],
+    'user_regnumber' => $l['w_regcode'],
+    'user_firstname' => $l['w_firstname'],
+    'user_lastname' => $l['w_lastname'],
+    'user_birthdate' => $l['w_birth_date'],
+    'user_birthplace' => $l['w_birth_place'],
+    'user_ssn' => $l['w_fiscal_code'],
+    'user_groups' => $l['w_groups'],
+    'user_agreement' => $l['w_i_agree']
+);
+$reqfields = array();
+$reqdesc = array();
+foreach ($regfields as $field => $required) {
+    if ($required == 2) {
+        $reqfields[] = $field;
+        $reqdesc[] = htmlspecialchars($fielddesc[$field], ENT_COMPAT, $l['a_meta_charset']);
+    }
+}
+$_REQUEST['ff_required'] = implode(',', $reqfields);
+$_REQUEST['ff_required_labels'] = implode(',', $reqdesc);
+
+>>>>>>> origin/develop
 if ($menu_mode == 'add') { // process submited data
 
     foreach ($regfields as $name => $enabled) {
@@ -159,10 +196,16 @@ if ($menu_mode == 'add') { // process submited data
             }
             if (K_USRREG_EMAIL_CONFIRM) {
                 // require email confirmation
+<<<<<<< HEAD
                 //require_once('../../shared/code/tce_functions_user_registration.php');
                 //F_send_user_reg_email($user_id, $user_email, $user_verifycode);
                 //F_print_error('MESSAGE', $user_email.': '.$l['m_user_verification_sent']);
                 F_print_error('MESSAGE', $l['m_user_registration_ok']);
+=======
+                require_once('../../shared/code/tce_functions_user_registration.php');
+                F_send_user_reg_email($user_id, $user_email, $user_verifycode);
+                F_print_error('MESSAGE', $user_email.': '.$l['m_user_verification_sent']);
+>>>>>>> origin/develop
             } else {
                 F_print_error('MESSAGE', $l['m_user_registration_ok']);
                 echo K_NEWLINE;
@@ -245,7 +288,11 @@ echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipar
 
 echo getFormRowTextInput('user_name', $l['w_username'], $l['h_login_name'], '', $user_name, '', 255, false, false, false, showRequiredField($regfields['user_name']));
 if (K_USRREG_EMAIL_CONFIRM or $regfields['user_email']) {
+<<<<<<< HEAD
     echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', $user_email, '^([a-zA-Z0-9_\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', 255, false, false, false, showRequiredField($regfields['user_email']));
+=======
+    echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', $user_email, K_EMAIL_RE_PATTERN, 255, false, false, false, showRequiredField($regfields['user_email']));
+>>>>>>> origin/develop
 }
 echo getFormRowTextInput('newpassword', $l['w_password'], $l['h_password'], ' ('.$l['d_password_lenght'].')', '', K_USRREG_PASSWORD_RE, 255, false, false, true, showRequiredField(2));
 echo getFormRowTextInput('newpassword_repeat', $l['w_password'], $l['h_password_repeat'], ' ('.$l['w_repeat'].')', '', '', 255, false, false, true, showRequiredField(2));
@@ -308,6 +355,7 @@ echo '<div class="row">'.K_NEWLINE;
 
 F_submit_button('add', $l['w_add'], $l['h_add']);
 
+<<<<<<< HEAD
 // set fields descriptions for error messages
 $fielddesc = array (
     'user_name' => $l['w_name'],
@@ -337,6 +385,8 @@ $reqdesc = substr($reqdesc, 1);
 // comma separated list of required fields
 echo '<input type="hidden" name="ff_required" id="ff_required" value="'.$reqfields.'" />'.K_NEWLINE;
 echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="'.$reqdesc.'" />'.K_NEWLINE;
+=======
+>>>>>>> origin/develop
 echo '</div>'.K_NEWLINE;
 
 echo '</form>'.K_NEWLINE;

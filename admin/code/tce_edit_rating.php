@@ -2,7 +2,11 @@
 //============================================================+
 // File name   : tce_edit_rating.php
 // Begin       : 2004-06-09
+<<<<<<< HEAD
 // Last Update : 2012-12-03
+=======
+// Last Update : 2018-07-06
+>>>>>>> origin/develop
 //
 // Description : Editor to manually rate free text answers.
 //
@@ -15,7 +19,11 @@
 //               info@tecnick.com
 //
 // License:
+<<<<<<< HEAD
 //    Copyright (C) 2004-2012  Nicola Asuni - Tecnick.com LTD
+=======
+//    Copyright (C) 2004-2018  Nicola Asuni - Tecnick.com LTD
+>>>>>>> origin/develop
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -61,6 +69,13 @@ if (isset($_REQUEST['test_id']) and ($_REQUEST['test_id'] > 0)) {
     $test_id = 0;
 }
 
+<<<<<<< HEAD
+=======
+// comma separated list of required fields
+$_REQUEST['ff_required'] = 'testlog_score';
+$_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_score'], ENT_COMPAT, $l['a_meta_charset']);
+
+>>>>>>> origin/develop
 switch ($menu_mode) {
     case 'update': { // Update
         if ($formstatus = F_check_form_fields()) {
@@ -339,6 +354,7 @@ echo $answer.'&nbsp;<br />&nbsp;'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 
+<<<<<<< HEAD
 echo '<div class="row">'.K_NEWLINE;
 echo '<span class="label">'.K_NEWLINE;
 echo '<label for="testlog_score">'.$l['w_score'].'</label>'.K_NEWLINE;
@@ -349,6 +365,9 @@ echo '<input type="hidden" name="xl_testlog_score" id="xl_testlog_score" value="
 echo '<input type="text" name="testlog_score" id="testlog_score" value="'.$testlog_score.'" size="10" maxlength="20" title="'.$l['h_score'].'" />'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
+=======
+echo getFormRowTextInput('testlog_score', $l['w_score'], $l['h_score'], '', $testlog_score, '^([0-9\+\-]*)([\.]?)([0-9]*)$');
+>>>>>>> origin/develop
 
 echo '<div class="row">'.K_NEWLINE;
 echo '<span class="label">&nbsp;</span>'.K_NEWLINE;
@@ -372,6 +391,7 @@ echo '<input type="radio" name="default_score" id="default_score_unanswered" val
 echo '</span>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 
+<<<<<<< HEAD
 echo '<div class="row">'.K_NEWLINE;
 echo '<br />'.K_NEWLINE;
 echo '<span class="label">'.K_NEWLINE;
@@ -381,6 +401,9 @@ echo '<span class="formw">'.K_NEWLINE;
 echo '<textarea cols="50" rows="5" name="testlog_comment" id="testlog_comment" style="color:#FF0000" title="'.$l['w_comment'].'">'.htmlspecialchars($testlog_comment, ENT_NOQUOTES, $l['a_meta_charset']).'</textarea>'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
+=======
+echo getFormRowTextBox('testlog_comment', $l['w_comment'], $l['w_comment'], $testlog_comment);
+>>>>>>> origin/develop
 
 echo '<div class="row">'.K_NEWLINE;
 
@@ -389,9 +412,12 @@ if (isset($testlog_id) and ($testlog_id > 0)) {
     F_submit_button("update", $l['w_update'], $l['h_update']);
 }
 
+<<<<<<< HEAD
 // comma separated list of required fields
 echo '<input type="hidden" name="ff_required" id="ff_required" value="testlog_score" />'.K_NEWLINE;
 echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="'.$l['w_score'].'" />'.K_NEWLINE;
+=======
+>>>>>>> origin/develop
 echo '</div>'.K_NEWLINE;
 echo '</form>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;

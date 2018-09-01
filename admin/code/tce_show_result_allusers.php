@@ -2,7 +2,11 @@
 //============================================================+
 // File name   : tce_show_result_allusers.php
 // Begin       : 2004-06-10
+<<<<<<< HEAD
 // Last Update : 2014-03-04
+=======
+// Last Update : 2018-07-06
+>>>>>>> origin/develop
 //
 // Description : Display test results summary for all users.
 //
@@ -15,7 +19,11 @@
 //               info@tecnick.com
 //
 // License:
+<<<<<<< HEAD
 //    Copyright (C) 2004-2014 Nicola Asuni - Tecnick.com LTD
+=======
+//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+>>>>>>> origin/develop
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -46,6 +54,13 @@ require_once('../../shared/code/tce_functions_auth_sql.php');
 require_once('../../shared/code/tce_functions_statistics.php');
 require_once('tce_functions_user_select.php');
 
+<<<<<<< HEAD
+=======
+// comma separated list of required fields
+$_REQUEST['ff_required'] = '';
+$_REQUEST['ff_required_labels'] = '';
+
+>>>>>>> origin/develop
 $filter = 'sel=1';
 
 if (isset($_REQUEST['selectcategory'])) {
@@ -93,9 +108,13 @@ if (isset($_REQUEST['enddate'])) {
 }
 $filter .= '&amp;enddate='.urlencode($enddate).'';
 
+<<<<<<< HEAD
 // $detail_modes = array($l['w_disabled'], $l['w_minimum'], $l['w_module'], $l['w_subject'], $l['w_question'], $l['w_answer']);
 //we are remonving '$l['w_disabled']' because it caused some weird error-like warning
 $detail_modes = array($l['w_minimum'], $l['w_module'], $l['w_subject'], $l['w_question'], $l['w_answer']);
+=======
+$detail_modes = array($l['w_disabled'], $l['w_minimum'], $l['w_module'], $l['w_subject'], $l['w_question'], $l['w_answer']);
+>>>>>>> origin/develop
 if (isset($_REQUEST['display_mode'])) {
     $display_mode = max(0, min(5, intval($_REQUEST['display_mode'])));
     $filter .= '&amp;display_mode='.$display_mode;
@@ -361,7 +380,11 @@ echo '<div class="row"><hr /></div>'.K_NEWLINE;
 // ---------------------------------------------------------------------
 $itemcount = 0;
 if (isset($_REQUEST['sel'])) {
+<<<<<<< HEAD
         $data = F_getAllUsersTestStat($test_id, $group_id, $user_id, $startdate, $enddate, $full_order_field, false, $display_mode);
+=======
+    $data = F_getAllUsersTestStat($test_id, $group_id, $user_id, $startdate, $enddate, $full_order_field, false, $display_mode);
+>>>>>>> origin/develop
     if (isset($data['num_records'])) {
         $itemcount = $data['num_records'];
     }
@@ -431,9 +454,12 @@ if (isset($_REQUEST['sel'])) {
 echo '<input type="hidden" name="sel" id="sel" value="1" />'.K_NEWLINE;
 echo '<input type="hidden" name="order_field" id="order_field" value="'.$order_field.'" />'.K_NEWLINE;
 echo '<input type="hidden" name="orderdir" id="orderdir" value="'.$orderdir.'" />'.K_NEWLINE;
+<<<<<<< HEAD
 // comma separated list of required fields
 echo '<input type="hidden" name="ff_required" id="ff_required" value="" />'.K_NEWLINE;
 echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="" />'.K_NEWLINE;
+=======
+>>>>>>> origin/develop
 echo '<input type="hidden" name="itemcount" id="itemcount" value="'.$itemcount.'>" />'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 

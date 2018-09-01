@@ -55,7 +55,11 @@ class TCPDF_STATIC {
 	 * Current TCPDF version.
 	 * @private static
 	 */
+<<<<<<< HEAD
 	private static $tcpdf_version = '6.2.12';
+=======
+	private static $tcpdf_version = '6.2.17';
+>>>>>>> origin/develop
 
 	/**
 	 * String alias for total number of pages.
@@ -1910,7 +1914,11 @@ class TCPDF_STATIC {
 		    && !preg_match('%^//%', $file)
 		) {
 		    $urldata = @parse_url($_SERVER['SCRIPT_URI']);
+<<<<<<< HEAD
 		    return $urldata['scheme'].'://'.$urldata['host'].(($file[0] == '/') ? '' : '/').$file;
+=======
+		    $alt[] = $urldata['scheme'].'://'.$urldata['host'].(($file[0] == '/') ? '' : '/').$file;
+>>>>>>> origin/develop
 		}
 		//
 		$alt = array_unique($alt);

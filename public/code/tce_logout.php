@@ -33,10 +33,13 @@
 require_once('../config/tce_config.php');
 require_once('../../shared/code/tce_functions_session.php');
 
+<<<<<<< HEAD
 //echo "<pre>";
 //var_dump($_SESSION);
 //exit;
 
+=======
+>>>>>>> origin/develop
 // Destroys all user's session data
 session_unset();
 session_destroy();

@@ -165,6 +165,7 @@ function F_escape_sql($link_identifier, $str, $stripslashes = true)
 //============================================================+
 // END OF FILE
 //============================================================+
+<<<<<<< HEAD
 
 /*
 
@@ -183,3 +184,5 @@ function F_escape_sql($link_identifier, $str, $stripslashes = true)
                 fill in the gap
                 true/false
 */
+=======
+>>>>>>> origin/develop

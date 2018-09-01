@@ -40,11 +40,17 @@ echo '</div>'.K_NEWLINE;
 echo '<div class="userbar">'.K_NEWLINE;
 if ($_SESSION['session_user_level'] > 0) {
     // display user information
+<<<<<<< HEAD
 
         echo '<span title="'.$l['h_user_info'].'">'.$l['w_user'].': '.$_SESSION['session_user_name'].'</span>';
         // display logout link
         echo ' <a href="tce_logout.php" class="logoutbutton" title="'.$l['h_logout_link'].'">'.$l['w_logout'].'</a>'.K_NEWLINE;
 
+=======
+    echo '<span title="'.$l['h_user_info'].'">'.$l['w_user'].': '.$_SESSION['session_user_name'].'</span>';
+    // display logout link
+    echo ' <a href="tce_logout.php" class="logoutbutton" title="'.$l['h_logout_link'].'">'.$l['w_logout'].'</a>'.K_NEWLINE;
+>>>>>>> origin/develop
 } else {
     // display login link
     echo ' <a href="tce_login.php" class="loginbutton" title="'.$l['h_login_button'].'">'.$l['w_login'].'</a>'.K_NEWLINE;
@@ -57,7 +63,11 @@ if (K_LANGUAGE_SELECTOR and (stristr($_SERVER['SCRIPT_NAME'], 'tce_test_execute.
     echo '<span class="langselector" title="change language">'.K_NEWLINE;
     $lang_array = unserialize(K_AVAILABLE_LANGUAGES);
     $lngstr = '';
+<<<<<<< HEAD
     while (list($lang_code, $lang_name) = each($lang_array)) {
+=======
+    foreach ($lang_array as $lang_code => $lang_name) {
+>>>>>>> origin/develop
         $lngstr .= ' | ';
         if ($lang_code == K_USER_LANG) {
             $lngstr .= '<span class="selected" title="'.$lang_name.'">'.strtoupper($lang_code).'</span>';

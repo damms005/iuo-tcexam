@@ -47,7 +47,11 @@ require_once('../../shared/code/tce_functions_session.php');
 require_once('../../shared/code/tce_functions_otp.php');
 
 $logged = false; // the user is not yet logged in
+<<<<<<< HEAD
 define('K_BRUTE_FORCE_DELAY_TIME_CAP', 5);//secs
+=======
+
+>>>>>>> origin/develop
 // --- read existing user's session data from database
 $PHPSESSIDSQL = F_escape_sql($db, $PHPSESSID);
 $fingerprintkey = getClientFingerprint();
@@ -77,9 +81,12 @@ if ($rs = F_db_query($sqls, $db)) {
         $_SESSION['session_user_level'] = 0;
         $_SESSION['session_user_firstname'] = '';
         $_SESSION['session_user_lastname'] = '';
+<<<<<<< HEAD
         $_SESSION['session_user_passport'] = '';
         $_SESSION['session_user_department'] = '';
         $_SESSION['session_user_year_level'] = '';
+=======
+>>>>>>> origin/develop
         $_SESSION['session_test_login'] = '';
         // read client cookie
         if (isset($_COOKIE['LastVisit'])) {
@@ -125,8 +132,12 @@ $altusr = F_altLogin();
 // --- check if login information has been submitted
 if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_POST['xuser_name']) and isset($_POST['xuser_password'])) {
     $bruteforce = false;
+<<<<<<< HEAD
     // if (K_BRUTE_FORCE_DELAY_RATIO > 0) {
         if (false) {
+=======
+    if (K_BRUTE_FORCE_DELAY_RATIO > 0) {
+>>>>>>> origin/develop
         // check login attempt from the current client device to avoid brute force attack
         $bruteforce = true;
         // we are using another entry in the session table to keep track of the login attempts
@@ -137,6 +148,7 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                 if (strtotime($mt['cpsession_expiry']) < time()) {
                     $bruteforce = false;
                 }
+<<<<<<< HEAD
 
                 // update wait time
                 $wait = intval($mt['cpsession_data']);
@@ -149,6 +161,13 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                     $wait = K_BRUTE_FORCE_DELAY_TIME_CAP;
                 }
 
+=======
+                // update wait time
+                $wait = intval($mt['cpsession_data']);
+                if ($wait < K_SECONDS_IN_HOUR) {
+                    $wait *= K_BRUTE_FORCE_DELAY_RATIO;
+                }
+>>>>>>> origin/develop
                 $sqlup = 'UPDATE '.K_TABLE_SESSIONS.' SET
 					cpsession_expiry=\''.date(K_TIMESTAMP_FORMAT, (time() + $wait)).'\',
 					cpsession_data=\''.$wait.'\'
@@ -158,7 +177,11 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                 }
             } else {
                 // add new record
+<<<<<<< HEAD
                 $wait = 10; // number of seconds to wait for the second attempt
+=======
+                $wait = 1; // number of seconds to wait for the second attempt
+>>>>>>> origin/develop
                 $sqls = 'INSERT INTO '.K_TABLE_SESSIONS.' (
 					cpsession_id,
 					cpsession_expiry,
@@ -222,9 +245,12 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                     $_SESSION['session_user_level'] = $m['user_level'];
                     $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
                     $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
+<<<<<<< HEAD
                     $_SESSION['session_user_passport'] = $m['user_passport'];
                     $_SESSION['session_user_department'] = $departments[ $m['user_department']];
                     $_SESSION['session_user_year_level'] = $year_level[$m['user_year_level']];
+=======
+>>>>>>> origin/develop
                     $_SESSION['session_test_login'] = '';
                     // read client cookie
                     if (isset($_COOKIE['LastVisit'])) {
@@ -258,9 +284,12 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                                 $_SESSION['session_user_level'] = $md['user_level'];
                                 $_SESSION['session_user_firstname'] = urlencode($md['user_firstname']);
                                 $_SESSION['session_user_lastname'] = urlencode($md['user_lastname']);
+<<<<<<< HEAD
                                 $_SESSION['session_user_passport'] = $md['user_passport'];
                                 $_SESSION['session_user_department'] =$departments[ $md['user_department']];
                                 $_SESSION['session_user_year_level'] =$year_level[ $md['user_year_level']];
+=======
+>>>>>>> origin/develop
                                 $_SESSION['session_last_visit'] = 0;
                                 $_SESSION['session_test_login'] = '';
                                 $logged = true;
@@ -318,9 +347,12 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                             $_SESSION['session_user_level'] = intval($altusr['user_level']);
                             $_SESSION['session_user_firstname'] = urlencode($altusr['user_firstname']);
                             $_SESSION['session_user_lastname'] = urlencode($altusr['user_lastname']);
+<<<<<<< HEAD
                             $_SESSION['session_user_passport'] = $altusr['user_passport'];
                             $_SESSION['session_user_department'] =$departments[ $altusr['user_department']];
                             $_SESSION['session_user_year_level'] =$year_level[ $altusr['user_year_level']];
+=======
+>>>>>>> origin/develop
                             $_SESSION['session_last_visit'] = 0;
                             $_SESSION['session_test_login'] = '';
                             $logged = true;
@@ -372,7 +404,10 @@ if ($pagelevel) { // pagelevel=0 means access to anonymous user
 
 if ($logged) { //if user is just logged in: reloads page
     // html redirect
+<<<<<<< HEAD
 	//exit('red int');
+=======
+>>>>>>> origin/develop
     $htmlredir = '<'.'?xml version="1.0" encoding="'.$l['a_meta_charset'].'"?'.'>'.K_NEWLINE;
     $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.K_NEWLINE;
     $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$l['a_meta_language'].'" lang="'.$l['a_meta_language'].'" dir="'.$l['a_meta_dir'].'">'.K_NEWLINE;
@@ -384,9 +419,12 @@ if ($logged) { //if user is just logged in: reloads page
     $htmlredir .= '<a href="'.$_SERVER['SCRIPT_NAME'].'">ENTER</a>'.K_NEWLINE;
     $htmlredir .= '</body>'.K_NEWLINE;
     $htmlredir .= '</html>'.K_NEWLINE;
+<<<<<<< HEAD
 
 	// var_dump($_SERVER);
 	// exit('H:' . K_PATH_HOST);
+=======
+>>>>>>> origin/develop
     switch (K_REDIRECT_LOGIN_MODE) {
         case 1: {
             // relative redirect
@@ -406,6 +444,7 @@ if ($logged) { //if user is just logged in: reloads page
         case 4:
         default: {
             // full redirect
+<<<<<<< HEAD
 			// echo "<pre>";
 			// print_r($_SERVER['SERVER_ADDR']);
 			// print_r($_SERVER);
@@ -413,6 +452,9 @@ if ($logged) { //if user is just logged in: reloads page
             $loc = 'Location: '.K_PATH_HOST.$_SERVER['SCRIPT_NAME'];
 			// exit( $loc);
             header( $loc );
+=======
+            header('Location: '.K_PATH_HOST.$_SERVER['SCRIPT_NAME']);
+>>>>>>> origin/develop
             echo $htmlredir;
             break;
         }
