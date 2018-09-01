@@ -757,15 +757,10 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
     //$ret .= F_select_table_header_element('testuser_end_time', $nextorderdir, $l['h_time_end'], $l['w_time_end'], $order_field, $filter);
     $ret .= '<th title="'.$l['h_test_time'].'">'.$l['w_time'].'</th>'.K_NEWLINE;
     $ret .= F_select_table_header_element('testuser_test_id', $nextorderdir, $l['h_test'], $l['w_test'], $order_field, $filter);
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/develop
     if (!$pubmode) {
         $ret .= F_select_table_header_element('user_name', $nextorderdir, $l['h_login_name'], $l['w_user'], $order_field, $filter);
         $ret .= F_select_table_header_element('user_lastname', $nextorderdir, $l['h_lastname'], $l['w_lastname'], $order_field, $filter);
         $ret .= F_select_table_header_element('user_firstname', $nextorderdir, $l['h_firstname'], $l['w_firstname'], $order_field, $filter);
-<<<<<<< HEAD
         $ret .= F_select_table_header_element('user_department', $nextorderdir, 'department','department', $order_field, $filter);
         $ret .= F_select_table_header_element('user_college', $nextorderdir, 'college', 'college', $order_field, $filter);
         $ret .= F_select_table_header_element('user_year_level', $nextorderdir, 'level', 'level', $order_field, $filter);
@@ -775,10 +770,6 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
     $ret .= F_select_table_header_element('max_obtainable', $nextorderdir, 'max_obtainable', '' . 'max_obtainable', $order_field, $filter);
     $ret .= F_select_table_header_element('perc_score', $nextorderdir, 'perc_score', ''. 'perc_score', $order_field, $filter);
 
-=======
-    }
-    $ret .= F_select_table_header_element('total_score', $nextorderdir, $l['h_score_total'], $l['w_score'], $order_field, $filter);
->>>>>>> origin/develop
     if ($stats > 0) {
         $ret .= '<th title="'.$l['h_answers_right'].'">'.$l['w_answers_right'].'</th>'.K_NEWLINE;
         $ret .= '<th title="'.$l['h_answers_wrong'].'">'.$l['w_answers_wrong'].'</th>'.K_NEWLINE;
@@ -786,10 +777,7 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
         $ret .= '<th title="'.$l['h_questions_undisplayed'].'">'.$l['w_questions_undisplayed'].'</th>'.K_NEWLINE;
         $ret .= '<th title="'.$l['h_questions_unrated'].'">'.$l['w_questions_unrated'].'</th>'.K_NEWLINE;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/develop
     $ret .= '<th title="'.$l['w_status'].' ('.$l['w_time'].' ['.$l['w_minutes'].'])">'.$l['w_status'].' ('.$l['w_time'].' ['.$l['w_minutes'].'])</th>'.K_NEWLINE;
     $ret .= '<th title="'.$l['h_testcomment'].'">'.$l['w_comment'].'</th>'.K_NEWLINE;
     $ret .= '</tr>'.K_NEWLINE;
@@ -823,7 +811,6 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
             $ret .= '<td style="text-align:'.$tdalign.';"><a href="tce_edit_user.php?user_id='.$tu['user_id'].'">'.$tu['user_name'].'</a></td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_lastname'].'</td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_firstname'].'</td>'.K_NEWLINE;
-<<<<<<< HEAD
 
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_department'].'</td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_college'].'</td>'.K_NEWLINE;
@@ -843,10 +830,6 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
         . '</td>' . K_NEWLINE;
 
 
-=======
-        }
-        $ret .= '<td'.$passmsg.' class="numeric">'.F_formatFloat($tu['total_score']).'&nbsp;'.F_formatPercentage($tu['total_score_perc'], false).'</td>'.K_NEWLINE;
->>>>>>> origin/develop
         if ($stats > 0) {
             $ret .= '<td class="numeric">'.$tu['right'].'&nbsp;'.F_formatPercentage($tu['right_perc'], false).'</td>'.K_NEWLINE;
             $ret .= '<td class="numeric">'.$tu['wrong'].'&nbsp;'.F_formatPercentage($tu['wrong_perc'], false).'</td>'.K_NEWLINE;
@@ -1082,11 +1065,7 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_test.php');
     require_once('../../shared/code/tce_functions_statistics.php');
-<<<<<<< HEAD
     global $db, $l, $departments, $colleges, $year_level;
-=======
-    global $db, $l;
->>>>>>> origin/develop
     $test_id = intval($test_id);
     $group_id = intval($group_id);
     $user_id = intval($user_id);
@@ -1101,14 +1080,10 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
 		user_id,
 		user_lastname,
 		user_firstname,
-<<<<<<< HEAD
         user_name,
         user_department,
         user_college,
         user_year_level,
-=======
-		user_name,
->>>>>>> origin/develop
 		user_email,
 		SUM(testlog_score) AS total_score,
 		MAX(testlog_change_time) AS testuser_end_time
@@ -1144,10 +1119,7 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
     }
     $sqlr .= ' GROUP BY testuser_id, testuser_test_id, testuser_creation_time, user_id, user_lastname, user_firstname, user_name, user_email, testuser_status
 		ORDER BY '.$full_order_field.'';
-<<<<<<< HEAD
 		//echo $sqlr;
-=======
->>>>>>> origin/develop
     if ($rr = F_db_query($sqlr, $db)) {
         $itemcount = 0;
         $passed = 0;
@@ -1198,14 +1170,11 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_email'] = $mr['user_email'];
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_lastname'] = $mr['user_lastname'];
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_firstname'] = $mr['user_firstname'];
-<<<<<<< HEAD
 
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_department'] = $departments[ $mr['user_department']];
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_college'] =$colleges[ $mr['user_college']];
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_year_level'] = $year_level[$mr['user_year_level']];
 
-=======
->>>>>>> origin/develop
             $data['testuser']['\''.$mr['testuser_id'].'\'']['total_score'] = $mr['total_score'];
             $data['testuser']['\''.$mr['testuser_id'].'\'']['total_score_perc'] = $total_score_perc;
             if ($stats > 0) {
@@ -1272,17 +1241,13 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
         F_display_db_error();
     }
     $data['passed'] = $passed;
-<<<<<<< HEAD
     $data['total'] = $itemcount;
-=======
->>>>>>> origin/develop
     $passed_perc = 0;
     if ($itemcount > 0) {
         $passed_perc = round(100 * $passed / $itemcount);
     }
     $data['passed_perc'] = $passed_perc;
     $data['num_records'] = $itemcount;
-<<<<<<< HEAD
     if ($itemcount > 0)
     {
             // calculate statistics
@@ -1290,13 +1255,6 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
         $data['statistics'] = F_getArrayStatistics($statsdata);
     }
       return $data;
-=======
-    if ($itemcount > 0) {
-        // calculate statistics
-        $data['statistics'] = F_getArrayStatistics($statsdata);
-    }
-    return $data;
->>>>>>> origin/develop
 }
 
 /**

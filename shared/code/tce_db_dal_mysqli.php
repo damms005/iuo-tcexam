@@ -165,24 +165,3 @@ function F_escape_sql($link_identifier, $str, $stripslashes = true)
 //============================================================+
 // END OF FILE
 //============================================================+
-<<<<<<< HEAD
-
-/*
-
-//load question
-//add answers
-
-//save questions from previous typings
-
-
-//textbox to input question
-//select answers
-
-//select question type will give the type of answer entering module type
-
-//allowed type: multi-choice (obj)
-                fill in the gap
-                true/false
-*/
-=======
->>>>>>> origin/develop

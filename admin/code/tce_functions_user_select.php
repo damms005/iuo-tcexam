@@ -63,11 +63,7 @@ function F_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $group_
  */
 function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $group_id = 0, $andwhere = '', $searchterms = '')
 {
-<<<<<<< HEAD
     global $l, $db, $colleges, $departments, $year_level;
-=======
-    global $l, $db;
->>>>>>> origin/develop
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_page.php');
     require_once('../../shared/code/tce_functions_form.php');
@@ -131,7 +127,6 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
     if ($r = F_db_query($sql, $db)) {
         if ($m = F_db_fetch_array($r)) {
             // -- Table structure with links:
-<<<<<<< HEAD
             // echo "<pre>";
             // var_dump($sql);
             // var_dump($m);
@@ -139,10 +134,6 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
 
             echo '<div class="container">';
             echo '<table class="userselect table">'.K_NEWLINE;
-=======
-            echo '<div class="container">';
-            echo '<table class="userselect">'.K_NEWLINE;
->>>>>>> origin/develop
             // table header
             echo '<tr>'.K_NEWLINE;
             echo '<th>&nbsp;</th>'.K_NEWLINE;
@@ -154,14 +145,11 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
             echo F_select_table_header_element('user_firstname', $nextorderdir, $l['h_firstname'], $l['w_firstname'], $order_field, $filter);
             echo F_select_table_header_element('user_regnumber', $nextorderdir, $l['h_regcode'], $l['w_regcode'], $order_field, $filter);
             echo F_select_table_header_element('user_level', $nextorderdir, $l['h_level'], $l['w_level'], $order_field, $filter);
-<<<<<<< HEAD
 
             echo F_select_table_header_element('user_college', $nextorderdir, '', 'college', $order_field, $filter);
             echo F_select_table_header_element('user_department', $nextorderdir, '', 'department', $order_field, $filter);
             echo F_select_table_header_element('user_year_level', $nextorderdir, '', 'year level', $order_field, $filter);
 
-=======
->>>>>>> origin/develop
             echo F_select_table_header_element('user_regdate', $nextorderdir, $l['h_regdate'], $l['w_regdate'], $order_field, $filter);
             echo '<th title="'.$l['h_group_name'].'">'.$l['w_groups'].'</th>'.K_NEWLINE;
             echo '<th title="'.$l['t_all_results_user'].'">'.$l['w_tests'].'</th>'.K_NEWLINE;
@@ -182,14 +170,11 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars($m['user_firstname'], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars($m['user_regnumber'], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 echo '<td>&nbsp;'.$m['user_level'].'</td>'.K_NEWLINE;
-<<<<<<< HEAD
 
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(@$colleges[$m['user_college']], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(@$departments[$m['user_department']], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(@$year_level[$m['user_year_level']], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
 
-=======
->>>>>>> origin/develop
                 echo '<td>&nbsp;'.htmlspecialchars($m['user_regdate'], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 // comma separated list of user's groups
                 $grp = '';

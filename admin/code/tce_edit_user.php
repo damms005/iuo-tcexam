@@ -2,11 +2,7 @@
 //============================================================+
 // File name   : tce_edit_user.php
 // Begin       : 2002-02-08
-<<<<<<< HEAD
-// Last Update : 2013-04-03
-=======
-// Last Update : 2018-07-06
->>>>>>> origin/develop
+// Last Update : 2018-09-01
 //
 // Description : Edit user data.
 //
@@ -19,11 +15,7 @@
 //               info@tecnick.com
 //
 // License:
-<<<<<<< HEAD
-//    Copyright (C) 2004-2013 Nicola Asuni - Tecnick.com LTD
-=======
 //    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
->>>>>>> origin/develop
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -79,13 +71,10 @@ if (isset($_REQUEST['user_level'])) {
     }
 }
 
-<<<<<<< HEAD
-=======
 // comma separated list of required fields
 $_REQUEST['ff_required'] = 'user_name';
 $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'], ENT_COMPAT, $l['a_meta_charset']);
 
->>>>>>> origin/develop
 switch ($menu_mode) { // process submitted data
 
     case 'delete':{
@@ -183,15 +172,11 @@ switch ($menu_mode) { // process submitted data
 				user_email='.F_empty_to_null($user_email).',
 				user_password=\''.F_escape_sql($db, $user_password).'\',
 				user_regnumber='.F_empty_to_null($user_regnumber).',
-<<<<<<< HEAD
                 user_department='.F_empty_to_null($user_department).',
                 user_college='.F_empty_to_null($user_college).',
                 user_year_level='.F_empty_to_null($user_year_level).',
                 user_passport='.F_empty_to_null($user_passport).',
                 user_firstname='.F_empty_to_null($user_firstname).',
-=======
-				user_firstname='.F_empty_to_null($user_firstname).',
->>>>>>> origin/develop
 				user_lastname='.F_empty_to_null($user_lastname).',
 				user_birthdate='.F_empty_to_null($user_birthdate).',
 				user_birthplace='.F_empty_to_null($user_birthplace).',
@@ -289,13 +274,10 @@ switch ($menu_mode) { // process submitted data
 				user_email,
 				user_password,
 				user_regnumber,
-<<<<<<< HEAD
                 user_department,
                 user_college,
                 user_year_level,
                 user_passport,
-=======
->>>>>>> origin/develop
 				user_firstname,
 				user_lastname,
 				user_birthdate,
@@ -310,13 +292,10 @@ switch ($menu_mode) { // process submitted data
 				'.F_empty_to_null($user_email).',
 				\''.F_escape_sql($db, $user_password).'\',
 				'.F_empty_to_null($user_regnumber).',
-<<<<<<< HEAD
                 '.F_empty_to_null($user_department).',
                 '.F_empty_to_null($user_college).',
                 '.F_empty_to_null($user_year_level).',
                 '.F_empty_to_null($user_passport).',
-=======
->>>>>>> origin/develop
 				'.F_empty_to_null($user_firstname).',
 				'.F_empty_to_null($user_lastname).',
 				'.F_empty_to_null($user_birthdate).',
@@ -358,13 +337,10 @@ switch ($menu_mode) { // process submitted data
         $user_email = '';
         $user_password = '';
         $user_regnumber = '';
-<<<<<<< HEAD
         $user_department = '';
         $user_college = '';
         $user_year_level = '';
         $user_passport = '';
-=======
->>>>>>> origin/develop
         $user_firstname = '';
         $user_lastname = '';
         $user_birthdate = '';
@@ -375,11 +351,7 @@ switch ($menu_mode) { // process submitted data
         break;
     }
 
-<<<<<<< HEAD
-    default:{
-=======
     default :{
->>>>>>> origin/develop
         break;
     }
 } //end of switch
@@ -395,13 +367,10 @@ if ($formstatus) {
             $user_email = '';
             $user_password = '';
             $user_regnumber = '';
-<<<<<<< HEAD
             $user_department = '';
             $user_college = '';
             $user_year_level = '';
             $user_passport = '';
-=======
->>>>>>> origin/develop
             $user_firstname = '';
             $user_lastname = '';
             $user_birthdate = '';
@@ -420,13 +389,10 @@ if ($formstatus) {
                     $user_email = $m['user_email'];
                     $user_password = $m['user_password'];
                     $user_regnumber = $m['user_regnumber'];
-<<<<<<< HEAD
                     $user_department = $m['user_department'];
                     $user_college = $m['user_college'];
                     $user_year_level = $m['user_year_level'];
                     $user_passport = $m['user_passport'];
-=======
->>>>>>> origin/develop
                     $user_firstname = $m['user_firstname'];
                     $user_lastname = $m['user_lastname'];
                     $user_birthdate = substr($m['user_birthdate'], 0, 10);
@@ -441,13 +407,10 @@ if ($formstatus) {
                     $user_email = '';
                     $user_password = '';
                     $user_regnumber = '';
-<<<<<<< HEAD
                     $user_department = '';
                     $user_college = '';
                     $user_year_level = '';
                     $user_passport = '';
-=======
->>>>>>> origin/develop
                     $user_firstname = '';
                     $user_lastname = '';
                     $user_birthdate = '';
@@ -468,13 +431,10 @@ echo '<div class="container">'.K_NEWLINE;
 echo '<div class="tceformbox">'.K_NEWLINE;
 echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_usereditor">'.K_NEWLINE;
 
-<<<<<<< HEAD
 echo "<div class='student_passport' style='float:right'>";
 echo "<img height='130px' src='../../cache/passports/{$user_passport}' />";
 echo "</div>";
 
-=======
->>>>>>> origin/develop
 echo '<div class="row">'.K_NEWLINE;
 echo '<span class="label">'.K_NEWLINE;
 echo '<label for="user_id">'.$l['w_user'].'</label>'.K_NEWLINE;
@@ -526,11 +486,7 @@ echo getFormNoscriptSelect('selectrecord');
 echo '<div class="row"><hr /></div>'.K_NEWLINE;
 
 echo getFormRowTextInput('user_name', $l['w_username'], $l['h_login_name'], '', $user_name, '', 255, false, false, false);
-<<<<<<< HEAD
-echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', $user_email, '^([a-zA-Z0-9_\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', 255, false, false, false);
-=======
 echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', $user_email, K_EMAIL_RE_PATTERN, 255, false, false, false);
->>>>>>> origin/develop
 echo getFormRowTextInput('newpassword', $l['w_password'], $l['h_password'], ' ('.$l['d_password_lenght'].')', '', K_USRREG_PASSWORD_RE, 255, false, false, true);
 echo getFormRowTextInput('newpassword_repeat', $l['w_password'], $l['h_password_repeat'], ' ('.$l['w_repeat'].')', '', '', 255, false, false, true);
 echo getFormRowFixedValue('user_regdate', $l['w_regdate'], $l['h_regdate'], '', $user_regdate);
@@ -539,15 +495,12 @@ echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_l
 echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
-<<<<<<< HEAD
 
 echo getFormRowSelectBox('user_department', 'department', '', '', $user_department, $departments);
 echo getFormRowSelectBox('user_college', 'college', '', '', $user_college, $colleges);
 echo getFormRowSelectBox('user_year_level', 'year level', '', '', $user_level, $year_level);
 echo getFormRowTextInput('user_passport', 'passport', '', '', $user_passport, '', 255, false, false, false);
 
-=======
->>>>>>> origin/develop
 echo getFormRowTextInput('user_birthdate', $l['w_birth_date'], $l['h_birth_date'].' '.$l['w_date_format'], '', $user_birthdate, '', 10, true, false, false);
 echo getFormRowTextInput('user_birthplace', $l['w_birth_place'], $l['h_birth_place'], '', $user_birthplace, '', 255, false, false, false);
 echo getFormRowTextInput('user_ssn', $l['w_fiscal_code'], $l['h_fiscal_code'], '', $user_ssn, '', 255, false, false, false);
@@ -613,12 +566,6 @@ if (isset($user_id) and ($user_id > 0)) {
 F_submit_button('clear', $l['w_clear'], $l['h_clear']);
 
 echo '<input type="hidden" name="user_password" id="user_password" value="'.$user_password.'" />'.K_NEWLINE;
-<<<<<<< HEAD
-
-echo '<input type="hidden" name="ff_required" id="ff_required" value="user_name" />'.K_NEWLINE;
-echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="'.htmlspecialchars($l['w_name'], ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
-=======
->>>>>>> origin/develop
 echo '</div>'.K_NEWLINE;
 
 echo '</form>'.K_NEWLINE;

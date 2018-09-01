@@ -36,7 +36,6 @@
  */
 function F_getArrayStatistics($data)
 {
-<<<<<<< HEAD
     echo "<pre>";
     //var_dump($data);
     echo "</pre>";
@@ -109,54 +108,6 @@ function F_getArrayStatistics($data)
             $stats['standard_deviation'][$set] = sqrt($stats['variance'][$set]);
             $stats['skewness'][$set]           = 0;
             $stats['kurtosi'][$set]            = 0;
-=======
-    $stats = array();
-    $stats['number'] = array(); // number of items
-    $stats['sum'] = array(); // sum of all elements
-    $stats['mean'] = array(); // mean or average value
-    $stats['median'] = array(); // median
-    $stats['mode'] = array(); // mode
-    $stats['minimum'] = array(); // minimum value
-    $stats['maximum'] = array(); // maximum value
-    $stats['range'] = array(); // range
-    $stats['variance'] = array(); // variance
-    $stats['standard_deviation'] = array(); // standard deviation
-    $stats['skewness'] = array(); // skewness
-    $stats['kurtosi'] = array(); // kurtosi
-    foreach ($data as $set => $dataset) {
-        sort($dataset);
-        $stats['number'][$set] = 0;
-        $stats['minimum'][$set] = $dataset[0];
-        $stats['sum'][$set] = 0;
-        $datastr = array();
-        foreach ($dataset as $num => $value) {
-            $stats['number'][$set]++;
-            $stats['sum'][$set] += $value;
-            $datastr[] = ''.$value.''; // convert value to string
-        }
-        if ($stats['number'][$set] > 0) {
-            $stats['maximum'][$set] = $dataset[($stats['number'][$set] - 1)];
-            $stats['range'][$set] = $stats['maximum'][$set] - $stats['minimum'][$set];
-            $stats['mean'][$set] = $stats['sum'][$set] / $stats['number'][$set];
-            if (($stats['number'][$set] % 2) == 0) {
-                $stats['median'][$set] = ($dataset[($stats['number'][$set] / 2)] + $dataset[(($stats['number'][$set] / 2) - 1)]) / 2 ;
-            } else {
-                $stats['median'][$set] = $dataset[(($stats['number'][$set] - 1) / 2)];
-            }
-            $freq = array_count_values($datastr);
-            arsort($freq, SORT_NUMERIC);
-            $freq = array_keys($freq);
-            $stats['mode'][$set] = floatval($freq[0]);
-            $dev = 0;
-            foreach ($dataset as $num => $value) {
-                // deviance
-                $dev += pow(($value - $stats['mean'][$set]), 2);
-            }
-            $stats['variance'][$set] = $dev / $stats['number'][$set];
-            $stats['standard_deviation'][$set] = sqrt($stats['variance'][$set]);
-            $stats['skewness'][$set] = 0;
-            $stats['kurtosi'][$set] = 0;
->>>>>>> origin/develop
             if ($stats['standard_deviation'][$set] != 0) {
                 foreach ($dataset as $num => $value) {
                     $tmpval = (($value - $stats['mean'][$set]) / $stats['standard_deviation'][$set]);

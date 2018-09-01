@@ -43,24 +43,12 @@ function F_getUserTests()
     // get current date-time
     $current_time = date(K_TIMESTAMP_FORMAT);
     // select tests hiding old repeated tests
-<<<<<<< HEAD
-    $sql = 'SELECT * FROM '.K_TABLE_TESTS.' WHERE (test_id IN (SELECT tsubset_test_id FROM '
-	.K_TABLE_TEST_SUBJSET.') AND (test_begin_time < \''.$current_time.'\')';
-
-    if (K_HIDE_EXPIRED_TESTS) {
-        $sql .= " AND (test_end_time > '{$current_time}')";
-    }
-    $sql .= ') ORDER BY test_begin_time DESC';
-
-	if ($r = F_db_query($sql, $db)) {
-=======
     $sql = 'SELECT * FROM '.K_TABLE_TESTS.' WHERE (test_id IN (SELECT tsubset_test_id FROM '.K_TABLE_TEST_SUBJSET.') AND (test_begin_time < \''.$current_time.'\')';
     if (K_HIDE_EXPIRED_TESTS) {
         $sql .= ' AND (test_end_time > \''.$current_time.'\')';
     }
     $sql .= ') ORDER BY test_begin_time DESC';
     if ($r = F_db_query($sql, $db)) {
->>>>>>> origin/develop
         while ($m = F_db_fetch_array($r)) { // for each active test
             $expired = false;
             // check user's authorization
@@ -222,11 +210,7 @@ function F_isValidIP($user_ip, $test_ips)
     // build array of valid IP masks
     $test_ip = explode(',', $test_ips);
     // check user IP against test IP masks
-<<<<<<< HEAD
-    while (list($key, $ipmask) = @each($test_ip)) {
-=======
     foreach ($test_ip as $key => $ipmask) {
->>>>>>> origin/develop
         if (strrpos($ipmask, '*') !== false) {
             // old range notation using IPv4 addresses and '*' character.
             $ipv4 = explode('.', $ipmask);
@@ -273,11 +257,7 @@ function F_isValidIP($user_ip, $test_ips)
 /**
  * Check if user's IP is valid over test IP range
  * @param $test_id (int) Test ID
-<<<<<<< HEAD
  * @return true if the client certificate is valid, false otherwise
-=======
- * @return true if the client certifiate is valid, false otherwise
->>>>>>> origin/develop
  */
 function F_isValidSSLCert($test_id)
 {
@@ -844,11 +824,7 @@ function F_addLogAnswers($testlog_id, $answers_ids)
     global $db, $l;
     $testlog_id = intval($testlog_id);
     $i = 0;
-<<<<<<< HEAD
-    while (list($key, $answid) = each($answers_ids)) {
-=======
     foreach ($answers_ids as $key => $answid) {
->>>>>>> origin/develop
         $i++;
         $sqli = 'INSERT INTO '.K_TABLE_LOG_ANSWER.' (
 			logansw_testlog_id,
@@ -1569,14 +1545,8 @@ function F_updateQuestionLog($test_id, $testlog_id, $answpos = array(), $answer_
 					AND answer_isright=\'1\'';
             if ($r = F_db_query($sql, $db)) {
                 while ($m = F_db_fetch_array($r)) {
-<<<<<<< HEAD
-                    if ( (K_SHORT_ANSWERS_BINARY and (strcmp(trim($answer_text), $m['answer_description']) == 0) ) or
-					    (!K_SHORT_ANSWERS_BINARY and (strcasecmp(trim($answer_text), $m['answer_description']) == 0))) {
-						$answer_score = (float)$answer_score;
-=======
                     if ((K_SHORT_ANSWERS_BINARY and (strcmp(trim($answer_text), $m['answer_description']) == 0))
                         or (!K_SHORT_ANSWERS_BINARY and (strcasecmp(trim($answer_text), $m['answer_description']) == 0))) {
->>>>>>> origin/develop
                         $answer_score += $question_right_score;
                         break;
                     }
@@ -1770,10 +1740,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
 					WHERE logansw_answer_id=answer_id
 						AND logansw_testlog_id='.$testlog_id.'
 					ORDER BY logansw_order';
-<<<<<<< HEAD
 					//exit( $sqla );
-=======
->>>>>>> origin/develop
                 if ($ra = F_db_query($sqla, $db)) {
                     while ($ma = F_db_fetch_array($ra)) {
                         $anspos = $ma['logansw_order'];
@@ -2190,11 +2157,7 @@ function F_testLoginForm($faction, $fid, $fmethod, $fenctype, $test_id)
     $str .= getFormRowTextInput('xtest_password', $l['w_test_password'], $l['h_test_password'], '', '', '', 255, false, false, true, '');
     // buttons
     $str .= '<div class="row">'.K_NEWLINE;
-<<<<<<< HEAD
     $str .= '<input type="submit" class="btn btn-danger" name="login" id="login" value="'.$l['w_login'].'" title="'.$l['h_login_button'].'" />'.K_NEWLINE;
-=======
-    $str .= '<input type="submit" name="login" id="login" value="'.$l['w_login'].'" title="'.$l['h_login_button'].'" />'.K_NEWLINE;
->>>>>>> origin/develop
     // the following field is used to check if the form has been submitted
     $str .= '<input type="hidden" name="testpswaction" id="testpswaction" value="login" />'.K_NEWLINE;
     $str .= '<input type="hidden" name="testid" id="testid" value="'.intval($test_id).'" />'.K_NEWLINE;
