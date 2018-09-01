@@ -162,6 +162,7 @@ require_once('../code/tce_page_footer.php');
 // ---------------------------------------------------------------------
 
 /**
+ * THIS IS CUSTOM TSV IMPORTER - DIFFERENT FROM STOCK TCEXAM TSV IMPORTER
  * Import questions from TSV file (tab delimited text).
  * The format of TSV is the same obtained by exporting data from TCExam interface.
  * @param $tsvfile (string) TSV (tab delimited text) file name
