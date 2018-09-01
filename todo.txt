@@ -1,0 +1,13 @@
+setings page where we can set:
+1. K_HIDE_EXPIRED_TESTS
+2. K_PATH_HOST
+3. School Name
+4. this will necessitate need for a new tcexam table. Don't forget to add this schema to the installation log
+
+Non-exsiting student passport should not display <img> tag
+
+Edit the IUO header logo such that its messy display @public area is fixed
+
+Bootstrap designs: buttons, etc...
+
+Set password for all users at once

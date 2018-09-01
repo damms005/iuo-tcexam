@@ -1,0 +1,182 @@
+M=MODULE	module_enabled	module_name								
+S=SUBJECT	subject_enabled	subject_name	subject_description							
+Q=QUESTION	question_enabled	question_description	question_explanation	question_type	question_difficulty	question_position	question_timer	question_fullscreen	question_inline_answers	question_auto_next
+A=ANSWER	answer_enabled	answer_description	answer_explanation	answer_isright	answer_position	answer_keyboard_key				
+										
+M	1	default								
+S	1	GST 113	NIGERIAN PEOPLES AND CULTURE							
+Q	1	For Greek philosophers and thinkers, justice was equated with ____?		S	1		0	0	0	0
+A	1	Injustice		0						
+A	1	Morality		1						
+A	1	Goodness		0						
+A	1	Wrong		0						
+Q	1	___________ is best known as the cradle of Western scholarship?		S	1		0	0	0	0
+A	1	Ancient Greek		1						
+A	1	Ancient Rome		0						
+A	1	Ancient Egypt		0						
+A	1	None of the above		0						
+Q	1	In pre-colonial era, most Nigerian communities were_____? 		S	1		0	0	0	0
+A	1	Small		0						
+A	1	Rural		0						
+A	1	Segmentary		0						
+A	1	All of the above		1						
+Q	1	Accordingly, to Plato, the four virtues that made a good individual, include justice,_____, courage and temperance?		S	1		0	0	0	0
+A	1	 Wisdom		1						
+A	1	Understanding		0						
+A	1	Integrity 		0						
+A	1	Love		0						
+Q	1	The formulation of a national policy on education took place in the year ______ ?		S	1		0	0	0	0
+A	1	1974		0						
+A	1	1975		0						
+A	1	1976		0						
+A	1	1977		1						
+Q	1	Most of the laws governing traditional African society were ______ based?		S	1		0	0	0	0
+A	1	Economically		0						
+A	1	Politically		0						
+A	1	Religiously		1						
+A	1	Socially		0						
+Q	1	In traditional Africa, ancestors were regarded as _________ and they played a major role in the society?		S	1		0	0	0	0
+A	1	Dead		0						
+A	1	Living		1						
+A	1	Powerful		0						
+A	1	Weak		0						
+Q	1	 Pastoral Fulani religion is ______ ?		S	1		0	0	0	0
+A	1	Islam		0						
+A	1	Pre-Islamic practices		0						
+A	1	 a and b 		1						
+A	1	 None of the above		0						
+Q	1	Some Igala elites attribute the emergence of their state to one _______?		S	1		0	0	0	0
+A	1	Ashadu		0						
+A	1	Achadu		1						
+A	1	Ashaolu		0						
+A	1	Achabu		0						
+Q	1	One of this is the obligation of a citizen?		S	1		0	0	0	0
+A	1	Placing the interest of the State before any other interest		0						
+A	1	Paying tax promptly		0						
+A	1	Defending the State against internal and external enemies		0						
+A	1	All of the above		1						
+Q	1	In ________ the Nigerian government introduced the Universal Basic Education Programme (UBE)?		S	1		0	0	0	0
+A	1	1975		0						
+A	1	1976		1						
+A	1	1977		0						
+A	1	1978		0						
+Q	1	There are at least ____ activity sectors of the Nigerian economy?		S	1		0	0	0	0
+A	1	15		0						
+A	1	18		1						
+A	1	21		0						
+A	1	24		0						
+Q	1	Before independence, Nigeria arable land is estimated to be about___ million hectares?		S	1		0	0	0	0
+A	1	98.321		0						
+A	1	74.036		1						
+A	1	89.406		0						
+A	1	68.063		0						
+Q	1	As Nana is to Itsekiri, so is ______ to Benin?		S	1		0	0	0	0
+A	1	Oba		0						
+A	1	Ovonramwen 		1						
+A	1	Obaseki		0						
+A	1	Igbinedion		0						
+Q	1	when a group of people occupying a defined territory acquires the citizenship privileges of another either by treaty or by statute annexing the territory to a new one is known as ____?		S	1		0	0	0	0
+A	1	Naturalization		0						
+A	1	Collective Naturalization		1						
+A	1	Direct Naturalization		0						
+A	1	Indirect Naturalization		0						
+Q	1	Historically _____ resistance the British in Sokoto, just like Jaja of Opobo?		S	1		0	0	0	0
+A	1	Sultan		0						
+A	1	Attahiru		1						
+A	1	Jega		0						
+A	1	Tambuwa		0						
+Q	1	The year _________ the Hausa population was estimated at about twenty million?		S	1		0	0	0	0
+A	1	2002		0						
+A	1	2000		1						
+A	1	2012		0						
+A	1	2020		0						
+Q	1	The _____ people groups in Nigeria are found also in Senegal, Gambia, Guinea, Guinea Bissau, Mali and Benin?		S	1		0	0	0	0
+A	1	Igbo		0						
+A	1	Hausa		0						
+A	1	Fulani		1						
+A	1	Yoruba		0						
+Q	1	The First amalgamation in Nigeria was between these two protectorate ____?		S	1		0	0	0	0
+A	1	Lagos colony and The Norther protectorate		0						
+A	1	Protectorate of Southern Nigeria and Lagos colony		1						
+A	1	Protectorate of Western Nigeria and Lagos colony 		0						
+A	1	Protectorate of Southern Nigeria and The Norther protectorate 		0						
+Q	1	It was only in the year _____ that the declaration of the Rights of Man issued by the National Assembly of France during the French Revolution gave a universal and an unbiased dimension to citizenship?		S	1		0	0	0	0
+A	1	1789		1						
+A	1	1898		0						
+A	1	1800		0						
+A	1	1798		0						
+Q	1	Besides the Ijaw and the Itsekiri, ____ communities have proved their best skills in the oil palm production technology except? 		S	1		0	0	0	0
+A	1	The Urhobo		0						
+A	1	The Isoko		0						
+A	1	The Ilaje		1						
+A	1	All of the above		0						
+Q	1	In Niger Delta Region of Nigeria the clan or the village group is a _____?		S	1		0	0	0	0
+A	1	Unitary System		0						
+A	1	Federation		0						
+A	1	Confederation		1						
+A	1	All of the above		0						
+Q	1	The farmers, petty civil servants, craftsmen and traders in the Sudan Savanna belong to the ____ class?		S	1		0	0	0	0
+A	1	First class		0						
+A	1	Second class		0						
+A	1	Third class		1						
+A	1	Second class lower		0						
+Q	1	The Edoid culture group include the following except ___ ?		S	1		0	0	0	0
+A	1	Esan		0						
+A	1	Idoma		1						
+A	1	Etsako		0						
+A	1	Igarra		0						
+Q	1	Among the Igbo of Nigeria ____ is the link between his people and the ancestors?		S	1		0	0	0	0
+A	1	Obi		0						
+A	1	Okpara		1						
+A	1	Debia		0						
+A	1	Amadioha		0						
+Q	1	The following people groups except ___ are well known for their strong belief in witchcraft, magic and sorcery?		S	1		0	0	0	0
+A	1	Igbo		1						
+A	1	Igala		0						
+A	1	Jukun		0						
+A	1	Tiv		0						
+Q	1	Any person born within the territorial jurisdiction of a State is automatically a citizen of that State irrespective of the citizenship of the parents, this is known as ___? 		S	1		0	0	0	0
+A	1	Jus Sanguinis		0						
+A	1	Jus Soli 		1						
+A	1	Jus Born 		0						
+A	1	None of the above		0						
+Q	1	___ ethnic group believe that only women are  witches?		S	1		0	0	0	0
+A	1	The Nupe 		0						
+A	1	The Gwari  		0						
+A	1	The Jukun		0						
+A	1	a and b above		1						
+Q	1	In _______ the tertiary education witnessed a tremendous improvement with the adoption of the 6-3-3-4 system?		S	1		0	0	0	0
+A	1	1981		1						
+A	1	1980		0						
+A	1	1983		0						
+A	1	1982		0						
+Q	1	The following communities except ____ are known for iron smelting as their major business?		S	1		0	0	0	0
+A	1	Ife		0						
+A	1	Nkwere		0						
+A	1	Abiriba		0						
+A	1	Opobo		1						
+Q	1	Some scholars argue that the Igala are of a ________ extraction?		S	1		0	0	0	0
+A	1	Hausa		0						
+A	1	Fulani		0						
+A	1	Israel		0						
+A	1	Yoruba		1						
+Q	1	The attachment to deities is so powerful in Ile-Ife, with as many as _____deities with official religious activities devoted to them? 		S	1		0	0	0	0
+A	1	201		0						
+A	1	2001		1						
+A	1	200		0						
+A	1	2000		0						
+Q	1	The army of Kanem Bornu was very professional. It was divided strategically into ________ divisions?		S	1		0	0	0	0
+A	1	2		1						
+A	1	3		0						
+A	1	4		0						
+A	1	5		0						
+Q	1	In the year 1970, the Sudan Savanna area accounted for ____ of the total guinea corn output in Nigeria?		S	1		0	0	0	0
+A	1	90%		0						
+A	1	91%		0						
+A	1	92%		1						
+A	1	93%		0						
+Q	1	In the year 1960 the _______ sector absorbed over 75 percent of the work force?		S	1		0	0	0	0
+A	1	Oil		0						
+A	1	Communication		0						
+A	1	Agriculture		1						
+A	1	Transport		0						

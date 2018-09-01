@@ -1,0 +1,17 @@
+#oringinal list of ignores by tcexam origin
+admin/config/
+shared/config/
+public/config/
+
+#editors use files ending on tilde a lot
+*~
+
+#do not upload user passports
+**passports.zip
+/cache/passports
+/cache/passports*
+/cache/passports/*
+/cache/passports/**/*
+
+# 011 -first
+# 057- zenith

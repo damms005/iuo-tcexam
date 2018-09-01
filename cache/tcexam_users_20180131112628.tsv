@@ -1,0 +1,8 @@
+user_id	user_name	user_password	user_email	user_regdate	user_ip	user_firstname	user_lastname	user_birthdate	user_birthplace	user_regnumber	user_ssn	user_level	user_verifycode	user_otpkey	user_groups
+2	admin			2001-01-01 01:01:01	127.0.0.0	Admin	Admin-user					10			default,students
+4	damms005			2018-01-22 10:34:33	0000:0000:0000:0000:0000:ffff:7f00:0001	Damilola	Olowookere	2003-11-11				1		RKV62542GWY5QPZC	students
+	user1	12345678				Olu	Debbs					1			students
+	user2	12345678				Baba	Sodiq					1			students
+	user3	12345678				M’ahmed	Mirabilis					1			students
+	user	12345678				DirectUser1	NewUser2					1			students
+4	correct	12345678		2018-01-22 10:34:33	0000:0000:0000:0000:0000:ffff:7f00:0001	Mo	Hits	2003-11-11				1		RKV62542GWY5QPZC	students
