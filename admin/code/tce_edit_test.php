@@ -2,11 +2,7 @@
 //============================================================+
 // File name   : tce_edit_test.php
 // Begin       : 2004-04-27
-<<<<<<< HEAD
-// Last Update : 2013-08-23
-=======
-// Last Update : 2018-07-06
->>>>>>> origin/develop
+// Last Update : 2018-09-03
 //
 // Description : Edit Tests
 //
@@ -19,11 +15,7 @@
 //               info@tecnick.com
 //
 // License:
-<<<<<<< HEAD
-//    Copyright (C) 2004-2013 Nicola Asuni - Tecnick.com LTD
-=======
 //    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
->>>>>>> origin/develop
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -51,14 +43,11 @@ require_once('../../shared/code/tce_functions_auth_sql.php');
 require_once('tce_functions_user_select.php');
 require_once('tce_functions_test_select.php');
 
-<<<<<<< HEAD
-=======
 
 // comma separated list of required fields
 $_REQUEST['ff_required'] = 'test_name,test_description,test_ip_range,test_duration_time,test_score_right';
 $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'].','.$l['w_description'].','.$l['w_ip_range'].','.$l['w_test_time'].','.$l['w_score_right'], ENT_COMPAT, $l['a_meta_charset']);
 
->>>>>>> origin/develop
 // set default values
 if (!isset($_REQUEST['test_results_to_users']) or (empty($_REQUEST['test_results_to_users']))) {
     $test_results_to_users = false;
@@ -462,10 +451,7 @@ switch ($menu_mode) {
         if ($formstatus = F_check_form_fields()) {
             // check referential integrity (NOTE: mysql do not support "ON UPDATE" constraint)
             if (!F_check_unique(K_TABLE_TEST_USER, 'testuser_test_id='.$test_id.'')) {
-<<<<<<< HEAD
 				//exit('non unique');
-=======
->>>>>>> origin/develop
                 F_print_error('WARNING', $l['m_update_restrict']);
                 $formstatus = false;
                 F_stripslashes_formfields();
@@ -660,14 +646,11 @@ switch ($menu_mode) {
                         F_display_db_error(false);
                     }
                 }
-<<<<<<< HEAD
             }else {
             	echo "
 				<b>
 					<code>Possible error: no user group(s) to take this test. Please set 'groups' options</code>
 				</b>";
-=======
->>>>>>> origin/develop
             }
 
             // update authorized SSL certificates
@@ -760,7 +743,6 @@ switch ($menu_mode) {
         $test_random_answers_select = true;
         $test_random_answers_order = true;
         $test_answers_order_mode = 0;
-<<<<<<< HEAD
         $test_comment_enabled = false;
         $test_menu_enabled = false;
         $test_noanswer_enabled = false;
@@ -768,15 +750,6 @@ switch ($menu_mode) {
         $test_repeatable = false;
         $test_mcma_partial_score = false;
         $test_logout_on_timeout = true;
-=======
-        $test_comment_enabled = true;
-        $test_menu_enabled = true;
-        $test_noanswer_enabled = true;
-        $test_mcma_radio = true;
-        $test_repeatable = false;
-        $test_mcma_partial_score = true;
-        $test_logout_on_timeout = false;
->>>>>>> origin/develop
         $test_password = '';
         break;
     }
@@ -802,11 +775,7 @@ if ($formstatus) {
             $test_end_time = date(K_TIMESTAMP_FORMAT, time() + K_SECONDS_IN_DAY);
             $test_duration_time = 60;
             $test_ip_range = '*.*.*.*';
-<<<<<<< HEAD
             $test_results_to_users = true;
-=======
-            $test_results_to_users = false;
->>>>>>> origin/develop
             $test_report_to_users = false;
             $test_score_right = 1;
             $test_score_wrong = 0;
@@ -819,7 +788,6 @@ if ($formstatus) {
             $test_random_answers_select = true;
             $test_random_answers_order = true;
             $test_answers_order_mode = 0;
-<<<<<<< HEAD
             $test_comment_enabled = false;
             $test_menu_enabled = false;
             $test_noanswer_enabled = false;
@@ -827,15 +795,6 @@ if ($formstatus) {
             $test_repeatable = false;
             $test_mcma_partial_score = false;
             $test_logout_on_timeout = true;
-=======
-            $test_comment_enabled = true;
-            $test_menu_enabled = true;
-            $test_noanswer_enabled = true;
-            $test_mcma_radio = true;
-            $test_repeatable = false;
-            $test_mcma_partial_score = true;
-            $test_logout_on_timeout = false;
->>>>>>> origin/develop
             $test_password = '';
         } else {
             $sql = 'SELECT * FROM '.K_TABLE_TESTS.' WHERE test_id='.$test_id.' LIMIT 1';
@@ -1127,13 +1086,10 @@ if (isset($test_id) and ($test_id > 0)) {
 }
 F_submit_button('clear', $l['w_clear'], $l['h_clear']);
 
-<<<<<<< HEAD
 // comma separated list of required fields
 echo '<input type="hidden" name="ff_required" id="ff_required" value="test_name,test_description,test_ip_range,test_duration_time,test_score_right" />'.K_NEWLINE;
 echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="'.htmlspecialchars($l['w_name'].','.$l['w_description'].','.$l['w_ip_range'].','.$l['w_test_time'].','.$l['w_score_right'], ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
 
-=======
->>>>>>> origin/develop
 echo '<br /><br />'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 

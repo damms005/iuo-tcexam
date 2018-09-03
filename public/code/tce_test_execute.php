@@ -109,10 +109,6 @@ if (isset($_REQUEST['testid']) and ($_REQUEST['testid'] > 0)) {
         $thispage_title .= ': '.F_getTestName($test_id);
 
         require_once('../code/tce_page_header.php');
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/develop
         echo '<div class="container">'.K_NEWLINE;
 
         echo '<span class="infolink">'.F_testInfoLink($test_id, $l['w_info']).'<br /><br /></span>'.K_NEWLINE;
@@ -136,11 +132,7 @@ if (isset($_REQUEST['testid']) and ($_REQUEST['testid'] > 0)) {
                     $testlog_id = intval($_REQUEST['prevquestionid']);
                 } else {
                     // go to selected question
-<<<<<<< HEAD
-                    while (list($key,$value) = each($_POST)) {
-=======
                     foreach ($_POST as $key => $value) {
->>>>>>> origin/develop
                         if (preg_match('/jumpquestion_([0-9]+)/', $key, $matches) > 0) {
                             $testlog_id = intval($matches[1]);
                             break;
@@ -175,12 +167,8 @@ if (isset($_REQUEST['testid']) and ($_REQUEST['testid'] > 0)) {
             </form>
             </div>
             <?php
-<<<<<<< HEAD
         }
 		else {
-=======
-        } else {
->>>>>>> origin/develop
             echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="'.$formname.'"';
             echo ' onsubmit="var submittime=new Date();document.getElementById(\'reaction_time\').value=submittime.getTime()-document.getElementById(\'display_time\').value;"';
             echo '>'.K_NEWLINE;
@@ -253,7 +241,6 @@ echo '<div class="pagehelp">'.$l['hp_test_execute'].'</div>'.K_NEWLINE;
 
 echo '</div>'.K_NEWLINE; // container
 
-<<<<<<< HEAD
 echo "
 
 <script>
@@ -266,8 +253,6 @@ $(function(){
 
 ";
 
-=======
->>>>>>> origin/develop
 require_once('../code/tce_page_footer.php');
 
 //============================================================+
