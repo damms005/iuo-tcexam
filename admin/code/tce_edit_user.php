@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_edit_user.php
 // Begin       : 2002-02-08
-// Last Update : 2018-07-06
+// Last Update : 2018-09-01
 //
 // Description : Edit user data.
 //
@@ -172,7 +172,11 @@ switch ($menu_mode) { // process submitted data
 				user_email='.F_empty_to_null($user_email).',
 				user_password=\''.F_escape_sql($db, $user_password).'\',
 				user_regnumber='.F_empty_to_null($user_regnumber).',
-				user_firstname='.F_empty_to_null($user_firstname).',
+                user_department='.F_empty_to_null($user_department).',
+                user_college='.F_empty_to_null($user_college).',
+                user_year_level='.F_empty_to_null($user_year_level).',
+                user_passport='.F_empty_to_null($user_passport).',
+                user_firstname='.F_empty_to_null($user_firstname).',
 				user_lastname='.F_empty_to_null($user_lastname).',
 				user_birthdate='.F_empty_to_null($user_birthdate).',
 				user_birthplace='.F_empty_to_null($user_birthplace).',
@@ -270,6 +274,10 @@ switch ($menu_mode) { // process submitted data
 				user_email,
 				user_password,
 				user_regnumber,
+                user_department,
+                user_college,
+                user_year_level,
+                user_passport,
 				user_firstname,
 				user_lastname,
 				user_birthdate,
@@ -284,6 +292,10 @@ switch ($menu_mode) { // process submitted data
 				'.F_empty_to_null($user_email).',
 				\''.F_escape_sql($db, $user_password).'\',
 				'.F_empty_to_null($user_regnumber).',
+                '.F_empty_to_null($user_department).',
+                '.F_empty_to_null($user_college).',
+                '.F_empty_to_null($user_year_level).',
+                '.F_empty_to_null($user_passport).',
 				'.F_empty_to_null($user_firstname).',
 				'.F_empty_to_null($user_lastname).',
 				'.F_empty_to_null($user_birthdate).',
@@ -325,6 +337,10 @@ switch ($menu_mode) { // process submitted data
         $user_email = '';
         $user_password = '';
         $user_regnumber = '';
+        $user_department = '';
+        $user_college = '';
+        $user_year_level = '';
+        $user_passport = '';
         $user_firstname = '';
         $user_lastname = '';
         $user_birthdate = '';
@@ -351,6 +367,10 @@ if ($formstatus) {
             $user_email = '';
             $user_password = '';
             $user_regnumber = '';
+            $user_department = '';
+            $user_college = '';
+            $user_year_level = '';
+            $user_passport = '';
             $user_firstname = '';
             $user_lastname = '';
             $user_birthdate = '';
@@ -369,6 +389,10 @@ if ($formstatus) {
                     $user_email = $m['user_email'];
                     $user_password = $m['user_password'];
                     $user_regnumber = $m['user_regnumber'];
+                    $user_department = $m['user_department'];
+                    $user_college = $m['user_college'];
+                    $user_year_level = $m['user_year_level'];
+                    $user_passport = $m['user_passport'];
                     $user_firstname = $m['user_firstname'];
                     $user_lastname = $m['user_lastname'];
                     $user_birthdate = substr($m['user_birthdate'], 0, 10);
@@ -383,6 +407,10 @@ if ($formstatus) {
                     $user_email = '';
                     $user_password = '';
                     $user_regnumber = '';
+                    $user_department = '';
+                    $user_college = '';
+                    $user_year_level = '';
+                    $user_passport = '';
                     $user_firstname = '';
                     $user_lastname = '';
                     $user_birthdate = '';
@@ -402,6 +430,10 @@ echo '<div class="container">'.K_NEWLINE;
 
 echo '<div class="tceformbox">'.K_NEWLINE;
 echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_usereditor">'.K_NEWLINE;
+
+echo "<div class='student_passport' style='float:right'>";
+echo "<img height='130px' src='../../cache/passports/{$user_passport}' />";
+echo "</div>";
 
 echo '<div class="row">'.K_NEWLINE;
 echo '<span class="label">'.K_NEWLINE;
@@ -463,6 +495,12 @@ echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_l
 echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
+
+echo getFormRowSelectBox('user_department', 'department', '', '', $user_department, $departments);
+echo getFormRowSelectBox('user_college', 'college', '', '', $user_college, $colleges);
+echo getFormRowSelectBox('user_year_level', 'year level', '', '', $user_level, $year_level);
+echo getFormRowTextInput('user_passport', 'passport', '', '', $user_passport, '', 255, false, false, false);
+
 echo getFormRowTextInput('user_birthdate', $l['w_birth_date'], $l['h_birth_date'].' '.$l['w_date_format'], '', $user_birthdate, '', 10, true, false, false);
 echo getFormRowTextInput('user_birthplace', $l['w_birth_place'], $l['h_birth_place'], '', $user_birthplace, '', 255, false, false, false);
 echo getFormRowTextInput('user_ssn', $l['w_fiscal_code'], $l['h_fiscal_code'], '', $user_ssn, '', 255, false, false, false);

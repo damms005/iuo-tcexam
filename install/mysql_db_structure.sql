@@ -40,6 +40,10 @@ CREATE TABLE tce_users (
 	user_ip Varchar(39) NOT NULL,
 	user_firstname Varchar(255),
 	user_lastname Varchar(255),
+	user_department VARCHAR(255),
+	user_college VARCHAR(255),
+	user_year_level VARCHAR(255),
+	user_passport VARCHAR(255),
 	user_birthdate Date,
 	user_birthplace Varchar(255),
 	user_regnumber Varchar(255),
@@ -297,4 +301,3 @@ ALTER TABLE tce_testgroups ADD Foreign Key (tstgrp_group_id) references tce_user
 ALTER TABLE tce_test_subjects ADD Foreign Key (subjset_tsubset_id) references tce_test_subject_set (tsubset_id) ON DELETE cascade ON UPDATE no action;
 ALTER TABLE tce_testsslcerts ADD Foreign Key (tstssl_test_id) references tce_tests (test_id) ON DELETE cascade ON UPDATE no action;
 ALTER TABLE tce_testsslcerts ADD Foreign Key (tstssl_ssl_id) references tce_sslcerts (ssl_id) ON DELETE cascade ON UPDATE no action;
-

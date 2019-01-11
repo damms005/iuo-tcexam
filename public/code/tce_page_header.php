@@ -34,7 +34,7 @@ require_once('tce_xhtml_header.php');
 
 // display header (image logo + timer)
 echo '<div class="header">'.K_NEWLINE;
-echo '<div class="left"></div>'.K_NEWLINE;
+echo '<div class="left"> <img src="../../images/logo_tcexam_118x25.png" /> </div>'.K_NEWLINE;
 echo '<div class="right">'.K_NEWLINE;
 echo '<a name="timersection" id="timersection"></a>'.K_NEWLINE;
 include('../../shared/code/tce_page_timer.php');
@@ -56,6 +56,37 @@ require_once(dirname(__FILE__).'/tce_page_menu.php');
 echo '</div>'.K_NEWLINE;
 
 echo '<div class="body">'.K_NEWLINE;
+
+        echo "<div id='userLcd'>";
+        echo "<table>";
+            echo "<tr>";
+                if(is_file( "../../cache/passports/{$_SESSION['session_user_passport']}" )){
+                    echo "<td>";
+                    echo "<img height='130px' src='../../cache/passports/{$_SESSION['session_user_passport']}' />";
+                    echo "</td>";
+                }
+                echo "<td>";
+                    echo "<span>
+                                <code>
+                                    ({$_SESSION['session_user_name']})
+                                </code>
+                                <br>
+                                <code>
+                                    {$_SESSION['session_user_firstname']} {$_SESSION['session_user_lastname']}
+                                </code>
+                                <br>
+                                <code>
+                                    {$_SESSION['session_user_department']}
+                                </code>
+                                <br>
+                                <code>
+                                    {$_SESSION['session_user_year_level']} LEVEL
+                                </code>
+                            </span>";
+                echo "</td>";
+            echo "</tr>";
+        echo "</table>";
+        echo "</div>";
 
 echo '<a name="topofdoc" id="topofdoc"></a>'.K_NEWLINE;
 echo '<h1>'.htmlspecialchars($thispage_title, ENT_NOQUOTES, $l['a_meta_charset']).'</h1>'.K_NEWLINE;

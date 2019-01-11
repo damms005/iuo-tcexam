@@ -198,7 +198,7 @@ for ($item = 1; $item <= $test_num; $item++) {
     // generate $test_num tests
 
     $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-    
+
     // data to be printed as QR-Code to be later used as input from scanner/image
     $barcode_test_data = array();
     $barcode_test_data[0] = $test_id;
@@ -322,7 +322,7 @@ for ($item = 1; $item <= $test_num; $item++) {
 	$pdf->Ln($data_cell_height);
 	$pdf->SetFont(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA);
 	*/
-    
+
     // IDs of MCSA questions with more than one correct answer
     $right_answers_mcsa_questions_ids = '';
     // IDs of MCSA questions with more than one wrong answer

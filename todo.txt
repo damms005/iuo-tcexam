@@ -1,0 +1,26 @@
+setings page where we can set:
+1. K_HIDE_EXPIRED_TESTS
+2. K_PATH_HOST
+3. School Name
+4. this will necessitate need for a new tcexam table. Don't forget to add this schema to the installation log
+
+Non-exsiting student passport should not display <img> tag
+
+Edit the IUO header logo such that its messy display @public area is fixed
+
+Bootstrap designs: buttons, etc...
+
+Set password for all users at once
+
+Mege scores (Generate scores based on list of pre-selected scores?)
+
+SQL LIMIT number of students displayed in dropdown list to prevent hanging UI
+
+Everything looks so 1984. Can we do some bootstrapping?
+
+#Mainstream Issues
+1. [Update: You are trying to log too many times and .......before the next attemp: 4096][https://github.com/tecnickcom/tcexam/issues/197]
+2. [Change or modify the School name in exam templates (i,e in results sheet it shows school name and address)] [https://github.com/tecnickcom/tcexam/issues/151]
+
+#Trademark Issues
+1. [How to remove TCExam logo][https://github.com/tecnickcom/tcexam/issues/131]

@@ -2,8 +2,7 @@
 //============================================================+
 // File name   : tce_show_result_allusers.php
 // Begin       : 2004-06-10
-// Last Update : 2018-07-06
-//
+// Last Update : 2018-09-01
 // Description : Display test results summary for all users.
 //
 // Author: Nicola Asuni

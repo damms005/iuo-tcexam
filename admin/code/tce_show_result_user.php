@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_show_result_user.php
 // Begin       : 2004-06-10
-// Last Update : 2018-07-06
+// Last Update : 2018-09-05
 //
 // Description : Display test results for specified user.
 //
@@ -304,7 +304,7 @@ echo '<div class="row"><hr /></div>'.K_NEWLINE;
 
 if (isset($teststat) and !empty($teststat)) {
     $teststat['testinfo'] = F_getUserTestStat($test_id, $user_id, $testuser_id);
-    
+
     echo '<div class="row">'.K_NEWLINE;
     echo '<span class="label">'.K_NEWLINE;
     echo '<span title="'.$l['h_time_begin'].'">'.$l['w_time_begin'].':</span>'.K_NEWLINE;

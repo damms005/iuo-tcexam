@@ -167,7 +167,8 @@ if (isset($_REQUEST['testid']) and ($_REQUEST['testid'] > 0)) {
             </form>
             </div>
             <?php
-        } else {
+        }
+		else {
             echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="'.$formname.'"';
             echo ' onsubmit="var submittime=new Date();document.getElementById(\'reaction_time\').value=submittime.getTime()-document.getElementById(\'display_time\').value;"';
             echo '>'.K_NEWLINE;
@@ -239,6 +240,18 @@ if (isset($_REQUEST['testid']) and ($_REQUEST['testid'] > 0)) {
 echo '<div class="pagehelp">'.$l['hp_test_execute'].'</div>'.K_NEWLINE;
 
 echo '</div>'.K_NEWLINE; // container
+
+echo "
+
+<script>
+$(function(){
+    $('.container form input[type=\"submit\"]').addClass('btn btn-info');
+    \n
+    // $().addClass('col-sm-2');
+});
+</script>
+
+";
 
 require_once('../code/tce_page_footer.php');
 

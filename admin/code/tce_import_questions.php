@@ -47,6 +47,18 @@ if (!isset($type) or (empty($type))) {
     $type = intval($type);
 }
 
+if(isset($_POST['uploadable_module'])){
+	$lines = explode( "\n" , trim(str_replace( "\r\n", "\n", $_POST['uploadable_module'] ) ) );
+	$qimp = F_TSVQuestionImporter_Process($lines);
+
+	if ($qimp) {
+		F_print_error('MESSAGE', $l['m_importing_complete']);
+	}else {
+		F_print_error('MESSAGE', "Error import: 4045");
+	}
+}
+
+
 if (isset($menu_mode) and ($menu_mode == 'upload')) {
     if ($_FILES['userfile']['name']) {
         require_once('../code/tce_functions_upload.php');
@@ -82,6 +94,9 @@ if (isset($menu_mode) and ($menu_mode == 'upload')) {
 echo '<div class="container">'.K_NEWLINE;
 
 echo '<div class="tceformbox">'.K_NEWLINE;
+
+echo "<a href='converter.php'>convert questions file</a>";
+
 echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_importquestions">'.K_NEWLINE;
 
 echo '<div class="row">'.K_NEWLINE;
@@ -147,32 +162,44 @@ require_once('../code/tce_page_footer.php');
 // ---------------------------------------------------------------------
 
 /**
+ * THIS IS CUSTOM TSV IMPORTER - DIFFERENT FROM STOCK TCEXAM TSV IMPORTER
  * Import questions from TSV file (tab delimited text).
  * The format of TSV is the same obtained by exporting data from TCExam interface.
  * @param $tsvfile (string) TSV (tab delimited text) file name
  * @return boolean TRUE in case of success, FALSE otherwise
  */
-function F_TSVQuestionImporter($tsvfile)
+ function F_TSVQuestionImporter($tsvfile)
+ {
+	 global $l, $db;
+     $file_content = file($tsvfile);
+	 if ($tsvfp === false) {
+         return false;
+     }
+     return F_TSVQuestionImporter_Process($file_content);
+ }
+
+ /**
+  * Import questions from the passed array
+  * The format of TSV is the same obtained by exporting data from TCExam interface.
+  * @param $lines_in_file (array) an array of lines in the file - each array element corresponds to a line to be processed (as in a line in the 'original file')
+  * @return boolean TRUE in case of success, FALSE otherwise
+  */
+function F_TSVQuestionImporter_Process($lines_in_file)
 {
     global $l, $db;
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_auth_sql.php');
     $qtype = array('S' => 1, 'M' => 2, 'T' => 3, 'O' => 4);
-    $tsvfp = fopen($tsvfile, 'r');
-    if ($tsvfp === false) {
-        return false;
-    }
     $current_module_id = 0;
     $current_subject_id = 0;
     $current_question_id = 0;
     $current_answer_id = 0;
     $questionhash = array();
     // for each row
-    while ($qdata=fgetcsv($tsvfp, 0, "\t", '"')) {
-        if ($qdata === null) {
-            continue;
-        }
-        // get user data into array
+    foreach ($lines_in_file as $qdata_) {
+    	$qdata = explode( "\t" , $qdata_ );
+
+		// get data in array
         switch ($qdata[0]) {
             case 'M': { // MODULE
                 $current_module_id = 0;

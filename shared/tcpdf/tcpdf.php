@@ -5975,6 +5975,7 @@ class TCPDF {
 				} // end for each column
 			} elseif ($page == $startpage) { // first page
 				for ($column = $startcolumn; $column < $this->num_columns; ++$column) { // for each column
+
 					if ($column != $this->current_column) {
 						$this->selectColumn($column);
 					}
@@ -5996,6 +5997,7 @@ class TCPDF {
 				} // end for each column
 			} elseif ($page == $endpage) { // last page
 				for ($column = 0; $column <= $endcolumn; ++$column) { // for each column
+
 					if ($column != $this->current_column) {
 						$this->selectColumn($column);
 					}
@@ -12584,6 +12586,7 @@ class TCPDF {
 		$k = $this->k;
 		$this->javascript .= sprintf("f".$name."=this.addField('%s','%s',%u,[%F,%F,%F,%F]);", $name, $type, $this->PageNo()-1, $x*$k, ($this->h-$y)*$k+1, ($x+$w)*$k, ($this->h-$y-$h)*$k+1)."\n";
 		$this->javascript .= 'f'.$name.'.textSize='.$this->FontSizePt.";\n";
+
 		foreach($prop as $key => $val) {
 			if (strcmp(substr($key, -5), 'Color') == 0) {
 				$val = TCPDF_COLORS::_JScolor($val);
@@ -17178,6 +17181,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		if ($cell) {
 			if ($this->rtl) {
 				$this->x -= $this->cell_padding['R'];
+
 				$this->lMargin += $this->cell_padding['L'];
 			} else {
 				$this->x += $this->cell_padding['L'];

@@ -257,7 +257,7 @@ function F_isValidIP($user_ip, $test_ips)
 /**
  * Check if user's IP is valid over test IP range
  * @param $test_id (int) Test ID
- * @return true if the client certifiate is valid, false otherwise
+ * @return true if the client certificate is valid, false otherwise
  */
 function F_isValidSSLCert($test_id)
 {
@@ -1740,6 +1740,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
 					WHERE logansw_answer_id=answer_id
 						AND logansw_testlog_id='.$testlog_id.'
 					ORDER BY logansw_order';
+					//exit( $sqla );
                 if ($ra = F_db_query($sqla, $db)) {
                     while ($ma = F_db_fetch_array($ra)) {
                         $anspos = $ma['logansw_order'];
@@ -2156,7 +2157,7 @@ function F_testLoginForm($faction, $fid, $fmethod, $fenctype, $test_id)
     $str .= getFormRowTextInput('xtest_password', $l['w_test_password'], $l['h_test_password'], '', '', '', 255, false, false, true, '');
     // buttons
     $str .= '<div class="row">'.K_NEWLINE;
-    $str .= '<input type="submit" name="login" id="login" value="'.$l['w_login'].'" title="'.$l['h_login_button'].'" />'.K_NEWLINE;
+    $str .= '<input type="submit" class="btn btn-danger" name="login" id="login" value="'.$l['w_login'].'" title="'.$l['h_login_button'].'" />'.K_NEWLINE;
     // the following field is used to check if the form has been submitted
     $str .= '<input type="hidden" name="testpswaction" id="testpswaction" value="login" />'.K_NEWLINE;
     $str .= '<input type="hidden" name="testid" id="testid" value="'.intval($test_id).'" />'.K_NEWLINE;

@@ -244,7 +244,7 @@ function F_update_config_files($db_type, $db_host, $db_port, $db_user, $db_passw
 	}
 
 	// initialize configuration directories with default values
-	
+
 	rename('../shared/config.default', '../shared/config');
 	rename('../admin/config.default', '../admin/config');
 	rename('../public/config.default', '../public/config');

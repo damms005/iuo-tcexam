@@ -837,7 +837,7 @@ ul.menu ul li:hover > ul, ul.menu ul *:focus + ul {
 	top: 0px;
 	margin: 0;
 	padding: 0;
-	background-color: #003399;	
+	background-color: #003399;
 	z-index: 1;
 }
 
