@@ -399,8 +399,8 @@ if ($logged) { //if user is just logged in: reloads page
     $htmlredir .= '</body>'.K_NEWLINE;
     $htmlredir .= '</html>'.K_NEWLINE;
 
-	var_dump($_SERVER);
-	exit('H:' . K_PATH_HOST);
+	// var_dump($_SERVER);
+	// exit('H:' . K_PATH_HOST);
     switch (K_REDIRECT_LOGIN_MODE) {
         case 1: {
             // relative redirect

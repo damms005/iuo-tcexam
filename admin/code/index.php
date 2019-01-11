@@ -21,9 +21,9 @@
 
 /**
  * @file
- * Main page of TCExam Administration Area.
- * @package com.tecnick.tcexam.admin
- * @brief TCExam Administration Area
+ * Main page of Anchis & Kolbins CBT Administration Area.
+ * @package com.tecnick.Anchis & Kolbins CBT.admin
+ * @brief Anchis & Kolbins CBT Administration Area
  * @author Nicola Asuni
  * @since 2004-04-20
  */
@@ -35,9 +35,6 @@ require_once('../config/tce_config.php');
 $pagelevel = K_AUTH_INDEX;
 require_once('../../shared/code/tce_authorization.php');
 require_once('tce_page_header.php');
-
-echo '<div style="direction:ltr;text-align:left;border:1px solid black; padding:5px; margin:10px; background-color:#DDEEFF; color:#000000; width:95%; margin-left:auto; margin-right:auto; font-weight:bold; font-size:95%;">TCEXAM IS SUBJECT TO THE <a href="http://www.fsf.org/licensing/licenses/agpl-3.0.html" title="External link to GNU Affero General Public License">GNU-AGPL v.3 LICENSE</a> LICENSE WITH THE FOLLOWING ADDITIONAL TERMS:<ul><li>YOU CAN\'T ALTER, REMOVE, MOVE OR HIDE THE ORIGINAL TCEXAM LOGO, COPYRIGHTS STATEMENTS, LINKS TO <a href="http://www.tecnick.com" title="External link to Tecnick.com">TECNICK.COM</a> AND <a href="http://www.tcexam.org" title="External link to TCExam">TCEXAM</a> WEBSITES, OTHER PROPRIETARY NOTICES, LEGENDS, SYMBOLS OR LABELS IN THE SOFTWARE.</li><li>TCEXAM NAME AND LOGO ARE TRADEMARKS OF <a href="http://www.tecnick.com" title="External link to Tecnick.com">TECNICK.COM LTD</a> AND SHALL BE USED IN ACCORDANCE WITH ACCEPTED TRADEMARK PRACTICE, INCLUDING IDENTIFICATION OF TRADEMARK OWNER\'S NAME.</li></ul>FOR ANY USAGE THAT REQUIRES DIFFERENT (COMMERCIAL) LICENSING TERMS, PLEASE CONTACT <a href="mailto:info@tecnick.com" title="mail to tecnick.com">INFO@TECNICK.COM</a> TO PURCHASE A COMMERCIAL LICENSE.</div>'.K_NEWLINE;
-
 
 // Display test limits (if any)
 

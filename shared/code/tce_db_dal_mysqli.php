@@ -40,7 +40,7 @@
  * @param $database (string) Database name.
  * @return MySQL link identifier on success, or FALSE on failure.
  */
-function F_db_connect($host = 'localhost', $port = '3306', $username = 'root', $password = '', $database = '')
+function F_db_connect($host = 'localhost', $port = '3306', $username = 'enniqnva_tcexam', $password = '{U=_e6R()jj_', $database = 'enniqnva_tcexam')
 {
     if (!$db = @mysqli_connect($host, $username, $password, $database, $port)) {
         return false;
