@@ -60,9 +60,9 @@ echo '<div class="body">'.K_NEWLINE;
         echo "<div id='userLcd'>";
         echo "<table>";
             echo "<tr>";
-                if(is_file( "../../cache/passports/{$_SESSION['session_user_passport']}" )){
+                if(is_file( "../../shared/config/passports/{$_SESSION['session_user_passport']}" )){
                     echo "<td>";
-                    echo "<img height='130px' src='../../cache/passports/{$_SESSION['session_user_passport']}' />";
+                    echo "<img height='130px' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
                     echo "</td>";
                 }
                 echo "<td>";
