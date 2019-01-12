@@ -126,7 +126,7 @@ $altusr = F_altLogin();
 if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_POST['xuser_name']) and isset($_POST['xuser_password'])) {
     $bruteforce = false;
     // if (K_BRUTE_FORCE_DELAY_RATIO > 0) {
-        if (false) {
+    if (false) {
         // check login attempt from the current client device to avoid brute force attack
         $bruteforce = true;
         // we are using another entry in the session table to keep track of the login attempts
