@@ -1,35 +1,28 @@
+/**
+ * This file helps TCExam in cases where php fails to handle shell_exec for 
+ * image processing functions
+ */
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const formidable = require('formidable')
+const {
+	exec
+} = require('child_process');
 
-app.get('/', function (req, res) {
-	res.sendFile(__dirname + '/index.html');
-});
-app.get('/favicon.ico', function (req, res) {
-	res.sendFile(__dirname + '/favicon.ico');
-});
-
-app.get('/socket.io.js', function (req, res) {
-	res.sendFile(__dirname + '/socket.io.js');
+this.socket = io;
+http.listen(3000, function () {
+	console.log('listening on ' + 3000);
 });
 
+//new user connected
 io.on('connection', function (socket) {
 	socket.emit('server-connection-acknowledged', `Me server connection-acknowledged`)
 	socket.on('client-thanking-server', function (data) {
 		console.log(`Don't mention, clicnt: ${data}`)
 	});
 });
-
-http.listen(3000, function () {
-	command();
-	console.log('listening on *:3000');
-});
-
-const {
-	exec
-} = require('child_process');
-
 
 function command() {
 	exec("/usr/bin/zbarimg --raw -Sdisable -Sqrcode.enable -q '/home/tfx/Desktop/tcexam/quiz1/sample-tce-OMR-Functionality-Test-qr-page.png'", (err, stdout, stderr) => {

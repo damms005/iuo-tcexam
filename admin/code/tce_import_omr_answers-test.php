@@ -70,23 +70,34 @@ if (!isset($_REQUEST['overwrite']) or (empty($_REQUEST['overwrite']))) {
 }
 
 // process uploaded files
-if (isset($menu_mode) and ($menu_mode == 'upload') and ($user_id > 0) and !empty($_FILES)) {
+if (isset($menu_mode) and ($menu_mode == 'upload') and !empty($_FILES)) {
     //TCExam now reduces paper wastage by saving qrcode into db and encoding same on
     //answer sheets
-    // read OMR DATA page
-    $omr_testdata = F_decodeOMRTestDataQRCode($_FILES['omrfile']['tmp_name'][0]);
-    if ($omr_testdata === false) {
-        F_print_error('ERROR', $l['m_omr_wrong_test_data']);
-    } else {
-        // read OMR ANSWER SHEET pages
-        $num_questions = (count($omr_testdata) - 1);
-        $num_pages     = ceil($num_questions / 30);
-        $omr_answers   = array();
-        for ($i = 1; $i <= $num_pages; ++$i) {
+    //use one of the uploaded files to get the qrcode
+    $omr_testdata  = F_get_omr_testdata($_FILES['omrfile']['tmp_name'][1]);
+    $num_questions = (count($omr_testdata) - 1);
+    $num_pages     = ceil($num_questions / 30);
+    $omr_answers   = array();
+    for ($i = 0; $i < count($_FILES['omrfile']['tmp_name']); ++$i) {
+        // read OMR DATA page
+        $data_file = $_FILES['omrfile']['tmp_name'][$i];
+        $name      = $_FILES['omrfile']['name'][$i];
+        if (!empty($name)) {
             if ($_FILES['omrfile']['error'][$i] == 0) {
-                $answers_page = F_decodeOMRPage($_FILES['omrfile']['tmp_name'][$i]);
+                $answer_page_data = F_extract_code_data_from_answer_page($data_file);
+                if ($answer_page_data['doc_type'] == "ANSWERS") {
+                    $answers_page = F_realDecodeOMRPage($data_file, $answer_page_data['start_number']);
+                } else {
+                    if ($answer_page_data['doc_type'] == "USERID") {
+                        $user_id = F_decodeIDentificationPage($data_file);
+                        $user_id = intval(implode('', $user_id));
+                        continue;
+                    } else {
+                        exit("Unidentified document: {$_FILES['omrfile']['name'][$i]}");
+                    }
+                }
                 if (($answers_page !== false) and !empty($answers_page)) {
-                    $omr_answers = array_merge($omr_answers, $answers_page);
+                    $omr_answers += $answers_page;
                 } else {
                     F_print_error('ERROR', '[OMR ANSWER SHEET ' . $i . '] ' . $l['m_omr_wrong_answer_sheet']);
                 }
@@ -94,14 +105,23 @@ if (isset($menu_mode) and ($menu_mode == 'upload') and ($user_id > 0) and !empty
                 F_print_error('ERROR', '[OMR ANSWER SHEET ' . $i . '] ' . $l['m_omr_wrong_answer_sheet']);
             }
         }
-        // sort answers
-        ksort($omr_answers);
-        // import answers
-        if (F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite)) {
-            F_print_error('MESSAGE', $l['m_import_ok'] . ': <a href="tce_show_result_user.php?testuser_id=' . $user_id . '&test_id=' . $omr_testdata[0] . '&user_id=' . $user_id . '" title="' . $l['t_result_user'] . '" style="text-decoration:underline;color:#0000ff;">' . $l['w_results'] . '</a>');
-        } else {
-            F_print_error('ERROR', $l['m_import_error']);
-        }
+    }
+    // sort answers (it should have been already sorted though - we are simply indirectly sorting questions here (i.e. consequently, the anserws group attached to each question s soted together with that question as a single unit of sort \_(0)_/ ))
+    ksort($omr_answers);
+
+    // import answers
+    if (F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite)) {
+        $testuser_id = F_get_testuser_id($omr_testdata[0], $user_id);
+        F_print_error('MESSAGE', $l['m_import_ok']
+            . ': <a href="tce_show_result_user.php?' .
+            ' testuser_id=' . $testuser_id
+            . '&test_id=' . $omr_testdata[0]
+            . '&user_id=' . $user_id
+            . '" title="' . $l['t_result_user']
+            . '" style="text-decoration:underline;color:#0000ff;">'
+            . $l['w_results'] . '</a>');
+    } else {
+        F_print_error('ERROR', $l['m_import_error']);
     }
     // remove uploaded files
     for ($i = 0; $i <= $max_omr_sheets; ++$i) {

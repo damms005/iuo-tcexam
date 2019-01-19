@@ -33,8 +33,7 @@
  * @param $data (array) array to be encoded
  * @return encoded string.
  */
-function F_encodeOMRTestData($data)
-{
+function F_encodeOMRTestData($data) {
     $str = serialize($data);
     $str = gzcompress($str, 9); // requires php-zlib extension
     $str = base64_encode($str);
@@ -47,8 +46,7 @@ function F_encodeOMRTestData($data)
  * @param $str (string) string to be decoded.
  * @return array with test data (0 => test_id, n => array(0 => question_n_ID, 1 => array(answers_IDs)), or false in case of error.
  */
-function F_decodeOMRTestData($str)
-{
+function F_decodeOMRTestData($str) {
     if (empty($str)) {
         return false;
     }
@@ -66,14 +64,13 @@ function F_decodeOMRTestData($str)
  * @param $image (string) image file to be decoded (scanned OMR page).
  * @return array with test data or false in case o error
  */
-function F_decodeOMRTestDataQRCode($image)
-{
-    require_once('../config/tce_config.php');
+function F_decodeOMRTestDataQRCode($image) {
+    require_once '../config/tce_config.php';
     if (empty($image)) {
         return false;
     }
-    $command = K_OMR_PATH_ZBARIMG.' --raw -Sdisable -Sqrcode.enable -q '.escapeshellarg($image);
-    $str = exec($command);
+    $command = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Sqrcode.enable -q ' . escapeshellarg($image);
+    $str     = exec($command);
     return F_decodeOMRTestData($str);
 }
 
@@ -83,16 +80,26 @@ function F_decodeOMRTestDataQRCode($image)
  * @param $image (string) image file to be decoded (scanned OMR page at 200 DPI with full color range).
  * @return array of answers data or false in case of error.
  */
-function F_decodeOMRPage($image)
-{
-    require_once('../config/tce_config.php');
+function F_decodeOMRPage($image) {
+    require_once '../config/tce_config.php';
     // decode barcode containing first question number
-    $command = K_OMR_PATH_ZBARIMG.' --raw -Sdisable -Scode128.enable -q '.escapeshellarg($image);
-    $qstart = exec($command);
-    $qstart = intval($qstart);
+    $command = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($image);
+    $qstart  = exec($command);
+    $qstart  = intval($qstart);
     if ($qstart == 0) {
         return false;
     }
+    return F_realDecodeOMRPage($image, $qstart);
+}
+
+/**
+ * Decode a single OMR Page and return data array.
+ * @param $image (string) image file to be decoded (scanned OMR page at 200 DPI with full color range).
+ * @param $qstart (int) the question start number of this answer sheet
+ * @return array of answers data or false in case of error.
+ */
+function F_realDecodeOMRPage($image, $qstart) {
+    require_once '../config/tce_config.php';
     $img = new Imagick();
     $img->readImage($image);
     $imginfo = $img->identifyImage();
@@ -166,7 +173,7 @@ function F_decodeOMRPage($image)
     // for each row (question)
     for ($r = 0; $r < 30; ++$r) {
         $omrdata[($r + $qstart)] = array();
-        $y = round($srow + ($r * $drow));
+        $y                       = round($srow + ($r * $drow));
         // for each column (answer)
         for ($c = 0; $c < 12; ++$c) {
             // read true option
@@ -178,6 +185,7 @@ function F_decodeOMRPage($image)
             $rmse = $imreg->compareImages($imref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
             // true option
             $opt_true = (2 * round(1.25 - $rmse[1]));
+
             // read false option
             $x += $dtf;
             // get square region inside the current grid position
@@ -201,6 +209,124 @@ function F_decodeOMRPage($image)
 }
 
 /**
+ * Decode a single OMR Page and return data array.
+ * @param $image (string) image file to be decoded (scanned OMR page at 200 DPI with full color range).
+ * @param $qstart (int) the question start number of this answer sheet
+ * @return array of answers data or false in case of error.
+ */
+function F_decodeIDentificationPage($image) {
+    require_once '../config/tce_config.php';
+    $img = new Imagick();
+    $img->readImage($image);
+    $imginfo = $img->identifyImage();
+    if ($imginfo['type'] == 'TrueColor') {
+        // remove red color
+        $img->separateImageChannel(Imagick::CHANNEL_RED);
+    } else {
+        // desaturate image
+        $img->modulateImage(100, 0, 100);
+    }
+    // get image width and height
+    $w = $imginfo['geometry']['width'];
+    $h = $imginfo['geometry']['height'];
+    if ($h > $w) {
+        // crop header and footer
+        $y = round(($h - $w) / 2);
+        $img->cropImage($w, $w, 0, $y);
+        $img->setImagePage(0, 0, 0, 0);
+    }
+    $img->normalizeImage(Imagick::CHANNEL_ALL);
+    $img->enhanceImage();
+    $img->despeckleImage();
+    $img->blackthresholdImage('#808080');
+    $img->whitethresholdImage('#808080');
+    $img->trimImage(85);
+    $img->deskewImage(15);
+    $img->trimImage(85);
+    $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
+    $img->setImagePage(0, 0, 0, 0);
+    // $img->writeImage(K_PATH_CACHE. mktime() . '_DEBUG_OMR_.PNG'); // DEBUG
+    // scan block width
+    $blkw = 16;
+    // starting column in pixels
+    $scol = 106;
+    // starting row in pixels
+    $srow = 49;
+    // column distance in pixels between two answers
+    $dcol = 75.364;
+    // column distance in pixels between True/false circles
+    $dtf = 25;
+    // row distance in pixels between two questions
+    $drow = 32.38;
+    // verify image pattern
+    $imgtmp = clone $img;
+    $imgtmp->cropImage(1028, 10, 0, 10);
+    $imgtmp->setImagePage(0, 0, 0, 0);
+    // create reference block pattern
+    $impref = new Imagick();
+    $impref->newImage(3, 10, new ImagickPixel('black'));
+    $psum = 0;
+    for ($c = 0; $c < 12; ++$c) {
+        $x = round(112 + ($c * $dcol));
+        // get square region inside the current grid position
+        $imreg = $img->getImageRegion(3, 10, $x, 0);
+        $imreg->setImagePage(0, 0, 0, 0);
+        // get root-mean-square-error with reference image
+        $rmse = $imreg->compareImages($impref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
+        // count reference blocks
+        $psum += round(1.25 - $rmse[1]);
+    }
+    $imreg->clear();
+    $impref->clear();
+    if ($psum != 12) {
+        return false;
+    }
+    // create reference block
+    $imref = new Imagick();
+    $imref->newImage($blkw, $blkw, new ImagickPixel('black'));
+    // array to be returned
+    $omrdata = array();
+    // for each row (id)
+    for ($r = 0; $r <= 6; ++$r) {
+        $y = round($srow + ($r * $drow));
+        // for each column (0-9)
+        for ($c = 0; $c <= 10; ++$c) {
+            // read true option
+            $x = round($scol + ($c * $dcol));
+            // get square region inside the current grid position
+            $imreg = $img->getImageRegion($blkw, $blkw, $x, $y);
+            $imreg->setImagePage(0, 0, 0, 0);
+            // get root-mean-square-error with reference image
+            $rmse = $imreg->compareImages($imref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
+            // true option
+            // $opt_true = (2 * round(1.25 - $rmse[1]));
+
+            // read false option
+            $x += $dtf;
+            // get square region inside the current grid position
+            // $imreg = $img->getImageRegion($blkw, $blkw, $x, $y);
+            // $imreg->setImagePage(0, 0, 0, 0);
+            // get root-mean-square-error with reference image
+            // $rmse = $imreg->compareImages($imref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
+            // false option
+            // $opt_false = round(1.25 - $rmse[1]);
+            // set array to be returned (-1 = unset, 0 = false, 1 = true)
+            // $val = ($opt_true + $opt_false - 1);
+            // if ($val > 1) {
+            //     $val = 1;
+            // }
+            // $omrdata[] = $val;
+            if ((count($rmse) > 1) && ($rmse[1] < 0.09)) {
+                $omrdata[] = $c;
+            }
+        }
+    }
+    $imreg->clear();
+    $imref->clear();
+    return $omrdata;
+}
+
+/**
  * Import user's test data from OMR.
  * @param $user_id (int) user ID.
  * @param $date (string) date-time field.
@@ -209,46 +335,46 @@ function F_decodeOMRPage($image)
  * @param $overwrite (boolean) If true overwrites the previous answers on non-repeatable tests.
  * @return boolean TRUE in case of success, FALSE otherwise.
  */
-function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite = false)
-{
-    require_once('../config/tce_config.php');
-    require_once('../../shared/code/tce_functions_test.php');
+function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite = false) {
+    require_once '../config/tce_config.php';
+    require_once '../../shared/code/tce_functions_test.php';
     global $db, $l;
     // check arrays
     if (count($omr_testdata) > (count($omr_answers) + 1)) {
         // arrays must contain the same amount of questions
         return false;
     }
-    $test_id = intval($omr_testdata[0]);
-    $user_id = intval($user_id);
-    $time = strtotime($date);
-    $date = date(K_TIMESTAMP_FORMAT, $time);
+    $test_id     = intval($omr_testdata[0]);
+    $user_id     = intval($user_id);
+    $time        = strtotime($date);
+    $date        = date(K_TIMESTAMP_FORMAT, $time);
     $dateanswers = date(K_TIMESTAMP_FORMAT, ($time + 1));
     // check user's group
-    if (F_count_rows(K_TABLE_USERGROUP.', '.K_TABLE_TEST_GROUPS.' WHERE usrgrp_group_id=tstgrp_group_id AND tstgrp_test_id='.$test_id.' AND usrgrp_user_id='.$user_id.' LIMIT 1') == 0) {
+    if (F_count_rows(K_TABLE_USERGROUP . ', ' . K_TABLE_TEST_GROUPS . ' WHERE usrgrp_group_id=tstgrp_group_id AND tstgrp_test_id=' . $test_id . ' AND usrgrp_user_id=' . $user_id . ' LIMIT 1') == 0) {
         return false;
     }
     // get test data
     $testdata = F_getTestData($test_id);
     // 1. check if test is repeatable
-    $sqls = 'SELECT test_id FROM '.K_TABLE_TESTS.' WHERE test_id='.$test_id.' AND test_repeatable=\'1\' LIMIT 1';
+    $sqls = 'SELECT test_id FROM ' . K_TABLE_TESTS . ' WHERE test_id=' . $test_id . ' AND test_repeatable=\'1\' LIMIT 1';
     if ($rs = F_db_query($sqls, $db)) {
         if ($ms = F_db_fetch_array($rs)) {
             // 1a. update previous test data if repeatable
-            $sqld = 'UPDATE '.K_TABLE_TEST_USER.' SET testuser_status=testuser_status+1 WHERE testuser_test_id='.$test_id.' AND testuser_user_id='.$user_id.' AND testuser_status>3';
+            $sqld = 'UPDATE ' . K_TABLE_TEST_USER . ' SET testuser_status=testuser_status+1 WHERE testuser_test_id=' . $test_id . ' AND testuser_user_id=' . $user_id . ' AND testuser_status>3';
             if (!$rd = F_db_query($sqld, $db)) {
                 F_display_db_error();
             }
         } else {
             if ($overwrite) {
                 // 1b. delete previous test data if not repeatable
-                $sqld = 'DELETE FROM '.K_TABLE_TEST_USER.' WHERE testuser_test_id='.$test_id.' AND testuser_user_id='.$user_id.'';
+                $sqld = 'DELETE FROM ' . K_TABLE_TEST_USER . ' WHERE testuser_test_id=' . $test_id . ' AND testuser_user_id=' . $user_id . '';
                 if (!$rd = F_db_query($sqld, $db)) {
                     F_display_db_error();
                 }
             } else {
                 // 1c. check if this data already exist
-                if (F_count_rows(K_TABLE_TEST_USER, 'WHERE testuser_test_id='.$test_id.' AND testuser_user_id='.$user_id.'') > 0) {
+                if (F_count_rows(K_TABLE_TEST_USER, 'WHERE testuser_test_id=' . $test_id . ' AND testuser_user_id=' . $user_id . '') > 0) {
+                    F_print_error('MESSAGE',"Error : you did not select to overwrite, and user {$user_id} already have answers uploaded for this test");
                     return false;
                 }
             }
@@ -258,17 +384,17 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
     }
     // 2. create new user's test entry
     // ------------------------------
-    $sql = 'INSERT INTO '.K_TABLE_TEST_USER.' (
+    $sql = 'INSERT INTO ' . K_TABLE_TEST_USER . ' (
 		testuser_test_id,
 		testuser_user_id,
 		testuser_status,
 		testuser_creation_time,
 		testuser_comment
 		) VALUES (
-		'.$test_id.',
-		'.$user_id.',
+		' . $test_id . ',
+		' . $user_id . ',
 		4,
-		\''.$date.'\',
+		\'' . $date . '\',
 		\'OMR\'
 		)';
     if (!$r = F_db_query($sql, $db)) {
@@ -286,15 +412,15 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
         $question_id = intval($omr_testdata[$q][0]);
         $num_answers = count($omr_testdata[$q][1]);
         // get question data
-        $sqlq = 'SELECT question_type, question_difficulty FROM '.K_TABLE_QUESTIONS.' WHERE question_id='.$question_id.' LIMIT 1';
+        $sqlq = 'SELECT question_type, question_difficulty FROM ' . K_TABLE_QUESTIONS . ' WHERE question_id=' . $question_id . ' LIMIT 1';
         if ($rq = F_db_query($sqlq, $db)) {
             if ($mq = F_db_fetch_array($rq)) {
                 // question scores
-                $question_right_score = ($testdata['test_score_right'] * $mq['question_difficulty']);
-                $question_wrong_score = ($testdata['test_score_wrong'] * $mq['question_difficulty']);
+                $question_right_score      = ($testdata['test_score_right'] * $mq['question_difficulty']);
+                $question_wrong_score      = ($testdata['test_score_wrong'] * $mq['question_difficulty']);
                 $question_unanswered_score = ($testdata['test_score_unanswered'] * $mq['question_difficulty']);
                 // add question
-                $sqll = 'INSERT INTO '.K_TABLE_TESTS_LOGS.' (
+                $sqll = 'INSERT INTO ' . K_TABLE_TESTS_LOGS . ' (
 					testlog_testuser_id,
 					testlog_question_id,
 					testlog_score,
@@ -304,14 +430,14 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
 					testlog_order,
 					testlog_num_answers
 					) VALUES (
-					'.$testuser_id.',
-					'.$question_id.',
-					'.$question_unanswered_score.',
-					\''.$date.'\',
-					\''.$date.'\',
+					' . $testuser_id . ',
+					' . $question_id . ',
+					' . $question_unanswered_score . ',
+					\'' . $date . '\',
+					\'' . $date . '\',
 					1,
-					'.$q.',
-					'.$num_answers.'
+					' . $q . ',
+					' . $num_answers . '
 					)';
                 if (!$rl = F_db_query($sqll, $db)) {
                     F_display_db_error(false);
@@ -324,7 +450,7 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
                 } else { // MCMA
                     $qscore = 0;
                 }
-                $unanswered = true;
+                $unanswered  = true;
                 $numselected = 0; // count the number of MCSA selected answers
                 // for each answer on array
                 for ($a = 1; $a <= $num_answers; ++$a) {
@@ -335,16 +461,16 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
                         $answer_selected = -1;
                     }
                     // add answer
-                    $sqli = 'INSERT INTO '.K_TABLE_LOG_ANSWER.' (
+                    $sqli = 'INSERT INTO ' . K_TABLE_LOG_ANSWER . ' (
 						logansw_testlog_id,
 						logansw_answer_id,
 						logansw_selected,
 						logansw_order
 						) VALUES (
-						'.$testlog_id.',
-						'.$answer_id.',
-						'.$answer_selected.',
-						'.$a.'
+						' . $testlog_id . ',
+						' . $answer_id . ',
+						' . $answer_selected . ',
+						' . $a . '
 						)';
                     if (!$ri = F_db_query($sqli, $db)) {
                         F_display_db_error(false);
@@ -354,12 +480,12 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
                     if ($mq['question_type'] < 3) { // MCSA or MCMA
                         // check if the answer is right
                         $answer_isright = false;
-                        $sqla = 'SELECT answer_isright FROM '.K_TABLE_ANSWERS.' WHERE answer_id='.$answer_id.' LIMIT 1';
+                        $sqla           = 'SELECT answer_isright FROM ' . K_TABLE_ANSWERS . ' WHERE answer_id=' . $answer_id . ' LIMIT 1';
                         if ($ra = F_db_query($sqla, $db)) {
                             if (($ma = F_db_fetch_array($ra))) {
                                 $answer_isright = F_getBoolean($ma['answer_isright']);
                                 switch ($mq['question_type']) {
-                                    case 1: { // MCSA - Multiple Choice Single Answer
+                                case 1:{ // MCSA - Multiple Choice Single Answer
                                         if ($answer_selected == 1) {
                                             ++$numselected;
                                             if ($numselected == 1) {
@@ -372,12 +498,12 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
                                             } else {
                                                 // multiple answer selected
                                                 $unanswered = true;
-                                                $qscore = $question_unanswered_score;
+                                                $qscore     = $question_unanswered_score;
                                             }
                                         }
                                         break;
                                     }
-                                    case 2: { // MCMA - Multiple Choice Multiple Answer
+                                case 2:{ // MCMA - Multiple Choice Multiple Answer
                                         if ($answer_selected == -1) {
                                             $qscore += $question_unanswered_score;
                                         } elseif ($answer_selected == 0) {
@@ -430,11 +556,11 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
                     $change_time = $dateanswers;
                 }
                 // update question score
-                $sqll = 'UPDATE '.K_TABLE_TESTS_LOGS.' SET
-					testlog_score='.$qscore.',
-					testlog_change_time='.F_empty_to_null($change_time).',
+                $sqll = 'UPDATE ' . K_TABLE_TESTS_LOGS . ' SET
+					testlog_score=' . $qscore . ',
+					testlog_change_time=' . F_empty_to_null($change_time) . ',
 					testlog_reaction_time=1000
-					WHERE testlog_id='.$testlog_id.'';
+					WHERE testlog_id=' . $testlog_id . '';
                 if (!$rl = F_db_query($sqll, $db)) {
                     F_display_db_error();
                     return false;
@@ -446,6 +572,40 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
         }
     } // end for each question
     return true;
+}
+
+function write_debug_file(&$img) {
+    try {
+        $img->writeImage('/opt/lampp/temp/debug/' . date(K_TIMESTAMP_FORMAT) . '_DEBUG_OMR_.PNG');
+    } catch (\Throwable $th) {
+        $img = $th;
+    }
+}
+
+function F_get_omr_testdata($uploaded_file) {
+    global $db, $l;
+    $omr_testdata  = "";
+    $answer_codecs = F_extract_code_data_from_answer_page($uploaded_file);
+    if ($r = F_db_query("SELECT qrcode FROM tce_qrcodes WHERE id={$answer_codecs['qrcode_id']}", $db)) {
+        if ($m = F_db_fetch_array($r)) {
+            $omr_testdata = F_decodeOMRTestData($m['qrcode']);
+            // read OMR ANSWER SHEET pages
+        }
+    }
+
+    return $omr_testdata;
+}
+
+function F_extract_code_data_from_answer_page($uploaded_file) {
+    $command       = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($uploaded_file);
+    $answer_codecs = exec($command);
+    $answer_codecs = explode(',', $answer_codecs);
+    return [
+        'qrcode_id'          => $answer_codecs[0],
+        'start_number'       => $answer_codecs[1],
+        'unique_answer_code' => explode('(', $answer_codecs[2])[0],
+        'doc_type'           => $answer_codecs[3], //if it is answer sheet or identification page
+    ];
 }
 
 //============================================================+

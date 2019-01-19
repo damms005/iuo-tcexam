@@ -2068,6 +2068,18 @@ function F_getNumOmittedQuestions($test_id)
     return $omitted;
 }
 
+function F_get_testuser_id($test_id,$user_id){
+    global $db;
+    $sqls = 'SELECT testuser_id FROM '.K_TABLE_TEST_USER.' WHERE
+    testuser_test_id='.$test_id.' AND testuser_user_id='.$user_id;
+    if ($rs = F_db_query($sqls, $db)) {
+        $ms = F_db_fetch_array($rs);
+        return $ms['testuser_id'];
+    } else {
+        F_display_db_error();
+    }
+}
+
 /**
  * Display a textarea for user's comment.<br>
  * @param $test_id (int) test ID
@@ -2213,6 +2225,29 @@ function F_getTestSSLCerts($test_id)
         F_display_db_error();
     }
     return $ids;
+}
+
+function generate_unique_question_paper_type( Array &$existing_question_types , $bytes = 1 )
+{
+    // generate a random string of alphanumeric characters of length = $bytes * 2.
+    // bin2hex(openssl_random_pseudo_bytes($bytes))
+    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $question_type = rand(0,(strlen($codeAlphabet)-1));
+    while (in_array($question_type,$existing_question_types)) {
+        $question_type = rand(0,(strlen($codeAlphabet)-1));
+    }
+
+    $question_type =$codeAlphabet[$question_type];
+    $existing_question_types[] = $question_type;
+    return $question_type;
+}
+
+function generate_unique_answersheet_code($bytes=10)
+{
+    // generate a random string of alphanumeric characters of length = $bytes * 2.
+    // must be in uppercase because barcode spec C128A complains when there are lowercase
+    //also make it smaller so that barcode won't be too long
+    return substr( strtoupper( bin2hex( openssl_random_pseudo_bytes( $bytes ) ) ) , 0 , 7 ) ;
 }
 
 //============================================================+
