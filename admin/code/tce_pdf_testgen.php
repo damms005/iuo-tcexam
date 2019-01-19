@@ -656,7 +656,9 @@ for ($item = 1; $item <= $test_num; $item++) {
 
     // QR-CODE mode H (best error correction)
     // This will be used to create test logs
-    $pdf->write2DBarcode($qr_test_data, 'QRCODE,L', '', $qry, '', '', $qrstyle, 'N');
+    //rather write barcode data to db and encode its db id to each answer page
+    // $pdf->write2DBarcode($qr_test_data, 'QRCODE,L', '', $qry, '', '', $qrstyle, 'N');
+    $barcode_id = F_encode();
 
     // --- OMR ANSWER SHEET ---------------------------------------------------
 

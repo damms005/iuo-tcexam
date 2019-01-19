@@ -71,6 +71,8 @@ if (!isset($_REQUEST['overwrite']) or (empty($_REQUEST['overwrite']))) {
 
 // process uploaded files
 if (isset($menu_mode) and ($menu_mode == 'upload') and ($user_id > 0) and !empty($_FILES)) {
+    //TCExam now reduces paper wastage by saving qrcode into db and encoding same on
+    //answer sheets
     // read OMR DATA page
     $omr_testdata = F_decodeOMRTestDataQRCode($_FILES['omrfile']['tmp_name'][0]);
     if ($omr_testdata === false) {
@@ -122,7 +124,8 @@ echo '<span class="label">'.K_NEWLINE;
 echo '<label for="user_id">'.$l['w_user'].'</label>'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '<span class="formw">'.K_NEWLINE;
-echo '<select name="user_id" id="user_id" size="0" onchange="">'.K_NEWLINE;
+echo '<input list="user_data_list" name="user_id" id="user_id" size="0" onchange="" />'.K_NEWLINE;
+echo '<datalist id="user_data_list">'.K_NEWLINE;
 $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM '.K_TABLE_USERS.' WHERE (user_id>1)';
 if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
     // filter for level
@@ -147,10 +150,11 @@ if ($r = F_db_query($sql, $db)) {
         $countitem++;
     }
 } else {
-    echo '</select></span></div>'.K_NEWLINE;
+    echo '</i></span></div>'.K_NEWLINE;
     F_display_db_error();
 }
-echo '</select>'.K_NEWLINE;
+echo '</datalist>'.K_NEWLINE;
+// echo '</select>'.K_NEWLINE;
 
 // link for user selection popup
 $jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';

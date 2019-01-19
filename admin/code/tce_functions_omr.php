@@ -122,7 +122,7 @@ function F_decodeOMRPage($image)
     $img->trimImage(85);
     $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
     $img->setImagePage(0, 0, 0, 0);
-    //$img->writeImage(K_PATH_CACHE.'_DEBUG_OMR_.PNG'); // DEBUG
+    // $img->writeImage(K_PATH_CACHE. mktime() . '_DEBUG_OMR_.PNG'); // DEBUG
     // scan block width
     $blkw = 16;
     // starting column in pixels
