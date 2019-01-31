@@ -582,6 +582,18 @@ function write_debug_file(&$img) {
     }
 }
 
+function F_get_omr_testdata_by_id(int $qrcode_db_id) {
+    global $db, $l;
+    $omr_testdata  = "";
+    if ($r = F_db_query("SELECT qrcode FROM tce_qrcodes WHERE id={$qrcode_db_id}", $db)) {
+        if ($m = F_db_fetch_array($r)) {
+            $omr_testdata = F_decodeOMRTestData($m['qrcode']);
+            // read OMR ANSWER SHEET pages
+        }
+    }
+    return $omr_testdata;
+}
+
 function F_get_omr_testdata($uploaded_file) {
     global $db, $l;
     $omr_testdata  = "";
