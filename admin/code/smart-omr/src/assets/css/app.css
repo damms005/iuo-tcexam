@@ -1,0 +1,287 @@
+.dropbox h4, .dropbox label{
+  margin-top: 15%;
+}
+
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+ 
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+
+  /*******  L O A D I N G   A N I M A T I O N *******/
+
+  .lds-roller {
+  display: inline-block;
+  position: relative;
+  }
+  .lds-roller div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 32px 32px;
+  }
+  .lds-roller div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    margin: -3px 0 0 -3px;
+  }
+  .lds-roller div:nth-child(1) {
+    animation-delay: -0.036s;
+  }
+  .lds-roller div:nth-child(1):after {
+    top: 50px;
+    left: 50px;
+  }
+  .lds-roller div:nth-child(2) {
+    animation-delay: -0.072s;
+  }
+  .lds-roller div:nth-child(2):after {
+    top: 54px;
+    left: 45px;
+  }
+  .lds-roller div:nth-child(3) {
+    animation-delay: -0.108s;
+  }
+  .lds-roller div:nth-child(3):after {
+    top: 57px;
+    left: 39px;
+  }
+  .lds-roller div:nth-child(4) {
+    animation-delay: -0.144s;
+  }
+  .lds-roller div:nth-child(4):after {
+    top: 58px;
+    left: 32px;
+  }
+  .lds-roller div:nth-child(5) {
+    animation-delay: -0.18s;
+  }
+  .lds-roller div:nth-child(5):after {
+    top: 57px;
+    left: 25px;
+  }
+  .lds-roller div:nth-child(6) {
+    animation-delay: -0.216s;
+  }
+  .lds-roller div:nth-child(6):after {
+    top: 54px;
+    left: 19px;
+  }
+  .lds-roller div:nth-child(7) {
+    animation-delay: -0.252s;
+  }
+  .lds-roller div:nth-child(7):after {
+    top: 50px;
+    left: 14px;
+  }
+  .lds-roller div:nth-child(8) {
+    animation-delay: -0.288s;
+  }
+  .lds-roller div:nth-child(8):after {
+    top: 45px;
+    left: 10px;
+  }
+  @keyframes lds-roller {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /******* E N D  L O A D I N G   A N I M A T I O N *******/
+
+
+/******** S C R O L L B A R   S T Y L I N G   *******/
+
+  .visible-scrollbar, .invisible-scrollbar, .mostly-customized-scrollbar {
+    display: block;
+    width: 10em;
+    overflow: auto;
+    height: 2em;
+  }
+
+
+  /* Demonstrate a "mostly customized" scrollbar
+   * (won't be visible otherwise if width/height is specified) */
+  .mostly-customized-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #aaa; /* or add it to the track */
+  }
+  /* Add a thumb */
+  .mostly-customized-scrollbar::-webkit-scrollbar-thumb {
+      background: #000; 
+  }
+
+  .reveal-uploader-enter-active {
+    animation: bounce-in .5s;
+  }
+  .reveal-uploader-leave-active {
+    animation: bounce-in .5s reverse;
+  }
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+/******** E N D  S C R O L L B A R   S T Y L I N G   *******/
+
+
+
+/******** U P L O A D E R   .   V U E    *******/
+
+
+/******* P R O G R E S S **********/
+
+.circle-loader {
+  margin-bottom: 3.5em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-left-color: #5cb85c;
+  animation: loader-spin 1.2s infinite linear;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  width: 7em;
+  height: 7em;
+}
+
+.load-complete {
+  -webkit-animation: none;
+  animation: none;
+  border-color: #5cb85c;
+  transition: border 500ms ease-out;
+}
+
+.checkmark {
+  /*display: none;*/
+}
+.checkmark.draw:after {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg);
+}
+.checkmark:after {
+  opacity: 1;
+  height: 3.5em;
+  width: 1.75em;
+  transform-origin: left top;
+  border-right: 3px solid #5cb85c;
+  border-top: 3px solid #5cb85c;
+  content: '';
+  left: 1.75em;
+  top: 3.5em;
+  position: absolute;
+}
+
+@keyframes loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 1.75em;
+    opacity: 1;
+  }
+  40% {
+    height: 3.5em;
+    width: 1.75em;
+    opacity: 1;
+  }
+  100% {
+    height: 3.5em;
+    width: 1.75em;
+    opacity: 1;
+  }
+}
+
+
+/********   E N D    U P L O A D E R   .   V U E    *******/
+
+
+/******************   Q U O T E S    **********************/
+blockquote{
+  color: #555555;
+  padding:1.2em 30px 1.2em 30px;
+}
+
+.quotation::before{
+  content: "\201C";
+  color:#78C0A8;
+  font-size:3em;
+  position: absolute;
+  top:-10px;
+}
+
+/*the ::after quotatoin mark keeps overlapping the author in some instances*/
+.null-quotation::after{
+  content: "\201E";
+  color:#78C0A8;
+  font-size:3em;
+  position: absolute;
+  margin-bottom: -20px;
+}
+
+blockquote::after{
+  content: '';
+}
+
+blockquote .author{
+  display:block;
+  margin-top:1em;
+}
+
+/********   E N D    Q U O T E S    *******/
