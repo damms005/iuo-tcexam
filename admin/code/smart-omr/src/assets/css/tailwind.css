@@ -6271,6 +6271,23 @@ table {
  * @import "utilities/skew-transforms";
  */
 
+.btn {
+  background-color: #e3342f;
+  color: #fff;
+  font-size: .75rem;
+  border-radius: .25rem;
+  padding: .25rem;
+}
+
+.label {
+  background-color: #2779bd;
+  border-radius: .25rem;
+  padding: .25rem;
+  font-family: Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  font-size: .75rem;
+  color: #fff;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;

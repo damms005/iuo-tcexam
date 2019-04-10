@@ -33,7 +33,8 @@
  * @param $data (array) array to be encoded
  * @return encoded string.
  */
-function F_encodeOMRTestData($data) {
+function F_encodeOMRTestData($data)
+{
     $str = serialize($data);
     $str = gzcompress($str, 9); // requires php-zlib extension
     $str = base64_encode($str);
@@ -46,7 +47,8 @@ function F_encodeOMRTestData($data) {
  * @param $str (string) string to be decoded.
  * @return array with test data (0 => test_id, n => array(0 => question_n_ID, 1 => array(answers_IDs)), or false in case of error.
  */
-function F_decodeOMRTestData($str) {
+function F_decodeOMRTestData($str)
+{
     if (empty($str)) {
         return false;
     }
@@ -64,7 +66,8 @@ function F_decodeOMRTestData($str) {
  * @param $image (string) image file to be decoded (scanned OMR page).
  * @return array with test data or false in case o error
  */
-function F_decodeOMRTestDataQRCode($image) {
+function F_decodeOMRTestDataQRCode($image)
+{
     require_once '../config/tce_config.php';
     if (empty($image)) {
         return false;
@@ -80,7 +83,8 @@ function F_decodeOMRTestDataQRCode($image) {
  * @param $image (string) image file to be decoded (scanned OMR page at 200 DPI with full color range).
  * @return array of answers data or false in case of error.
  */
-function F_decodeOMRPage($image) {
+function F_decodeOMRPage($image)
+{
     require_once '../config/tce_config.php';
     // decode barcode containing first question number
     $command = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($image);
@@ -98,7 +102,8 @@ function F_decodeOMRPage($image) {
  * @param $qstart (int) the question start number of this answer sheet
  * @return array of answers data or false in case of error.
  */
-function F_realDecodeOMRPage($image, $qstart) {
+function F_realDecodeOMRPage($image, $qstart)
+{
     require_once '../config/tce_config.php';
     $img = new Imagick();
     $img->readImage($image);
@@ -214,27 +219,12 @@ function F_realDecodeOMRPage($image, $qstart) {
  * @param $qstart (int) the question start number of this answer sheet
  * @return array of answers data or false in case of error.
  */
-function F_decodeIDentificationPage($image) {
+function F_decodeIDentificationPage($image, $job_id)
+{
     require_once '../config/tce_config.php';
     $img = new Imagick();
     $img->readImage($image);
-    $imginfo = $img->identifyImage();
-    if ($imginfo['type'] == 'TrueColor') {
-        // remove red color
-        $img->separateImageChannel(Imagick::CHANNEL_RED);
-    } else {
-        // desaturate image
-        $img->modulateImage(100, 0, 100);
-    }
-    // get image width and height
-    $w = $imginfo['geometry']['width'];
-    $h = $imginfo['geometry']['height'];
-    if ($h > $w) {
-        // crop header and footer
-        $y = round(($h - $w) / 2);
-        $img->cropImage($w, $w, 0, $y);
-        $img->setImagePage(0, 0, 0, 0);
-    }
+    $img = F_ensureImageIsUseable($img, $job_id,"FastHpScanner-genericMode");
     $img->normalizeImage(Imagick::CHANNEL_ALL);
     $img->enhanceImage();
     $img->despeckleImage();
@@ -258,9 +248,15 @@ function F_decodeIDentificationPage($image) {
     $dtf = 25;
     // row distance in pixels between two questions
     $drow = 32.38;
-    // verify image pattern
+    // now verify image pattern
+
     $imgtmp = clone $img;
+    // $biggerCrop = clone $img;
+
     $imgtmp->cropImage(1028, 10, 0, 10);
+    write_debug_file($img, $job_id, "-3-omr-orig");
+    write_debug_file($imgtmp, $job_id, "-3-omr-crop-top-black-strip");
+
     $imgtmp->setImagePage(0, 0, 0, 0);
     // create reference block pattern
     $impref = new Imagick();
@@ -326,6 +322,62 @@ function F_decodeIDentificationPage($image) {
     return $omrdata;
 }
 
+function F_ensureImageIsUseable($img, $job_id, $scanner = "default")
+{
+    $imginfo = $img->identifyImage();
+    // get image width and height
+    $w = $imginfo['geometry']['width'];
+    $h = $imginfo['geometry']['height'];
+
+    switch ($scanner) {
+        case "FastHpScanner-genericMode":
+
+            //for images scanned with our FastHpScanner, extra 850px was added to the
+            //height of the scanned image (added as white spaces). So we need to crop-off
+            //this 'contaminating' extra space by cropiingcropping from top to 3350px (the
+            //whole image with all the white padding is 4200px. Check drive link for sample file -
+            //files named ALIDADA 002.PNG..etc)
+
+            write_debug_file($img, $job_id, "-1-afix-beforecropforscannertype");
+            $img->cropImage($w, 3350, 0, 0);
+            write_debug_file($img, $job_id, "-1-afix-immdtlyaftercropforscannertype");
+            // $img->setImagePage(0, 0, 0, 0);
+            break;
+    }
+
+    $maxHeight = 1200;
+    //heavy images takes unecessarily long time to process. okay if height is just about  {$maxHeight}px
+    if ($h > $maxHeight) {
+        //resize it proportionately
+        // $scaledownRatio = (($maxHeight * 100) / $h) / 100;
+        // $newWidth       = ceil($w * ($scaledownRatio));
+        // $newHeight      = ceil($h * $scaledownRatio);
+        // $img->resizeImage($newWidth, $newHeight, Imagick::FILTER_CUBIC, 1, TRUE);
+        write_debug_file($img, $job_id, "-1.1-afix-beforescaling");
+        $img->scaleImage(0, $maxHeight);
+        write_debug_file($img, $job_id, "-1.1-afix-immdtlyafterscaling");
+    }
+
+    if ($imginfo['type'] == 'TrueColor') {
+        // remove red color
+        $img->separateImageChannel(Imagick::CHANNEL_RED);
+    } else {
+        // desaturate image
+        $img->modulateImage(100, 0, 100);
+    }
+
+    if ($h > $w) {
+        // crop header and footer
+        $y = round(($h - $w) / 2);
+        write_debug_file($img, $job_id, "-2-beforecropawayheaderandfooter");
+        $img->cropImage($w, $w, 0, $y);
+        write_debug_file($img, $job_id, "-2-immdtlyaftercropawayheaderandfooter");
+        $img->setImagePage(0, 0, 0, 0);
+    }
+
+    return $img;
+}
+
 /**
  * Import user's test data from OMR.
  * @param $user_id (int) user ID.
@@ -335,10 +387,14 @@ function F_decodeIDentificationPage($image) {
  * @param $overwrite (boolean) If true overwrites the previous answers on non-repeatable tests.
  * @return boolean TRUE in case of success, FALSE otherwise.
  */
-function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite = false) {
+function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite = false, $connection = null)
+{
     require_once '../config/tce_config.php';
     require_once '../../shared/code/tce_functions_test.php';
     global $db, $l;
+    if (!is_null($connection)) {
+        $db = $connection;
+    }
     // check arrays
     if (count($omr_testdata) > (count($omr_answers) + 1)) {
         // arrays must contain the same amount of questions
@@ -374,7 +430,7 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
             } else {
                 // 1c. check if this data already exist
                 if (F_count_rows(K_TABLE_TEST_USER, 'WHERE testuser_test_id=' . $test_id . ' AND testuser_user_id=' . $user_id . '') > 0) {
-                    F_print_error('MESSAGE',"Error : you did not select to overwrite, and user {$user_id} already have answers uploaded for this test");
+                    F_print_error('MESSAGE', "Error : you did not select to overwrite, and user {$user_id} already have answers uploaded for this test");
                     return false;
                 }
             }
@@ -485,44 +541,44 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
                             if (($ma = F_db_fetch_array($ra))) {
                                 $answer_isright = F_getBoolean($ma['answer_isright']);
                                 switch ($mq['question_type']) {
-                                case 1:{ // MCSA - Multiple Choice Single Answer
-                                        if ($answer_selected == 1) {
-                                            ++$numselected;
-                                            if ($numselected == 1) {
+                                    case 1:{ // MCSA - Multiple Choice Single Answer
+                                            if ($answer_selected == 1) {
+                                                ++$numselected;
+                                                if ($numselected == 1) {
+                                                    $unanswered = false;
+                                                    if ($answer_isright) {
+                                                        $qscore = $question_right_score;
+                                                    } else {
+                                                        $qscore = $question_wrong_score;
+                                                    }
+                                                } else {
+                                                    // multiple answer selected
+                                                    $unanswered = true;
+                                                    $qscore     = $question_unanswered_score;
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    case 2:{ // MCMA - Multiple Choice Multiple Answer
+                                            if ($answer_selected == -1) {
+                                                $qscore += $question_unanswered_score;
+                                            } elseif ($answer_selected == 0) {
                                                 $unanswered = false;
                                                 if ($answer_isright) {
-                                                    $qscore = $question_right_score;
+                                                    $qscore += $question_wrong_score;
                                                 } else {
-                                                    $qscore = $question_wrong_score;
+                                                    $qscore += $question_right_score;
                                                 }
-                                            } else {
-                                                // multiple answer selected
-                                                $unanswered = true;
-                                                $qscore     = $question_unanswered_score;
+                                            } elseif ($answer_selected == 1) {
+                                                $unanswered = false;
+                                                if ($answer_isright) {
+                                                    $qscore += $question_right_score;
+                                                } else {
+                                                    $qscore += $question_wrong_score;
+                                                }
                                             }
+                                            break;
                                         }
-                                        break;
-                                    }
-                                case 2:{ // MCMA - Multiple Choice Multiple Answer
-                                        if ($answer_selected == -1) {
-                                            $qscore += $question_unanswered_score;
-                                        } elseif ($answer_selected == 0) {
-                                            $unanswered = false;
-                                            if ($answer_isright) {
-                                                $qscore += $question_wrong_score;
-                                            } else {
-                                                $qscore += $question_right_score;
-                                            }
-                                        } elseif ($answer_selected == 1) {
-                                            $unanswered = false;
-                                            if ($answer_isright) {
-                                                $qscore += $question_right_score;
-                                            } else {
-                                                $qscore += $question_wrong_score;
-                                            }
-                                        }
-                                        break;
-                                    }
                                 }
                             }
                         } else {
@@ -574,38 +630,87 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
     return true;
 }
 
-function write_debug_file(&$img) {
+function write_debug_file($img, $job_id, $append)
+{
     try {
-        $img->writeImage('/opt/lampp/temp/debug/' . date(K_TIMESTAMP_FORMAT) . '_DEBUG_OMR_.PNG');
-    } catch (\Throwable $th) {
-        $img = $th;
+        $img->writeImage("/opt/lampp/temp/debug/{$job_id}-" . date(K_TIMESTAMP_FORMAT) . "_DEBUG_OMR{$append}.PNG");
+    } catch (\Exception $e) {
+        endMarkingSessionWithError($job_id, $e->getMessage());
     }
 }
 
-function F_get_omr_testdata($uploaded_file) {
+function F_get_omr_testdata($uploaded_file)
+{
     global $db, $l;
     $omr_testdata  = "";
-    $answer_codecs = F_extract_code_data_from_answer_page($uploaded_file);
+    $answer_codecs = F_extract_code_data_from_encoded_page($uploaded_file);
     if ($r = F_db_query("SELECT qrcode FROM tce_qrcodes WHERE id={$answer_codecs['qrcode_id']}", $db)) {
         if ($m = F_db_fetch_array($r)) {
             $omr_testdata = F_decodeOMRTestData($m['qrcode']);
-            // read OMR ANSWER SHEET pages
         }
     }
 
     return $omr_testdata;
 }
 
-function F_extract_code_data_from_answer_page($uploaded_file) {
+function F_get_omrData_by_qrcodeId($qrcode_id)
+{
+    global $db, $l;
+    if ($r = F_db_query("SELECT qrcode FROM tce_qrcodes WHERE id={$qrcode_id}", $db)) {
+        if ($m = F_db_fetch_array($r)) {
+            return F_decodeOMRTestData($m['qrcode']);
+        }
+    }
+}
+
+/**
+ * return [
+ *      'qrcode_id'          => $answer_codecs[0],
+ *      'start_number'       => $answer_codecs[1],
+ *      'unique_answer_code' => explode('(', $answer_codecs[2])[0],
+ *      'doc_type'           => $answer_codecs[3], //if it is answer sheet or identification page
+ *      ];
+ * @param [type] $uploaded_file [description]
+ */
+function F_extract_code_data_from_encoded_page($uploaded_file)
+{
+    //for zbarimg program to ecode correctly, our images must not be more than 1000px tall
     $command       = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($uploaded_file);
     $answer_codecs = exec($command);
+
+    if (empty($answer_codecs)) {
+        $trials = 0;
+        $img    = new Imagick();
+        while (empty($answer_codecs)) {
+            //we noticed that reducing the "density"/compressing the image helps zbarimg to succeed
+            $trials++;
+            $img->clear();
+            $img->readImage($uploaded_file);
+            $img->resizeImage((1028 / $trials), (1052 / $trials), Imagick::FILTER_CUBIC, 1);
+            $newFilePath = K_PATH_CACHE . mktime() . '-' . ($trials) . '-RESIZE_OMR.PNG';
+            $img->writeImage($newFilePath);
+            $command       = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($newFilePath);
+            $answer_codecs = exec($command);
+
+            if ($trials == 2) {
+                break;
+            }
+        }
+    }
+
     $answer_codecs = explode(',', $answer_codecs);
-    return [
-        'qrcode_id'          => $answer_codecs[0],
-        'start_number'       => $answer_codecs[1],
-        'unique_answer_code' => explode('(', $answer_codecs[2])[0],
-        'doc_type'           => $answer_codecs[3], //if it is answer sheet or identification page
-    ];
+
+    //if the image is not ok, we won't have much
+    if (count($answer_codecs) > 3) {
+        return [
+            'qrcode_id'          => $answer_codecs[0],
+            'start_number'       => $answer_codecs[1],
+            'unique_answer_code' => explode('(', $answer_codecs[2])[0],
+            'doc_type'           => $answer_codecs[3], //if it is answer sheet or identification page
+        ];
+    } else {
+        return [];
+    }
 }
 
 //============================================================+

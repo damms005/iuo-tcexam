@@ -1,38 +1,41 @@
 <template>
   <div class="absolute flex quotes-main-component w-full h-full">
+    <div class="absolute inline-block h-48 mt-2 w-full" v-show="this.show_quote">
 
-    <transition
-      enter-active-class="animated fadeIn fast"
-      leave-active-class="animated fadeOut faster"
-      mode="out-in"
-    >
-      <div class="absolute inline-block h-48 mt-2 w-full" v-if="this.show_quote">
+      <blockquote class="flex flex-col justify-center">
 
-        <blockquote class="flex flex-col justify-center">
-
+        <transition
+          enter-active-class="animated fadeIn fast"
+          leave-active-class="animated fadeOut faster"
+          mode="out-in"
+        >
           <div class="quotation flex-1 tracking-wide text-center">
-            <span class="pl-6 font-sans text-sm font-hairline">
+            <span class="pl-6 font-sans text-sm font-hairline" :key="quote.quote">
               {{quote.quote}}
             </span>
           </div>
+        </transition>
           
           <div class="self-center block pin-r mr-2 mt-6 leading-loose">
             <div class="relative flex">
               <div class="mt-1 pin-y inline absolute opacity-50 p-1 w-6 h-6" id="progressbar"></div>
               <div class="inline ml-8 pin-y author italic text-xs font-bold tracking-wide">
                 <span class="font-heavy text-heavy">&dash;</span>
-                <span>
-                  {{quote.author}}
-                </span>
+                  <transition
+                    enter-active-class="animated fadeIn fast"
+                    leave-active-class="animated fadeOut faster"
+                    mode="out-in"
+                  >
+                    <span :key="quote.author">
+                      {{quote.author}}
+                    </span>
+                </transition>
               </div>
               <!-- <small>{{quote.genre}}</small> -->
             </div>
           </div>
-        </blockquote>
-
-      </div>
-
-    </transition>
+      </blockquote>
+    </div>
   </div>
 </template>
 
@@ -149,7 +152,6 @@ export default {
           xhr.open("GET", xhr.url, true);
           xhr.send();
         }else{
-          console.log(`not retrying (${xhr.retry} >= 10) `);
         }
     },
     get_quotes_from_db:function( xhr = null ){
@@ -157,7 +159,6 @@ export default {
       if( xhr == null ){
         xhr = new XMLHttpRequest();
         xhr.url = `${this.webserver_url}/git-collaborations/tcexam/admin/code/tce_quotes.php`;
-        console.log(xhr.url);
         xhr.open("GET", xhr.url, true);
         xhr.retry = 1;
       }
@@ -175,13 +176,11 @@ export default {
                 catch(Ex){
                   console.log(Ex);
                   console.log(xhr);
-                  console.log(xhr.responseText);
                   vm.retry_ajax_request(xhr);
                 }
               } else {
                 console.log(xhr);
                 console.log(xhr.status);
-                console.log(xhr.responseText);
                 vm.retry_ajax_request(xhr);
               }
           }else{

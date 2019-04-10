@@ -158,9 +158,7 @@ export default {
         this.quotesBarWidth += increment;
         this.progressbar.animate(this.quotesBarWidth/100);
 
-        console.log(`increment: ${increment}`);
         var nextIncrement = ( this.quotesBarWidth+increment) > 100 ? 100 : this.quotesBarWidth+increment;
-        console.log(`nextIncrement: ${nextIncrement}`);
 
         //ensure not to offshoot 100
         var vm = this;
@@ -182,7 +180,6 @@ export default {
           xhr.open("GET", xhr.url, true);
           xhr.send();
         }else{
-          console.log(`not retrying (${xhr.retry} >= 10) `);
         }
     },
     get_quotes_from_db:function( xhr = null ){
@@ -207,13 +204,11 @@ export default {
                 catch(Ex){
                   console.log(Ex);
                   console.log(xhr);
-                  console.log(xhr.responseText);
                   vm.retry_ajax_request(xhr);
                 }
               } else {
                 console.log(xhr);
                 console.log(xhr.status);
-                console.log(xhr.responseText);
                 vm.retry_ajax_request(xhr);
               }
           }else{

@@ -84,11 +84,11 @@ if (isset($menu_mode) and ($menu_mode == 'upload') and !empty($_FILES)) {
         $name      = $_FILES['omrfile']['name'][$i];
         if (!empty($name)) {
             if ($_FILES['omrfile']['error'][$i] == 0) {
-                $answer_page_data = F_extract_code_data_from_answer_page($data_file);
-                if ($answer_page_data['doc_type'] == "ANSWERS") {
-                    $answers_page = F_realDecodeOMRPage($data_file, $answer_page_data['start_number']);
+                $data_from_encoded_page = F_extract_code_data_from_encoded_page($data_file);
+                if ($data_from_encoded_page['doc_type'] == "ANSWERS") {
+                    $answers_page = F_realDecodeOMRPage($data_file, $data_from_encoded_page['start_number']);
                 } else {
-                    if ($answer_page_data['doc_type'] == "USERID") {
+                    if ($data_from_encoded_page['doc_type'] == "USERID") {
                         $user_id = F_decodeIDentificationPage($data_file);
                         $user_id = intval(implode('', $user_id));
                         continue;

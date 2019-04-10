@@ -1,3 +1,11 @@
+.animateAll{
+    transition: all 3s;
+}
+
+.transformer{
+    transition: transform 1s;  
+}
+
 .dropbox h4, .dropbox label{
   margin-top: 15%;
 }
@@ -285,3 +293,90 @@ blockquote .author{
 }
 
 /********   E N D    Q U O T E S    *******/
+
+.drop-tzable td, .drop-table th{
+  text-align: left;
+  padding-right: 25px;
+}
+
+.drop-table td *{
+  padding: 3px;
+  margin: 3px;
+  cursor: pointer;
+
+  padding-left: 0px;
+  margin-left: 0px;
+}
+.drop-table th{
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.h-0{
+  height: 0px;
+  /* 
+  hidden overflow is needed for default display
+  overflow: hidden; 
+  */
+}
+
+/******** b u t t o n s   t r a n s i t i o n ********/
+
+.action-buttons-enter, .action-buttons-leave-to /* .action-buttons-leave-active below version 2.1.8 */ {
+   transform: scale(0);
+  /*opacity: 0;*/
+  /*top: 1px;
+  margin-top: 1px;*/
+  /*transform: translateX(30px);*/
+}
+
+.action-button-enter-to, .action-button-leave{
+    transform: scale(.9);
+}
+
+.action-buttons-enter-active{
+  animation: btn-animation forwards 500ms ease-out;
+}
+
+.action-buttons-leave-active{
+  animation: btn-animation reverse forwards 500ms ease-out;
+}
+
+/*.action-buttons-move{
+  transition: transform 2s;
+}*/
+
+@keyframes btn-animation{
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70%{
+    opacity: 0.5;
+    transform: scale(.6);
+  }
+  100%{
+    opacity: 1;
+    transform: scale(.9);
+  }
+}
+/***** e n d  b u t t o n s  t r a n s i t i o n *****/
+
+/***** other vue  t r a n s i t i o ns *****/
+
+.main-grey-background-leave{
+  /*transition: all 300ms;*/
+  transform: scale(.9);
+  opacity: .7;
+}
+.main-grey-background-leave-active{
+  transition: all 300ms;
+  opacity: .2;
+  transform: translateY(-15px) scale(.3) ;
+}
+
+.main-grey-background-leave-to{
+  opacity: 0;
+  transform: translateY(-15px) scale(0) ;
+}
+/***** end other vue  t r a n s i t i o ns *****/

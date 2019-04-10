@@ -654,6 +654,18 @@ function F_getUIDfromRegnum($regnum)
     return 0;
 }
 
+function F_getUserByID($userid){
+     global $l, $db;
+    require_once('../config/tce_config.php');
+    $sql = 'SELECT * FROM '.K_TABLE_USERS.' WHERE user_id = \''.F_escape_sql($db, $userid).'\' LIMIT 1';
+    if ($r = F_db_query($sql, $db)) {
+        if ($m = F_db_fetch_array($r)) {
+            return $m;
+        }
+    }
+    return "";
+}
+
 //============================================================+
 // END OF FILE
 //============================================================+

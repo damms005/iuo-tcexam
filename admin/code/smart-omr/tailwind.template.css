@@ -61,3 +61,11 @@
  * @import "utilities/skew-transforms";
  */
 
+
+.btn{
+    @apply .bg-red .text-white .text-xs .rounded .p-1
+}
+
+.label{
+    @apply .bg-blue-dark .rounded .p-1 .font-mono .text-xs .text-white
+}
