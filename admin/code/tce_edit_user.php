@@ -440,7 +440,10 @@ echo '<span class="label">'.K_NEWLINE;
 echo '<label for="user_id">'.$l['w_user'].'</label>'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '<span class="formw">'.K_NEWLINE;
-echo '<select name="user_id" id="user_id" size="0" onchange="document.getElementById(\'form_usereditor\').submit()">'.K_NEWLINE;
+
+echo '<input list="user_data_list" name="user_id" id="user_id" size="0" onchange="document.getElementById(\'form_usereditor\').submit()" />' . K_NEWLINE;
+
+echo '<datalist id="user_data_list">' . K_NEWLINE;
 echo '<option value="0" style="background-color:#009900;color:white;"';
 if ($user_id == 0) {
     echo ' selected="selected"';
@@ -457,22 +460,25 @@ if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
 			AND ta.usrgrp_user_id='.intval($_SESSION['session_user_id']).'
 			AND tb.usrgrp_user_id=user_id)';
 }
+$selection = "";
 $sql .= ' ORDER BY user_lastname, user_firstname, user_name';
 if ($r = F_db_query($sql, $db)) {
     $countitem = 1;
     while ($m = F_db_fetch_array($r)) {
-        echo '<option value="'.$m['user_id'].'"';
+        $string = $countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']);
         if ($m['user_id'] == $user_id) {
-            echo ' selected="selected"';
+            $selection = "<script> document.getElementById('user_id').value = `$string` </script>";
         }
-        echo '>'.$countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']).'</option>'.K_NEWLINE;
+        echo '<option value="'.$m['user_id'].'">' . $string . '</option>'.K_NEWLINE;
         $countitem++;
     }
 } else {
-    echo '</select></span></div>'.K_NEWLINE;
+    echo '</datalist></span></div>'.K_NEWLINE;
     F_display_db_error();
 }
-echo '</select>'.K_NEWLINE;
+
+//at this stage, we should echo $selection, but this will prevent dropdown suggestion unless user clears the input box
+echo "</datalist> ".K_NEWLINE;
 
 // link for user selection popup
 $jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';
