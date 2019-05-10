@@ -74,7 +74,7 @@ if (isset($menu_mode) and ($menu_mode == 'upload') and !empty($_FILES)) {
     //TCExam now reduces paper wastage by saving qrcode into db and encoding same on
     //answer sheets
     //use one of the uploaded files to get the qrcode
-    $omr_testdata  = F_get_omr_testdata($_FILES['omrfile']['tmp_name'][1]);
+    $omr_testdata  = F_get_omr_testdata($_FILES['omrfile']['tmp_name'][1], null);
     $num_questions = (count($omr_testdata) - 1);
     $num_pages     = ceil($num_questions / 30);
     $omr_answers   = array();

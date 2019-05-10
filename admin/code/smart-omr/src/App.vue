@@ -116,7 +116,7 @@
       /******** C S S    C L A S S E S ********/
 
       //1. main grey background at default
-      //note that some of the classes are not necessarily for css rules, but simply markers that 
+      //note that some of the classes are not necessarily for css rules, but simply markers that
       //are helpful for dom inspection @debugging, so we know which css class is swapped in at any partuclar time
       current_bottom_main_grey_background_class: "",
       bottom_main_grey_background_class: {
@@ -131,7 +131,7 @@
       },
 
 
-      //bottom green at default      
+      //bottom green at default
       current_bottom_green_background_class: "",
       bottom_green_background_class: {
         "-bottom_green_background_class border rounded p-4 bg-green-lightest flex w-5/6": true
@@ -270,7 +270,7 @@
 
           this.$refs.uploader.displayLoadingImage = false;
           this.showQuotes = false;
-          
+
           this.current_bottom_green_background_class = this.bottom_green_background_start_uploading_class;
           this.current_bottom_main_grey_background_class = this.bottom_main_grey_background_class_slide_up;
       },
@@ -281,7 +281,7 @@
           this.$refs.uploader.showLoadingMode = false;
           this.$refs.uploader.showFinalStatus = true;
           this.showQuotes = false;
-          this.serverStatusText = "Marking completed successful";
+          this.serverStatusText = "Marking completed successfully";
           this.showStartAllOver = true;
       },
 
@@ -329,7 +329,7 @@
 
         this.status = event.target.parentElement.innerText.trim();
         this.doUITransition(this.status);
-        
+
       },
       files_change: function( _files ) {
         if( _files.length > 0) {

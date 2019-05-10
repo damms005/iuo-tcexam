@@ -87,7 +87,6 @@
         :size="size || 0"
         :thread="thread < 1 ? 1 : (thread > 10 ? 10 : thread)"
         :headers="headers"
-        :data="data"
         :drop="drop"
         :drop-directory="dropDirectory"
         :add-index="addIndex"
@@ -282,6 +281,9 @@ export default {
       // var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
       // xhr.url="http://localhost/git-collaborations/tcexam/admin/code/tce_quotes.php";
       webserver_url: location.protocol+'//'+location.hostname,
+      server_script_path: 'git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor.php',
+      status_upgrade_script_path: 'git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor_status.php',
+      // putAction: '/upload/put',
       minSize: 1024,
       size: 1024 * 1024 * 50,
       multiple: true,
@@ -292,16 +294,8 @@ export default {
       addIndex: false,
       thread: 10,
       name: 'omrfile',
-      server_script_path: 'git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor.php',
-      status_upgrade_script_path: 'git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor_status.php',
-      // putAction: '/upload/put',
       headers: {
         // 'X-Csrf-Token': 'xxxx',
-      },
-      data: {
-        'job_id': this.ongoingServerPollTimestamp,
-        total_number_files: this.files ? this.files.length : 0,
-        error:'true'
       },
       autoCompress: 1024 * 1024,
       uploadAuto: false,
@@ -444,15 +438,10 @@ export default {
       this.$emit('files_change' , this.files );
       this.filesAvailable = this.files && (this.files.length > 0);
       this.showOrHideGreenWorkingBackground();
-      this.data.total_number_files = this.files ? this.files.length : 0;
     },
     serverStatusText: function(){
       this.showOrHideGreenWorkingBackground();
     },
-    ongoingServerPollTimestamp:function(){
-      this.data.job_id = this.ongoingServerPollTimestamp
-    },
-
     'isCurrentlyUploading': function( new_val , old_val ){
       if( new_val ) {
         //don't redo if there is an ongoing polling
@@ -518,15 +507,15 @@ export default {
       if( prefix == 's:' ) {
         try{
 
-          let data = JSON.parse( _mssg );
+          let realmssg = JSON.parse( _mssg );
 
-          if(data.marking_completed_successfully){
+          if(realmssg.marking_completed_successfully){
             this.$emit('_markingCompletedSuccessfully');
             this.displayLoadingImage = false;//this ting runs down CPU!! So stop it as soon as possible wth chances of even if its container is displayed...also ensures cleaner UI: no image unessaruly
             this.ongoingServerPollTimestamp = undefined;
           }else{
-              this.$emit('serverStatusText' , data.status_text);
-              this.markingPercentageProgress = data.percentage_progress;
+              this.$emit('serverStatusText' , realmssg.status_text);
+              this.markingPercentageProgress = realmssg.percentage_progress;
           }
         }catch(Ex){
           this.reportErrorAsAlertPopoup(`Error occured: ${Ex} (${_mssg})`);
@@ -599,9 +588,16 @@ export default {
       }
 
       if( newFile && (oldFile == undefined )) {
-        this.data.total_number_files = this.files ? this.files.length : 0;
-        let newData = this.data;
+
+        let newData = {
+          'job_id': this.ongoingServerPollTimestamp,
+          total_number_files: this.files ? this.files.length : 0,
+          filename: newFile.name,
+          error:'true',
+        }
+
         this.$refs.upload.update( newFile, { data: newData } )
+
       }
 
       if (newFile && oldFile) {
@@ -647,7 +643,7 @@ export default {
               } else {
                 var temp = document.createElement("div");
                 temp.innerHTML = newFile.response;
-                console.error("Error: ", temp.textContent || temp.innerText || "")
+                console.error("Error: ", ( temp.textContent || temp.innerText || "" ), newFile.xhr )
               }
             }
           }
@@ -877,15 +873,17 @@ export default {
       if( xhr == null ) {
 
         var query = "";
+        let addendum = "";
 
         switch (command) {
           case 'startProessingUploadedScripts':
             query = "startProessingUploadedScripts=true&job_id=" + this.ongoingServerPollTimestamp;
+            addendum = "?startmarking=true";
             break;
         }
 
         xhr = new XMLHttpRequest();
-        xhr.url=`${this.webserver_url}/${this.server_script_path}`;
+        xhr.url=`${this.webserver_url}/${this.server_script_path}${addendum}`;
         // xhr.sentData = `startProessingUploadedScripts=true&job_id=${Number(this.ongoingServerPollTimestamp)}`;
         xhr.sentData = query;
         xhr.retry = 1;

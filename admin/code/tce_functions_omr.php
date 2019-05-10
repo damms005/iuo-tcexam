@@ -102,27 +102,30 @@ function F_decodeOMRPage($image)
  * @param $qstart (int) the question start number of this answer sheet
  * @return array of answers data or false in case of error.
  */
-function F_realDecodeOMRPage($image, $qstart)
+function F_realDecodeOMRPage($job_id, $image, $qstart)
 {
+
     require_once '../config/tce_config.php';
+
+    /*
     $img = new Imagick();
     $img->readImage($image);
     $imginfo = $img->identifyImage();
     if ($imginfo['type'] == 'TrueColor') {
-        // remove red color
-        $img->separateImageChannel(Imagick::CHANNEL_RED);
+    // remove red color
+    $img->separateImageChannel(Imagick::CHANNEL_RED);
     } else {
-        // desaturate image
-        $img->modulateImage(100, 0, 100);
+    // desaturate image
+    $img->modulateImage(100, 0, 100);
     }
     // get image width and height
     $w = $imginfo['geometry']['width'];
     $h = $imginfo['geometry']['height'];
     if ($h > $w) {
-        // crop header and footer
-        $y = round(($h - $w) / 2);
-        $img->cropImage($w, $w, 0, $y);
-        $img->setImagePage(0, 0, 0, 0);
+    // crop header and footer
+    $y = round(($h - $w) / 2);
+    $img->cropImage($w, $w, 0, $y);
+    $img->setImagePage(0, 0, 0, 0);
     }
     $img->normalizeImage(Imagick::CHANNEL_ALL);
     $img->enhanceImage();
@@ -132,9 +135,18 @@ function F_realDecodeOMRPage($image, $qstart)
     $img->trimImage(85);
     $img->deskewImage(15);
     $img->trimImage(85);
+
+    write_debug_file($img, $job_id, "-0-before-resize-for-decoding", basename($image));
     $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
+
     $img->setImagePage(0, 0, 0, 0);
     // $img->writeImage(K_PATH_CACHE. mktime() . '_DEBUG_OMR_.PNG'); // DEBUG
+     */
+
+    $img = F_get_useable_image_base_on_scanner_type($image, $job_id);
+
+    write_debug_file($img, $job_id, "-1-after-resize-for-decoding", basename($image));
+
     // scan block width
     $blkw = 16;
     // starting column in pixels
@@ -147,6 +159,17 @@ function F_realDecodeOMRPage($image, $qstart)
     $dtf = 25;
     // row distance in pixels between two questions
     $drow = 32.38;
+
+    switch ($scannertype) {
+        case 'FastHpScanner':
+            $x_offset = 111;
+            break;
+
+        default:
+            $x_offset = 113;
+            break;
+    }
+
     // verify image pattern
     $imgtmp = clone $img;
     $imgtmp->cropImage(1028, 10, 0, 10);
@@ -155,18 +178,22 @@ function F_realDecodeOMRPage($image, $qstart)
     $impref = new Imagick();
     $impref->newImage(3, 10, new ImagickPixel('black'));
     $psum = 0;
+    write_debug_file($imgtmp, $job_id, "-2-top-strip", basename($image));
     for ($c = 0; $c < 12; ++$c) {
-        $x = round(112 + ($c * $dcol));
+        $x = round($x_offset + ($c * $dcol));
         // get square region inside the current grid position
         $imreg = $img->getImageRegion(3, 10, $x, 0);
         $imreg->setImagePage(0, 0, 0, 0);
         // get root-mean-square-error with reference image
+        write_debug_file($imreg, $job_id, "-3-imgcompare-{$c}", basename($image));
         $rmse = $imreg->compareImages($impref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
         // count reference blocks
         $psum += round(1.25 - $rmse[1]);
     }
+
     $imreg->clear();
     $impref->clear();
+
     if ($psum != 12) {
         return false;
     }
@@ -208,8 +235,11 @@ function F_realDecodeOMRPage($image, $qstart)
             $omrdata[($r + $qstart)][($c + 1)] = $val;
         }
     }
+
+    $img->clear();
     $imreg->clear();
     $imref->clear();
+    $imgtmp->clear();
     return $omrdata;
 }
 
@@ -219,23 +249,11 @@ function F_realDecodeOMRPage($image, $qstart)
  * @param $qstart (int) the question start number of this answer sheet
  * @return array of answers data or false in case of error.
  */
-function F_decodeIDentificationPage($image, $job_id)
+function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
 {
-    require_once '../config/tce_config.php';
-    $img = new Imagick();
-    $img->readImage($image);
-    $img = F_ensureImageIsUseable($img, $job_id,"FastHpScanner-genericMode");
-    $img->normalizeImage(Imagick::CHANNEL_ALL);
-    $img->enhanceImage();
-    $img->despeckleImage();
-    $img->blackthresholdImage('#808080');
-    $img->whitethresholdImage('#808080');
-    $img->trimImage(85);
-    $img->deskewImage(15);
-    $img->trimImage(85);
-    $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
-    $img->setImagePage(0, 0, 0, 0);
-    // $img->writeImage(K_PATH_CACHE. mktime() . '_DEBUG_OMR_.PNG'); // DEBUG
+    $img = F_get_useable_image_base_on_scanner_type($image, $job_id);
+
+    // write_debug_file($img, $job_id, "-3.2-after-ensure-useable-named-deb", basename($image));
     // scan block width
     $blkw = 16;
     // starting column in pixels
@@ -250,12 +268,32 @@ function F_decodeIDentificationPage($image, $job_id)
     $drow = 32.38;
     // now verify image pattern
 
+    switch ($scannertype) {
+        case 'FastHpScanner':
+            $x_offset = 111;
+            break;
+
+        default:
+            $x_offset = 113;
+            break;
+    }
+
     $imgtmp = clone $img;
     // $biggerCrop = clone $img;
 
-    $imgtmp->cropImage(1028, 10, 0, 10);
-    write_debug_file($img, $job_id, "-3-omr-orig");
-    write_debug_file($imgtmp, $job_id, "-3-omr-crop-top-black-strip");
+    switch ($scannertype) {
+        case 1:
+            //Imagick::cropImage ($width ,$height , int $x , int $y )
+            $imgtmp->cropImage(1028, 10, 30, 10);
+            // $imgtmp->cropImage(1028, 10, 0, 10);
+            break;
+
+        default:
+            $imgtmp->cropImage(1028, 10, 0, 10);
+            break;
+    }
+
+    // write_debug_file($imgtmp, $job_id, "-4-crop-top-black-strip-from-deb", basename($image));
 
     $imgtmp->setImagePage(0, 0, 0, 0);
     // create reference block pattern
@@ -263,34 +301,45 @@ function F_decodeIDentificationPage($image, $job_id)
     $impref->newImage(3, 10, new ImagickPixel('black'));
     $psum = 0;
     for ($c = 0; $c < 12; ++$c) {
-        $x = round(112 + ($c * $dcol));
+        // $x = round(112 + ($c * $dcol));
+        $x = round($x_offset + ($c * $dcol));
         // get square region inside the current grid position
+        // Imagick::getImageRegion ($width ,$height , int $x , int $y )
         $imreg = $img->getImageRegion(3, 10, $x, 0);
         $imreg->setImagePage(0, 0, 0, 0);
+        // write_debug_file($imreg, $job_id, "-4-in-{$c}-crop-top-black-strip-from-deb", basename($image));
+
         // get root-mean-square-error with reference image
         $rmse = $imreg->compareImages($impref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
         // count reference blocks
         $psum += round(1.25 - $rmse[1]);
     }
+
     $imreg->clear();
     $impref->clear();
+    $imgtmp->clear();
+
     if ($psum != 12) {
         return false;
     }
     // create reference block
     $imref = new Imagick();
     $imref->newImage($blkw, $blkw, new ImagickPixel('black'));
+    // write_debug_file($imref, $job_id, "-zzzz-a-template-file");
     // array to be returned
     $omrdata = array();
     // for each row (id)
     for ($r = 0; $r <= 6; ++$r) {
         $y = round($srow + ($r * $drow));
+        // Imagick::getImageRegion ($width ,$height , int $x , int $y )
+        // write_debug_file($img->getImageRegion($img->getImageWidth(), $blkw, 0, $y), $job_id, "-zzzz-b-row-{$r}-afore");
         // for each column (0-9)
         for ($c = 0; $c <= 10; ++$c) {
             // read true option
             $x = round($scol + ($c * $dcol));
             // get square region inside the current grid position
             $imreg = $img->getImageRegion($blkw, $blkw, $x, $y);
+            // write_debug_file($imreg, $job_id, "-zzzz-b-row-{$r}-col-{$c}");
             $imreg->setImagePage(0, 0, 0, 0);
             // get root-mean-square-error with reference image
             $rmse = $imreg->compareImages($imref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
@@ -312,17 +361,29 @@ function F_decodeIDentificationPage($image, $job_id)
             //     $val = 1;
             // }
             // $omrdata[] = $val;
-            if ((count($rmse) > 1) && ($rmse[1] < 0.09)) {
+            //an RMSE[1] less than (highest so far is 0.42.) is okay...esp if we want to accomodate faint shadings, which is okay - from our tests
+            if ((count($rmse) > 1) && ($rmse[1] < 0.45)) {
                 $omrdata[] = $c;
             }
         }
     }
+
     $imreg->clear();
     $imref->clear();
+
     return $omrdata;
 }
 
-function F_ensureImageIsUseable($img, $job_id, $scanner = "default")
+/**
+ * Ensure the image is useable - solves differnces in scanner types
+ *
+ * @param [type] $img
+ * @param [type] $job_id
+ * @param [type] We need this because when we clone images etc., getFilename() on the Imagick instance brings extremely funny names - more of some sort of repitions in the names
+ * @param string $scanner
+ * @return void
+ */
+function F_ensureImageIsUseable($img, $job_id, $basename_filename, $scanner = "default")
 {
     $imginfo = $img->identifyImage();
     // get image width and height
@@ -338,9 +399,9 @@ function F_ensureImageIsUseable($img, $job_id, $scanner = "default")
             //whole image with all the white padding is 4200px. Check drive link for sample file -
             //files named ALIDADA 002.PNG..etc)
 
-            write_debug_file($img, $job_id, "-1-afix-beforecropforscannertype");
-            $img->cropImage($w, 3350, 0, 0);
-            write_debug_file($img, $job_id, "-1-afix-immdtlyaftercropforscannertype");
+            // write_debug_file($img, $job_id, "-1-afix-beforecropforscannertype", $basename_filename);
+            $img->cropImage($w, 1200, 0, 0);
+            // write_debug_file($img, $job_id, "-1-afix-immdtlyaftercropforscannertype", $basename_filename);
             // $img->setImagePage(0, 0, 0, 0);
             break;
     }
@@ -353,9 +414,9 @@ function F_ensureImageIsUseable($img, $job_id, $scanner = "default")
         // $newWidth       = ceil($w * ($scaledownRatio));
         // $newHeight      = ceil($h * $scaledownRatio);
         // $img->resizeImage($newWidth, $newHeight, Imagick::FILTER_CUBIC, 1, TRUE);
-        write_debug_file($img, $job_id, "-1.1-afix-beforescaling");
+        // write_debug_file($img, $job_id, "-1.1-afix-beforescaling", $basename_filename);
         $img->scaleImage(0, $maxHeight);
-        write_debug_file($img, $job_id, "-1.1-afix-immdtlyafterscaling");
+        // write_debug_file($img, $job_id, "-1.1-afix-immdtlyafterscaling", $basename_filename);
     }
 
     if ($imginfo['type'] == 'TrueColor') {
@@ -368,11 +429,22 @@ function F_ensureImageIsUseable($img, $job_id, $scanner = "default")
 
     if ($h > $w) {
         // crop header and footer
-        $y = round(($h - $w) / 2);
-        write_debug_file($img, $job_id, "-2-beforecropawayheaderandfooter");
-        $img->cropImage($w, $w, 0, $y);
-        write_debug_file($img, $job_id, "-2-immdtlyaftercropawayheaderandfooter");
+        // write_debug_file($img, $job_id, "-2-beforecropawayheaderandfooter", $basename_filename);
+
+        switch ($scanner) {
+
+            case "FastHpScanner-genericMode":
+                //Imagick::cropImage($width, $height , int $x , int $y )
+                $img->cropImage(826, 826, 10, 175);
+                break;
+
+            default:
+                $img->cropImage($w, $w, 0, round(($h - $w) / 2));
+                break;
+        }
+
         $img->setImagePage(0, 0, 0, 0);
+        // write_debug_file($img, $job_id, "-2-immdtlyaftercropawayheaderandfooter", $basename_filename);
     }
 
     return $img;
@@ -630,20 +702,24 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
     return true;
 }
 
-function write_debug_file($img, $job_id, $append)
+function write_debug_file($img, $job_id, $append, $original_filename = "")
 {
+    $fullname = K_PATH_CACHE . "logs/debug/" . time() . '-JOB' . $job_id . "-{$append}-{$original_filename}-DEBUG_OMR.png";
+    // echo "\n <br /> writing: [$fullname] \n <br />";
     try {
-        $img->writeImage("/opt/lampp/temp/debug/{$job_id}-" . date(K_TIMESTAMP_FORMAT) . "_DEBUG_OMR{$append}.PNG");
+        $img->writeImage($fullname);
+        // echo "\n <br /> done \n <br />";
     } catch (\Exception $e) {
+        // echo "\n <br /> failed write work: " . $e->getMessage() . " \n <br />\n <br />";
         endMarkingSessionWithError($job_id, $e->getMessage());
     }
 }
 
-function F_get_omr_testdata($uploaded_file)
+function F_get_omr_testdata($uploaded_file, $job_id)
 {
     global $db, $l;
     $omr_testdata  = "";
-    $answer_codecs = F_extract_code_data_from_encoded_page($uploaded_file);
+    $answer_codecs = F_extract_code_data_from_encoded_page($uploaded_file, $job_id);
     if ($r = F_db_query("SELECT qrcode FROM tce_qrcodes WHERE id={$answer_codecs['qrcode_id']}", $db)) {
         if ($m = F_db_fetch_array($r)) {
             $omr_testdata = F_decodeOMRTestData($m['qrcode']);
@@ -663,18 +739,52 @@ function F_get_omrData_by_qrcodeId($qrcode_id)
     }
 }
 
+function F_ensure_optimum_size_shell($job_id, $filepath)
+{
+    $response = exec("mogrify -resize 1000x1500 " . escapeshellarg($filepath));
+    if (!empty($response)) {
+        endMarkingSessionWithError($job_id, "Error initializing file for marking: $filepath");
+    }
+}
+
+function F_ensure_optimum_size($job_id, $filepath, $use_shell = true)
+{
+    //this is important for normalizing all the differnt scanner types, since we are resloving difernt scanner sizes based on this same resized-resolution
+    if ($use_shell) {
+        F_ensure_optimum_size_shell($job_id, $filepath);
+    } else {
+        $thumb = new Imagick();
+        $thumb->readImage($filepath);
+
+        //now check the width
+        $width = $thumb->getImageWidth();
+
+        //now check height
+        $height = $thumb->getImageHeight();
+
+        if ($height > $width) {
+
+            $new_width  = 826;
+            $new_height = (int) ($height / $width * 826);
+
+            $thumb->resizeImage($new_width, $new_height, Imagick::FILTER_LANCZOS, 1);
+        }
+
+        $thumb->writeImage($filepath);
+        $thumb->clear();}
+}
+
 /**
  * return [
- *      'qrcode_id'          => $answer_codecs[0],
- *      'start_number'       => $answer_codecs[1],
- *      'unique_answer_code' => explode('(', $answer_codecs[2])[0],
+ *      'qrcode_id'          => $answer_codecs[0], //qrcode_id is id to the qr data; which hold the questions and answers to those questions - it is directly used in marking the script
+ *      'start_number'       => $answer_codecs[1], (applies only to answer pages)
+ *      'question_paper_type_unique_sum' => explode('(', $answer_codecs[2])[0],
  *      'doc_type'           => $answer_codecs[3], //if it is answer sheet or identification page
  *      ];
  * @param [type] $uploaded_file [description]
  */
-function F_extract_code_data_from_encoded_page($uploaded_file)
+function F_extract_code_data_from_encoded_page($uploaded_file, $job_id)
 {
-    //for zbarimg program to ecode correctly, our images must not be more than 1000px tall
     $command       = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($uploaded_file);
     $answer_codecs = exec($command);
 
@@ -682,12 +792,16 @@ function F_extract_code_data_from_encoded_page($uploaded_file)
         $trials = 0;
         $img    = new Imagick();
         while (empty($answer_codecs)) {
+
+            updateJobStatus($job_id, $answer_codecs);
+
             //we noticed that reducing the "density"/compressing the image helps zbarimg to succeed
             $trials++;
             $img->clear();
             $img->readImage($uploaded_file);
-            $img->resizeImage((1028 / $trials), (1052 / $trials), Imagick::FILTER_CUBIC, 1);
-            $newFilePath = K_PATH_CACHE . mktime() . '-' . ($trials) . '-RESIZE_OMR.PNG';
+            $img->resizeImage((1028 / $trials), null, Imagick::FILTER_CUBIC, 1);
+            // $img->resizeImage((1028 / $trials), (1052 / $trials), Imagick::FILTER_CUBIC, 1, true);
+            $newFilePath = K_PATH_CACHE . "logs/resizes/" . time() . '-' . ($trials) . '-' . basename($uploaded_file) . '-RESIZE_OMR.PNG';
             $img->writeImage($newFilePath);
             $command       = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($newFilePath);
             $answer_codecs = exec($command);
@@ -700,16 +814,41 @@ function F_extract_code_data_from_encoded_page($uploaded_file)
 
     $answer_codecs = explode(',', $answer_codecs);
 
+    /*
+     * sample answer_codecs return:
+
+    129,0,5EBBE36(T1),USERID
+    129,1,5EBBE36(T1-1),ANSWERS
+    133,0,C5F84A7(K2),USERID
+    133,1,C5F84A7(K2-1),ANSWERS
+     */
+
     //if the image is not ok, we won't have much
     if (count($answer_codecs) > 3) {
+        $dynamic_id = explode('(', $answer_codecs[2]);
         return [
-            'qrcode_id'          => $answer_codecs[0],
-            'start_number'       => $answer_codecs[1],
-            'unique_answer_code' => explode('(', $answer_codecs[2])[0],
-            'doc_type'           => $answer_codecs[3], //if it is answer sheet or identification page
+            'qrcode_id'                      => $answer_codecs[0],
+            'start_number'                   => $answer_codecs[1],
+            'question_paper_type_unique_sum' => $dynamic_id[0],
+            'dynamic_user_id'                => $dynamic_id[1],
+            'doc_type'                       => $answer_codecs[3], //if it is answer sheet or identification page
         ];
     } else {
         return [];
+    }
+}
+
+function F_get_dynamic_identifier($job_id, $question_paper_type_unique_sum, $filename)
+{
+    //usually in the form of any of the below:
+    //T1-1)
+    //K2).
+    //We only need the T1/K2 part
+    //Condition: original string must have at least the "(" char
+    if (strpos($question_paper_type_unique_sum, ")") !== false) {
+        return explode("-", explode(")", $question_paper_type_unique_sum)[0])[0];
+    } else {
+        endMarkingSessionWithError($job_id, "No recognizable user identifier: $question_paper_type_unique_sum ({$filename})");
     }
 }
 

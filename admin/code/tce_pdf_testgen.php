@@ -48,12 +48,13 @@ if (isset($_REQUEST['test_id']) and ($_REQUEST['test_id'] > 0)) {
     exit;
 }
 
+//get number of tests (question types) to generate
 if (isset($_REQUEST['num'])) {
     $test_num = intval($_REQUEST['num']);
 } else {
     $test_num = 1;
 }
-//get how many users (i.e. anser sheets should be generated per question)
+//get how many users (i.e. to know anser sheets to be generated per question)
 //this allows us to minimize the cost of printing question paper for each student: just print one type and
 //cost-efficiently roll-print as many copies as needed
 if (isset($_REQUEST['num'])) {
