@@ -1018,6 +1018,7 @@ for ($item = 1; $item <= $test_num; $item++) {
     $answer_barcode_content = "$qrcode_id,0,$answer_sheet_code_for_barcode($answer_sheet_id),USERID";
     $pdf->write1DBarcode($answer_barcode_content, 'C128A', 0, $bcy, '', 10, 0.8, $bcstyle, '');
     // $pdf->write1DBarcode($qnum, 'C128C', 0, $bcy, '', 10, 0.8, $bcstyle, '');
+    // 
 
     // reset RTL mode
     $pdf->setRTL($rtl);
