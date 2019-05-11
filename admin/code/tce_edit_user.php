@@ -458,21 +458,24 @@ if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
 			AND ta.usrgrp_user_id='.intval($_SESSION['session_user_id']).'
 			AND tb.usrgrp_user_id=user_id)';
 }
+$selection = "";
 $sql .= ' ORDER BY user_lastname, user_firstname, user_name';
 if ($r = F_db_query($sql, $db)) {
     $countitem = 1;
     while ($m = F_db_fetch_array($r)) {
-        echo '<option value="'.$m['user_id'].'"';
+        $string = $countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']);
         if ($m['user_id'] == $user_id) {
-            echo ' selected="selected"';
+            $selection = "<script> document.getElementById('user_id').value = `$string` </script>";
         }
-        echo '>'.$countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']).'</option>'.K_NEWLINE;
+        echo '<option value="'.$m['user_id'].'">' . $string . '</option>'.K_NEWLINE;
         $countitem++;
     }
 } else {
     echo '</input></span></div>'.K_NEWLINE;
     F_display_db_error();
 }
+
+//at this stage, we should echo $selection, but this will prevent dropdown suggestion unless user clears the input box
 echo '</datalist>'.K_NEWLINE;
 
 // link for user selection popup

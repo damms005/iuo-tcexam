@@ -244,10 +244,17 @@ CREATE TABLE tce_testuser_stat (
 ) ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-
 CREATE TABLE tce_qrcodes (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	qrcode TEXT NOT NULL,
+ PRIMARY KEY (id)
+) ENGINE = InnoDB
+CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+CREATE TABLE tce_settings (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
+	vaalue TEXT NOT NULL,
  PRIMARY KEY (id)
 ) ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_unicode_ci;

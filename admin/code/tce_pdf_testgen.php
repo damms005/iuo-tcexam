@@ -48,12 +48,13 @@ if (isset($_REQUEST['test_id']) and ($_REQUEST['test_id'] > 0)) {
     exit;
 }
 
+//get number of tests (question types) to generate
 if (isset($_REQUEST['num'])) {
     $test_num = intval($_REQUEST['num']);
 } else {
     $test_num = 1;
 }
-//get how many users (i.e. anser sheets should be generated per question)
+//get how many users (i.e. to know anser sheets to be generated per question)
 //this allows us to minimize the cost of printing question paper for each student: just print one type and
 //cost-efficiently roll-print as many copies as needed
 if (isset($_REQUEST['num'])) {
@@ -733,7 +734,7 @@ for ($item = 1; $item <= $test_num; $item++) {
             //instead using $answer_sheet_id, let's use a more unique id, such that even if scanned docs are mixed with
             //old docs, chances of collision are reduced. Ideally, we would have rather used this as $answer_sheet_id printed
             //for users, but it will be too long
-            $header_text="PAPER TYPE: $question_paper_type\nANSWER SHEET ID: $answer_sheet_id";
+            $header_text="PAPER TYPE: <b> $question_paper_type<\b>\nANSWER SHEET ID: <b>$answer_sheet_id<\b>";
             $pdf->resetHeaderTemplate();
             $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, $header_text);
             $pdf->AddPage('P');

@@ -292,8 +292,11 @@ echo '<span class="label">'.K_NEWLINE;
 echo '<label for="user_id">'.$l['w_user'].'</label>'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '<span class="formw">'.K_NEWLINE;
-//echo '<select name="user_id" id="user_id" size="0" onchange="document.getElementById(\'form_resultallusers\').submit()">'.K_NEWLINE;
-echo '<select name="user_id" id="user_id" size="0">'.K_NEWLINE;
+
+//echo '<datalist name="user_id" id="user_id" size="0" onchange="document.getElementById(\'form_resultallusers\').submit()">'.K_NEWLINE;
+// echo '<select name="user_id" id="user_id" size="0">'.K_NEWLINE;
+echo '<input list="user_data_list" name="user_id" id="user_id" size="0" onchange="document.getElementById(\'form_resultallusers\').submit()" />' . K_NEWLINE;
+echo '<datalist id="user_data_list">' . K_NEWLINE;
 $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM '.K_TABLE_USERS.'';
 if ($test_id > 0) {
     $sql .= ', '.K_TABLE_TEST_USER.' WHERE testuser_user_id=user_id AND testuser_test_id='.$test_id.'';
@@ -319,10 +322,12 @@ if ($r = F_db_query($sql, $db)) {
         $countitem++;
     }
 } else {
-    echo '</select></span></div>'.K_NEWLINE;
+    // echo '</select></span></div>'.K_NEWLINE;
+    echo '</datalist></span></div>'.K_NEWLINE;
     F_display_db_error();
 }
-echo '</select>'.K_NEWLINE;
+echo '</datalist>' . K_NEWLINE;
+// echo '</select>'.K_NEWLINE;
 
 // link for user selection popup
 $jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';

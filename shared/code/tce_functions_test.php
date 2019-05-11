@@ -344,7 +344,14 @@ function F_terminateUserTest($test_id)
  * @param $user_id (int) user ID
  * @param $test_id (int) test ID
  * @param $duration (int) test duration in seconds
- * @return array of (test_status_code, testuser_id). test_status_code: <ul><li>0 = the test generation process is started but not completed;</li><li>1 = the test has been successfully created;</li><li>2 = all questions have been displayed to the user;</li><li>3 = all questions have been answered;</li><li>4 = test locked (for timeout);</li><li>5 or more = old version of repeated test;</li></ul>
+ * @return array of (test_status_code, testuser_id). 
+ *                  test_status_code: <ul>
+ *                  <li>0 = the test generation process is started but not completed;</li>
+ *                  <li>1 = the test has been successfully created;</li>
+ *                  <li>2 = all questions have been displayed to the user;</li>
+ *                  <li>3 = all questions have been answered;</li>
+ *                  <li>4 = test locked (for timeout);</li>
+ *                  <li>5 or more = old version of repeated test;</li></ul>
  */
 function F_checkTestStatus($user_id, $test_id, $duration)
 {

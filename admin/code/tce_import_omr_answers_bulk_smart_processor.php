@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 //============================================================+
 // File name   : tce_import_omr_answers_bulk_smart_processor.php
 // Begin       : 2019-01-21
@@ -20,234 +21,116 @@
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
+use Symfony\Component\Filesystem\Filesystem;
+
 require_once '../config/tce_config.php';
-
-$pagelevel       = K_AUTH_ADMIN_OMR_IMPORT;
-require_once '../../shared/code/tce_authorization.php';
-
-$thispage_title = $l['t_omr_answers_importer'];
 require_once '../../shared/code/tce_functions_tcecode.php';
 require_once '../../shared/code/tce_functions_auth_sql.php';
 require_once 'tce_functions_omr.php';
+require_once 'tce_functions_smart_omr.php';
+require_once 'tce_functions_user_select.php';
 
 // upload is done one-by-one so we do not clock the file upload limit
+// Report all errors except E_NOTICE
+error_reporting(E_ALL & ~E_NOTICE);
 
-if (isset($_FILES)) {
+if (!empty($_FILES)) {
 
-    // STAGE 1:
-    // 
     // *each file will carry a job_id and total_number_files
     // *with the job_id, we will use the total_number_files value to know the total files expected for the marking session
     // *upon receipt of a file, create a temporary tmp_smart_omr folder in the OMR directory
     // *inside tmp_smart_omr dir, mkdir for this job_id. Also create an entry in the db for this marking session, using the job_id as unique id
-    // *inside tmp_smart_omr/job_id/; save all the files that belongs to this marking session until total_number_files reached 
+    // *inside tmp_smart_omr/job_id/; save all the files that belongs to this marking session until total_number_files reached
     // *when total_number_files reached, update the status of the db entry as "files upload completed, commenced marking"
-    // 
-    if($_FILES['omrfile']['error'] == 0){
-        $data = getOrCreateJob($_POST['job_id']);
-        $dir = getJobFolder($_POST['job_id']);
-        $name = basename($_FILES["pictures"]["name"][$key]);
-        if(!move_uploaded_file( $_FILES['omrfile']['tmp_name'], "$dir/$name" )){
-            exit("Could not process uploaded file location");
+
+    if (isset($_FILES['omrfile']) && $_FILES['omrfile']['error'] == 0) {
+
+        if (empty(trim($_POST['job_id']))) {
+            exit("Job id not set");
         }
 
-        // -inside tmp_smart_omr/job_id/; save all the files that belongs to this marking session until total_number_files reached (dont foget to do `if ($_FILES['omrfile']['error'][$i] == 0)`). Also helps in processing is: `($answer_page_data['doc_type'] == "ANSWERS") || ($answer_page_data['doc_type'] == "USERID")`
-        // -when total_number_files reached, update the status of the db entry as "files upload completed, commenced marking"
-        if( $_POST['total_number_files'] == count( $job_files ) ){
+        // sleep(rand(892,997));
+        //get symfony Filesystem
+        require_once __DIR__ . '/smart-omr/vendor/autoload.php';
+        $fileSystem                        = new Filesystem();
+        $job_id                            = $_POST['job_id'];
+        $job_dir                           = getJobFolder($job_id);
+        $smart_omr_marker_control_filepath = realpath(__DIR__ . "/../../") . "/cache/smart-omr-marker-control-file.lock";
 
-            //strat procseeing the foles
-            
-            updateJobStatus($_POST['job_id'] , "Files upload successfully completed");
+        if (!ensureJobExistsInDb($job_id)) {
+            endMarkingSessionWithError($job_id, "Could not initialize job: {$job_id}");
+        }
 
-            // STAGE 2:
-            // 
-            // -iterate through tmp_smart_omr/job_id/ and map the data into an array: [ 'unique_user_id' => all_omr_file_names_including_id_page ]
-            // -don't forget to update the db entry with status text of how far. Client-side js always poll the db for status (for performance reasons, we may be updating the db after processing n-records, rather than at every single iteration)
-            // -When mapping complete, run each mapping through mark_student_answer($user_id, Array $omr_file_paths)
-            // -Upon completion, update db entry as completed
-            // -If any error occur at any point in the stps above, update db with the status, set db's error_col to true, and terminate the marking session
+        $name              = basename($_FILES["omrfile"]["name"]);
+        $job_db_primarykey = intval(getJobDbPrimaryKey($job_id));
 
-            $uploaded_data = [];
-            $job_files = getJobFilepaths($_POST['job_id']);
-            //extrapolate excpeted number of files
-            $omr_testdata  = F_get_omr_testdata($_FILES['omrfile']['tmp_name'][1]);
-            foreach ($job_files as $filepath) {
-                $omr_testdata  = F_get_omr_testdata($_FILES['omrfile']['tmp_name'][1]);
-            }
+        if (!is_uploaded_file($_FILES['omrfile']['tmp_name'])) {
+            endMarkingSessionWithError($job_id, "Uploaded file error: {$_FILES['omrfile']['tmp_name']}");
+        }
 
-            //TCExam now reduces paper wastage by saving qrcode into db and encoding same on
-            //answer sheets
-            //use one of the uploaded files to get the qrcode
-            $num_questions = (count($omr_testdata) - 1);
-            $num_pages     = ceil($num_questions / 30);
-            $omr_answers   = array();
-            for ($i = 0; $i < count($_FILES['omrfile']['tmp_name']); ++$i) {
-                // read OMR DATA page
-                $data_file = $_FILES['omrfile']['tmp_name'][$i];
-                $name      = $_FILES['omrfile']['name'][$i];
-                if (!empty($name)) {
-                    if ($_FILES['omrfile']['error'][$i] == 0) {
-                        $answer_page_data = F_extract_code_data_from_answer_page($data_file);
-                        if ($answer_page_data['doc_type'] == "ANSWERS") {
-                            $answers_page = F_realDecodeOMRPage($data_file, $answer_page_data['start_number']);
-                        } else {
-                            if ($answer_page_data['doc_type'] == "USERID") {
-                                $user_id = F_decodeIDentificationPage($data_file);
-                                $user_id = intval(implode('', $user_id));
-                                continue;
-                            } else {
-                                exit("Unidentified document: {$_FILES['omrfile']['name'][$i]}");
-                            }
-                        }
-                        if (($answers_page !== false) and !empty($answers_page)) {
-                            $omr_answers += $answers_page;
-                        } else {
-                            F_print_error('ERROR', '[OMR ANSWER SHEET ' . $i . '] ' . $l['m_omr_wrong_answer_sheet']);
-                        }
-                    } else {
-                        F_print_error('ERROR', '[OMR ANSWER SHEET ' . $i . '] ' . $l['m_omr_wrong_answer_sheet']);
-                    }
-                }
-            }
-            // sort answers (it should have been already sorted though - we are simply indirectly sorting questions here (i.e. consequently, the anserws group attached to each question s soted together with that question as a single unit of sort \_(0)_/ ))
-            ksort($omr_answers);
+        //reduce time wasted on uneccesarily large files. Theretically, the higher the resolution, the easier it is to comute accurately. But in the real wolrld, at least as it applies to us, it doesn't make any differnce other than the fact that it takes longer to achieve same resul
+        //copy appropriately, creating needed directories as requiredt
+        $newpath = "$job_dir/$name";
+        $fileSystem->copy($_FILES['omrfile']['tmp_name'], $newpath, true);
+        F_ensure_optimum_size($job_id, $newpath);
 
-            // import answers
-            if (F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, true)) {
-                $testuser_id = F_get_testuser_id($omr_testdata[0], $user_id);
-                F_print_error('MESSAGE', $l['m_import_ok']
-                    . ': <a href="tce_show_result_user.php?' .
-                    ' testuser_id=' . $testuser_id
-                    . '&test_id=' . $omr_testdata[0]
-                    . '&user_id=' . $user_id
-                    . '" title="' . $l['t_result_user']
-                    . '" style="text-decoration:underline;color:#0000ff;">'
-                    . $l['w_results'] . '</a>');
+        //now that we have saved this file, get it, alongside those that were uploaded prior
+        $job_files = getJobFilepaths($job_id);
+
+        //we need to atomize here because we want to make it impossible for user to make
+        //triggering concurrent running at this stage.
+        session_start();
+        $_SESSION['job_id'] = $job_id;
+
+        if ($_POST['total_number_files'] == count($job_files)) {
+
+            if (!all_required_files_uploaded($_POST["job_id"])) {
+                updateJobStatus($job_db_primarykey, 1, "all_required_files_uploaded");
+                updateJobStatus($job_db_primarykey, "Files upload successfully completed [$name]");
             } else {
-                F_print_error('ERROR', $l['m_import_error']);
+                exit("Exited: concurrent marking session prevented");
             }
 
-            // do not remove uploaded files...for reference sake
-        }else{
-            //continue receviing file uploads
-        }
+            session_write_close();
 
-    }else{
-        exit('File error');
-    }
-}else{
-    if (isset($_POST['getStatus'])) {
-        exit(getStatusOfMarkingSession( $_POST['jobId'] ));
-    }
-}
+            //we are not marking immediately now because we want client to get response of file uploads immediately
+            //If not, client will wait long for this processing to be copleted - client needs to make UI adjustments
+            //based on if all files are uploaded, etc
+            exit("completed...will start marking on client's prompt");
 
-function getStatusOfMarkingSession( $jobId ){
-    global $db;
-    if (!$r = F_db_query("SELECT status_text , percentage_progress FROM tce_smart_jobs WHERE job_id = '".F_escape_sql($db, $job_id)."'", $db)) {
-        F_display_db_error();
-        exit('Db error');
-    }else{
-        $data = F_db_fetch_array($r);
-        exit([
-            'status_text => '$data['status_text'],
-            'percentage_progress => '$data['percentage_progress'],
-        ]);
-    }
-}
-
-function mark_student_answer($user_id, string $answersheet_id, Array $omr_file_paths, int $qrcode_db_id){
-    //TCExam now reduces paper wastage by saving qrcode into db and encoding same on
-    //answer sheets
-    $omr_testdata  = F_get_omr_testdata_by_id($qrcode_db_id);
-    $num_questions = (count($omr_testdata) - 1);
-    $num_pages     = ceil($num_questions / 30);
-    if(count($omr_file_paths['answer_sheets']) != $num_pages ){
-        exit("Error: found " . count($omr_file_paths['answer_sheets']) . " out of {$num_pages} answer sheets expected for user with answer sheet id {$answersheet_id}");
-    }
-
-    $omr_answers   = array();
-    for ($i = 0; $i < count($omr_file_paths['answer_sheets']); ++$i) {
-        $answer_page_data = F_extract_code_data_from_answer_page($omr_file_paths['answer_sheets'][$i]);
-        if ($answer_page_data['doc_type'] == "ANSWERS") {
-            $answers_page = F_realDecodeOMRPage($data_file, $answer_page_data['start_number']);
-        } 
-
-        if (($answers_page !== false) and !empty($answers_page)) {
-            $omr_answers += $answers_page;
         } else {
-            F_print_error('ERROR', '[OMR ANSWER SHEET ' . $i . '] ' . $l['m_omr_wrong_answer_sheet']);
+            //continue receiving file uploads
+            exit("expecting more data (" . count($job_files) . " != " . $_POST['total_number_files'] . ") -> [$name]");
         }
-    }
-
-    // sort answers (it should have been already sorted though - we are simply indirectly sorting questions here (i.e. consequently, the anserws group attached to each question s soted together with that question as a single unit of sort \_(0)_/ ))
-    ksort($omr_answers);
-
-    // import answers
-    if (F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, true)) {
-        return true;
     } else {
-        F_print_error('ERROR', $l['m_import_error']);
+        //do not show this because browser does a pre-flight request to this script before making our
+        //normal request, thus creating unecesaary xhr entries in Network tab of debug
+        //windos (we just to avoid clusters/noise in debug window coz of preflifhgt requests)
+        // exit('File error');
     }
 }
 
-function getOrCreateJob($job_id)
-{
-    global $db;
-    //see if the job_id in already in database
-    if (!$r = F_db_query("SELECT job_id FROM tce_smart_jobs WHERE job_id = '".F_escape_sql($db, $job_id)."'", $db)) {
-        F_display_db_error();
-        exit('Db error');
+if (isset($_POST['all_available_files_uploaded'])) {
+
+    //Client sends us this so that server can set some specific error meesaages if need be
+
+    //if it is client telling us that he has finished uploading all the supplied files
+    //and server still wants more, then let client know that there is an error, as you
+    //cannot just say you done when we still expect more!
+
+    // $status = getJobStatus($_POST['job_id']);
+    // endMarkingSessionWithError( $_POST['job_id'], "You have some files not yet uploaded. Please fix those and re-upload" );
+
+}
+
+if (isset($_POST['startProessingUploadedScripts'])) {
+    $job_files         = getJobFilepaths($_POST['job_id']);
+    $job_db_primarykey = intval(getJobDbPrimaryKey($_POST['job_id']));
+    if ($job_files) {
+        exit(startProcessing($_POST["job_id"], $job_db_primarykey, $job_files));
+    } else {
+        exit("No job files found");
     }
-
-    $data = F_db_fetch_array($r);
-    if( empty($data) ) {
-      //instantiate this job
-      if (!$r = F_db_query("INSERT INTO tce_smart_jobs (job_id , status_text) '".F_escape_sql($db, $job_id)."'", $db)) {
-        F_display_db_error();
-        exit('Db error');
-      }
-
-      //create the job's folder
-      if(mkdir( getJobFolder($job_id) , 0777 , true )){
-        return F_db_fetch_array($r);
-      }else{
-        exit("Could not initiate marking job");
-      }
-    }else{
-        return $data;
-    }
-}
-
-function getJobFolder($job_id){
-    return K_PATH_CACHE . '/jobs/' . $job_id;
-}
-
-function getJobFilepaths($job_id){
-    $files = [];
-    $dir = getJobFolder($job_id);
-    $cdir = scandir($dir); 
-    foreach ($cdir as $key => $value) 
-    { 
-      if (!in_array($value,array(".",".."))) 
-      { 
-         $filePath = $dir . DIRECTORY_SEPARATOR . $value;
-         if ( !is_dir( $filePath ) ) 
-         { 
-            $files[] = $filePath; 
-         } 
-      } 
-    }
-    return $files;
-}
-
-function updateJobStatus($job_id , $status)
-{
-    global $db;
-    return F_db_query("UPDATE tce_smart_jobs status_text = '" . F_escape_sql($db, $status) . "' WHERE job_id = '" . F_escape_sql($db, $job_id) . "' ", $db)) {
-}
-
-function getJobFolder($job_id){
-
 }
 
 //============================================================+
