@@ -1314,6 +1314,25 @@ if (isset($test_id) and ($test_id > 0)) {
     echo '<br /><br />'.K_NEWLINE;
     echo '</div>'.K_NEWLINE;
 
+    ?>
+
+    <script>
+        function generate_pdf( test_id ){
+            var number_of_copies = 0;
+            pdfWindow=window.open(
+                    `tce_pdf_testgen.php?test_id=${test_id}`+
+                    '&num='
+                    + document.getElementById('form_testeditor').test_num.value 
+                    + '&number_of_users_per_test_copy_type='
+                    + document.getElementById('form_testeditor').number_of_users_per_test_copy_type.value 
+                    + '','pdfWindow','dependent,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes'
+                ); 
+            return false;
+        }
+    </script>
+
+    <?php
+
     echo '</fieldset>'.K_NEWLINE;
 
     echo '<div class="row"><br /></div>'.K_NEWLINE;
@@ -1324,8 +1343,12 @@ if (isset($test_id) and ($test_id > 0)) {
         echo '<label for="test_num">'.$l['w_pdf_offline_test'].'</label>'.K_NEWLINE;
         echo '</span>'.K_NEWLINE;
         echo '<span class="formw">'.K_NEWLINE;
-        echo '<input type="text" name="test_num" id="test_num" value="'.$test_num.'" size="4" maxlength="10" title="'.$l['h_pdf_offline_test'].'" />'.K_NEWLINE;
-        echo '<a href="tce_pdf_testgen.php?test_id='.$test_id.'&amp;num='.$test_num.'" title="'.$l['h_pdf_offline_test'].'" class="xmlbutton" onclick="pdfWindow=window.open(\'tce_pdf_testgen.php?test_id='.$test_id.'&amp;num=\' + document.getElementById(\'form_testeditor\').test_num.value + \'\',\'pdfWindow\',\'dependent,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes\'); return false;">'.$l['w_generate'].'</a>';
+        echo '<input type="number" name="test_num" id="test_num" value="'.$test_num.'" size="2" maxlength="3" title="'.$l['h_pdf_offline_test'].'" />'.K_NEWLINE;
+        echo '<input type="number" id="number_of_users_per_test_copy_type" size="2" maxlength="3" title="number of users per copy" />'.K_NEWLINE;
+        echo "<a href='#' title='{$l['h_pdf_offline_test']}' class='xmlbutton' 
+                onclick='return generate_pdf( {$test_id} )'>
+                {$l['w_generate']}
+             </a>";
         echo '</span>&nbsp;'.K_NEWLINE;
         echo '</div>'.K_NEWLINE;
     }

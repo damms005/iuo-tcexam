@@ -53,6 +53,14 @@ if (isset($_REQUEST['num'])) {
 } else {
     $test_num = 1;
 }
+//get how many users (i.e. anser sheets should be generated per question)
+//this allows us to minimize the cost of printing question paper for each student: just print one type and
+//cost-efficiently roll-print as many copies as needed
+if (isset($_REQUEST['num'])) {
+    $number_of_users_per_test_copy_type = intval($_REQUEST['number_of_users_per_test_copy_type']);
+} else {
+    $number_of_users_per_test_copy_type = 1;
+}
 
 $doc_title = unhtmlentities($l['w_test']);
 $doc_description = F_compact_string(unhtmlentities($l['h_test']));
@@ -85,7 +93,8 @@ $pdf->SetSubject($doc_description);
 $pdf->SetKeywords('TCExam, '.$doc_title);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
 
-$pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+//move this to question generation section below
+// $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
@@ -94,7 +103,7 @@ $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 $pdf->setHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->setFooterMargin(PDF_MARGIN_FOOTER);
 
-$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setHeaderFont(array('courier', '', PDF_FONT_SIZE_MAIN));
 $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 $pdf->setLanguageArray($l); //set language items
@@ -193,11 +202,14 @@ switch ($test_questions_order_mode) {
 }
 
 // NOTE: PDF tests are always random
-
+$existing_question_type=[];
 for ($item = 1; $item <= $test_num; $item++) {
     // generate $test_num tests
-
+    //we are settign header data below so that each question paper page printout wil have appropriated question type printed
+    $question_paper_type = generate_unique_question_paper_type( $existing_question_type );
+    $pdf->resetHeaderTemplate();
     $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+    $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, "PAPER TYPE: $question_paper_type");
 
     // data to be printed as QR-Code to be later used as input from scanner/image
     $barcode_test_data = array();
@@ -637,14 +649,14 @@ for ($item = 1; $item <= $test_num; $item++) {
     // remove default barcodes from header and footer to not interfere with data QR-code
     $pdf->resetHeaderTemplate();
     $pdf->setTCExamBackLink('');
-    $pdf->AddPage('P'); // force portrait mode
+    // $pdf->AddPage('P'); // force portrait mode
     $pdf->setBarcode('');
 
     $pdf->SetTextColor(255, 0, 0);
     $pdf->SetFont(PDF_FONT_NAME_DATA, '', round(PDF_FONT_SIZE_DATA * 1.5));
-    $pdf->Cell(0, 0, 'OMR DATA', 0, 1, 'C', false, '', 0, false, 'T', 'M');
+    // $pdf->Cell(0, 0, 'OMR DATA', 0, 1, 'C', false, '', 0, false, 'T', 'M');
     $pdf->SetFont(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA);
-    $pdf->Cell(0, 0, '['.$test_ref.']', 0, 1, 'C', false, '', 0, false, 'T', 'M');
+    // $pdf->Cell(0, 0, '['.$test_ref.']', 0, 1, 'C', false, '', 0, false, 'T', 'M');
     $pdf->SetTextColor(0, 0, 0);
 
     // encode data to be printed on QR-Code
@@ -656,7 +668,15 @@ for ($item = 1; $item <= $test_num; $item++) {
 
     // QR-CODE mode H (best error correction)
     // This will be used to create test logs
-    $pdf->write2DBarcode($qr_test_data, 'QRCODE,L', '', $qry, '', '', $qrstyle, 'N');
+    //rather write barcode data to db and encode its db id to each answer page
+    // $pdf->write2DBarcode($qr_test_data, 'QRCODE,L', '', $qry, '', '', $qrstyle, 'N');
+    $sql = "INSERT INTO ".K_TABLE_QRCODES." (qrcode) VALUES('".F_escape_sql($db, $qr_test_data)."')";
+    if (!$r = F_db_query($sql, $db)) {
+        F_display_db_error();
+    } else {
+        // get the id for the inserted qrcode, so we can include it on answer sheets
+        $qrcode_id = F_db_insert_id($db);
+    }
 
     // --- OMR ANSWER SHEET ---------------------------------------------------
 
@@ -700,141 +720,333 @@ for ($item = 1; $item <= $test_num; $item++) {
     // disable auto-page-break
     $pdf->SetAutoPageBreak(false, 0);
 
-    for ($omrpage = 0; $omrpage < $num_omr_pages; ++$omrpage) {
-        $pdf->AddPage('P');
+    $answer_sheet_code_for_barcode = generate_unique_answersheet_code();
 
-        $pdf->SetTextColor(255, 0, 0);
-        $pdf->SetFont(PDF_FONT_NAME_DATA, '', round(PDF_FONT_SIZE_DATA * 1.5));
-        $pdf->Cell(0, 0, 'OMR ANSWER SHEET '.($omrpage + 1), 0, 1, 'C', false, '', 0, false, 'T', 'M');
-        $pdf->SetFont(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA);
-        $pdf->Cell(0, 0, '['.$test_ref.']', 0, 1, 'C', false, '', 0, false, 'T', 'M');
-        $pdf->SetTextColor(0, 0, 0);
+    $counter = 1;
+    for ($copy=1; $copy <= $number_of_users_per_test_copy_type; $copy++) {
+        //each of these answer sheets will have, alongside the alrady printed question type, a
+        // unique code that ties it to a corresponding identification page.
+        //This is invented to take care of bulk marking: the system will simply scan through provided
+        //documents, get the answer sheets that match, and automatically match the together
+        $answer_sheet_id = $question_paper_type . $counter++;
+        for ($omrpage = 0; $omrpage < $num_omr_pages; ++$omrpage) {
+            //instead using $answer_sheet_id, let's use a more unique id, such that even if scanned docs are mixed with
+            //old docs, chances of collision are reduced. Ideally, we would have rather used this as $answer_sheet_id printed
+            //for users, but it will be too long
+            $header_text="PAPER TYPE: $question_paper_type\nANSWER SHEET ID: $answer_sheet_id";
+            $pdf->resetHeaderTemplate();
+            $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, $header_text);
+            $pdf->AddPage('P');
 
-        // disable RTL mode
-        $rtl = $pdf->getRTL();
-        $pdf->setRTL(false);
+            $pdf->SetTextColor(255, 0, 0);
+            $pdf->SetFont(PDF_FONT_NAME_DATA, '', round(PDF_FONT_SIZE_DATA * 1.5));
+            $pdf->Cell(0, 0, 'ANSWER SHEET '.($omrpage + 1), 0, 1, 'C', false, '', 0, false, 'T', 'M');
+            $pdf->SetFont(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA);
+            //print something else instead of outrightly removing it - perhaps it contributes to all these decimal-precise
+            //dimensions and calculations going on!
+            // $pdf->Cell(0, 0, '['.$test_ref.']', 0, 1, 'C', false, '', 0, false, 'T', 'M');
+            $pdf->Cell(0, 0, ' ', 0, 1, 'C', false, '', 0, false, 'T', 'M');
+            $pdf->SetTextColor(0, 0, 0);
 
-        $x = $start_x;
-        $y = $start_y;
+            // disable RTL mode
+            $rtl = $pdf->getRTL();
+            $pdf->setRTL(false);
 
-        // --------------------
-
-        // set the starting row number (starting question number)
-        $first_question = (1 + (30 * $omrpage));
-        $qnum = sprintf('%04d', $first_question);
-
-        // --------------------
-
-        // top alignment marks for columns
-        $x = $start_x;
-        $pdf->Rect($x, $y, $align_mark_lenght, $align_mark_lenght, 'F', array(), $align_mark_color);
-        $x += $align_mark_lenght + 9;
-        $pdf->SetFont('helvetica', '', 10);
-        for ($i = 0; $i < 12; ++$i) {
-            // vertical alignment mark
-            $x += $circle_shift;
-            $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
-            $x += $circle_shift;
-            $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
-            $x += $circle_shift;
-        }
-        $y += ($row_height + $circle_half_width);
-
-        // --------------------
-
-        for ($r=0; $r < 30; ++$r) {
-            $current_question = ($first_question + $r);
-            // start at left margin
             $x = $start_x;
-            // center of circles
-            $cy = $y + $circle_half_width;
-            // left alignment mark for row
-            $pdf->Rect($x, $y + $align_mark_shift, $align_mark_lenght, $align_mark_width, 'F', array(), $align_mark_color);
-            $x += $align_mark_lenght;
-            if ($current_question <= $num_questions) {
-                if (($r % 2) != 0) {
-                    // row background
-                    $pdf->Rect($x, $y - (4 * $line_width), 166.176, $circle_width + (8 * $line_width), 'F', array(), $grid_bg_color);
-                }
-                // print question number
-                $pdf->SetXY($x, $y);
-                $pdf->SetFont('courier', 'B', 10);
-                $pdf->SetTextColorArray($grid_color);
-                $pdf->Cell(8, $circle_width, $current_question, 0, 0, 'R', false, '', 0, true, 'T', 'M');
-                $x += 9;
-                // question type
-                $question_type = $questions_data[($current_question - 1)]['type'];
-                if ($question_type < 3) { // MCSA or MCMA question
-                    // number of answers
-                    $num_answers = count($barcode_test_data[$current_question][1]);
-                    for ($i = 1; $i <= 12; ++$i) { // for each answer
-                        if ($i <= $num_answers) {
-                            // print answer number
-                            $pdf->SetXY($x, $y);
-                            $pdf->SetFont('helvetica', '', 8);
-                            $pdf->SetTextColorArray($grid_color);
-                            $pdf->Cell($circle_shift, $circle_width, $i, 0, 0, 'R', false, '', 0, true, 'T', 'M');
-                            $x += $circle_shift;
-                            // select circle
-                            $pdf->Circle($x + $circle_half_width, $cy, $circle_radius, 0, 360, 'DF', $line_style, $circle_bg_color, 2);
-                            $pdf->SetXY($x, $y);
-                            $pdf->SetFont(PDF_FONT_NAME_DATA, '', 6);
-                            $pdf->SetTextColorArray($grid_bg_color);
-                            $pdf->Cell($circle_width, $circle_width, $l['w_true_acronym'], 0, 0, 'C', false, '', 1, true, 'T', 'M');
-                            $x += $circle_shift;
-                            if ($question_type == 2) { // MCMA question
+            $y = $start_y;
+
+            // --------------------
+
+            // set the starting row number (starting question number)
+            $first_question = (1 + (30 * $omrpage));
+            //since we now use C128C barcode, no need to stick to even-length chars
+            // $qnum = sprintf('%04d', $first_question);
+            $qnum = sprintf('%s', $first_question);
+
+            // --------------------
+
+            // top alignment marks for columns
+            $x = $start_x;
+            $pdf->Rect($x, $y, $align_mark_lenght, $align_mark_lenght, 'F', array(), $align_mark_color);
+            $x += $align_mark_lenght + 9;
+            $pdf->SetFont('helvetica', '', 10);
+            for ($i = 0; $i < 12; ++$i) {
+                // vertical alignment mark
+                $x += $circle_shift;
+                $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+                $x += $circle_shift;
+                $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+                $x += $circle_shift;
+            }
+            $y += ($row_height + $circle_half_width);
+
+            // --------------------
+
+            for ($r=0; $r < 30; ++$r) {
+                $current_question = ($first_question + $r);
+                // start at left margin
+                $x = $start_x;
+                // center of circles
+                $cy = $y + $circle_half_width;
+                // left alignment mark for row
+                $pdf->Rect($x, $y + $align_mark_shift, $align_mark_lenght, $align_mark_width, 'F', array(), $align_mark_color);
+                $x += $align_mark_lenght;
+                if ($current_question <= $num_questions) {
+                    if (($r % 2) != 0) {
+                        // row background
+                        $pdf->Rect($x, $y - (4 * $line_width), 166.176, $circle_width + (8 * $line_width), 'F', array(), $grid_bg_color);
+                    }
+                    // print question number
+                    $pdf->SetXY($x, $y);
+                    $pdf->SetFont('courier', 'B', 10);
+                    $pdf->SetTextColorArray($grid_color);
+                    $pdf->Cell(8, $circle_width, $current_question, 0, 0, 'R', false, '', 0, true, 'T', 'M');
+                    $x += 9;
+                    // question type
+                    $question_type = $questions_data[($current_question - 1)]['type'];
+                    if ($question_type < 3) { // MCSA or MCMA question
+                        // number of answers
+                        $num_answers = count($barcode_test_data[$current_question][1]);
+                        for ($i = 1; $i <= 12; ++$i) { // for each answer
+                            if ($i <= $num_answers) {
+                                // print answer number
+                                $pdf->SetXY($x, $y);
+                                $pdf->SetFont('helvetica', '', 8);
+                                $pdf->SetTextColorArray($grid_color);
+                                $pdf->Cell($circle_shift, $circle_width, $i, 0, 0, 'R', false, '', 0, true, 'T', 'M');
+                                $x += $circle_shift;
+                                // select circle
                                 $pdf->Circle($x + $circle_half_width, $cy, $circle_radius, 0, 360, 'DF', $line_style, $circle_bg_color, 2);
                                 $pdf->SetXY($x, $y);
-                                $pdf->Cell($circle_width, $circle_width, $l['w_false_acronym'], 0, 0, 'C', false, '', 1, true, 'T', 'M');
+                                $pdf->SetFont(PDF_FONT_NAME_DATA, '', 6);
+                                $pdf->SetTextColorArray($grid_bg_color);
+                                $pdf->Cell($circle_width, $circle_width, $l['w_true_acronym'], 0, 0, 'C', false, '', 1, true, 'T', 'M');
+                                $x += $circle_shift;
+                                if ($question_type == 2) { // MCMA question
+                                    $pdf->Circle($x + $circle_half_width, $cy, $circle_radius, 0, 360, 'DF', $line_style, $circle_bg_color, 2);
+                                    $pdf->SetXY($x, $y);
+                                    $pdf->Cell($circle_width, $circle_width, $l['w_false_acronym'], 0, 0, 'C', false, '', 1, true, 'T', 'M');
+                                }
+                            } else {
+                                $x += (2 * $circle_shift);
                             }
-                        } else {
-                            $x += (2 * $circle_shift);
+                            $x += $circle_shift;
                         }
-                        $x += $circle_shift;
+                    } else {
+                        $x += (36 * $circle_shift);
                     }
                 } else {
-                    $x += (36 * $circle_shift);
+                    $x += 9 + (36 * $circle_shift);
                 }
-            } else {
-                $x += 9 + (36 * $circle_shift);
+                $x += $circle_shift;
+                // right alignment mark for row
+                $pdf->Rect($x, $y + $align_mark_shift, $align_mark_lenght, $align_mark_width, 'F', array(), $align_mark_color);
+                $y += $row_height;
             }
-            $x += $circle_shift;
-            // right alignment mark for row
-            $pdf->Rect($x, $y + $align_mark_shift, $align_mark_lenght, $align_mark_width, 'F', array(), $align_mark_color);
-            $y += $row_height;
+
+            // --------------------
+
+            // bottom alignment marks for columns
+            $x = $start_x + $align_mark_lenght + 9;
+            $y += $circle_half_width;
+            $pdf->SetFont('helvetica', '', 10);
+            for ($i = 0; $i < 12; ++$i) {
+                // vertical alignment mark
+                $x += $circle_shift;
+                $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+                $x += $circle_shift;
+                $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+                $x += $circle_shift;
+            }
+
+            // --------------------
+
+            // set barcode to identify starting question number
+            //Also encode in the barcode, the qrcode database id
+            //http://www.vfinspections.com/mpdf/examples/example37_barcodes.php
+            //CODE 128 C. Valid characters: [0-9]. Must be an even number of digits. Checksum digit: automatic.
+            //This means we cannot use C128C specs
+            $answer_barcode_content = "$qrcode_id,$qnum,$answer_sheet_code_for_barcode($answer_sheet_id-".($omrpage+1)."),ANSWERS";
+            $pdf->write1DBarcode($answer_barcode_content, 'C128A', 0, $bcy, '', 10, 0.8, $bcstyle, '');
+            // $pdf->write1DBarcode($qnum, 'C128C', 0, $bcy, '', 10, 0.8, $bcstyle, '');
+
+            // reset RTL mode
+            $pdf->setRTL($rtl);
+        } // end for each OMR page
+
+    //now generate barcode for the registration page
+    /*
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    ******* S T A R T :: R E G I S T R A T I O N  P A G E*********
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    */
+
+
+    $header_text="IDENTIFICATION PAGE \nANSWER SHEET ID: $answer_sheet_id";
+    $pdf->resetHeaderTemplate();
+    $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, $header_text);
+    $pdf->AddPage('P');
+
+    $pdf->SetTextColor(255, 0, 0);
+    $pdf->SetFont(PDF_FONT_NAME_DATA, '', round(PDF_FONT_SIZE_DATA * 1.5));
+    $pdf->Cell(0, 0, 'IDENTIFICATION PAGE', 0, 1, 'C', false, '', 0, false, 'T', 'M');
+    $pdf->SetFont(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA);
+    //we won't be printing anything visible here so as not to confuse users. However, we just want to
+    //print something instead of outrightly removing it - perhaps it contributes to all these decimal-precise
+    //dimensions and calculations going on!
+    $pdf->Cell(0, 0, ' ', 0, 1, 'C', false, '', 0, false, 'T', 'M');
+    $pdf->SetTextColor(0, 0, 0);
+
+    // disable RTL mode
+    $rtl = $pdf->getRTL();
+    $pdf->setRTL(false);
+
+    // center the block on the page
+    $start_x = (($pagedim['wk'] - 173.964) / 2);
+    $start_y = (($pagedim['hk'] - 178.062) / 2);
+
+    $x = $start_x;
+    $y = $start_y;
+
+    // --------------------
+
+    // set the starting row number (starting question number)
+    $first_question = (1 + (30 * $omrpage));
+
+    // --------------------
+
+    // top alignment marks for columns
+    $x = $start_x;
+    $pdf->Rect($x, $y, $align_mark_lenght, $align_mark_lenght, 'F', array(), $align_mark_color);
+    $x += $align_mark_lenght + 9;
+    $pdf->SetFont('helvetica', '', 10);
+    for ($i = 0; $i < 12; ++$i) {
+        // vertical alignment mark
+        $x += $circle_shift;
+        $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+        $x += $circle_shift;
+        $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+        $x += $circle_shift;
+    }
+    $y += ($row_height + $circle_half_width);
+
+    // --------------------
+
+    for ($r=0; $r < 30; ++$r) {
+        $current_question = ($first_question + $r);
+        // start at left margin
+        $x = $start_x;
+        // center of circles
+        $cy = $y + $circle_half_width;
+        // left alignment mark for row
+        $pdf->Rect($x, $y + $align_mark_shift, $align_mark_lenght, $align_mark_width, 'F', array(), $align_mark_color);
+        $x += $align_mark_lenght;
+        if ($r <= 5) {
+            if (($r % 2) != 0) {
+                // row background
+                $pdf->Rect($x, $y - (4 * $line_width), 166.176, $circle_width + (8 * $line_width), 'F', array(), $grid_bg_color);
+            }
+            // print question number
+            $pdf->SetXY($x, $y);
+            $pdf->SetFont('courier', 'B', 10);
+            $pdf->SetTextColorArray($grid_color);
+            //printed should be $current_question, but we not removing it because it may constitte
+            //part of the whole dimension precision thing
+            $pdf->Cell(8, $circle_width, ' ', 0, 0, 'R', false, '', 0, true, 'T', 'M');
+            $x += 9;
+            if (true) { // MCSA or MCMA question
+                // number of answers
+                for ($i = 0; $i <= 9; ++$i) { // for each answer
+                    // print answer number
+                    $pdf->SetXY($x, $y);
+                    $pdf->SetFont('helvetica', '', 8);
+                    $pdf->SetTextColorArray($grid_color);
+                    $pdf->Cell($circle_shift, $circle_width, $i, 0, 0, 'R', false, '', 0, true, 'T', 'M');
+                    $x += $circle_shift;
+                    // select circle
+                    $pdf->Circle($x + $circle_half_width, $cy, $circle_radius, 0, 360, 'DF', $line_style, $circle_bg_color, 2);
+                    $pdf->SetXY($x, $y);
+                    $pdf->SetFont(PDF_FONT_NAME_DATA, '', 6);
+                    $pdf->SetTextColorArray($grid_bg_color);
+                    $pdf->Cell($circle_width, $circle_width, $l['w_true_acronym'], 0, 0, 'C', false, '', 1, true, 'T', 'M');
+                    $x += 2 * $circle_shift;
+                }
+                //add more space so that right alignment mark is well positioned
+                $x += (6 * $circle_shift);
+            }
+        } else {
+            $x += 9 + (36 * $circle_shift);
         }
+        $x += $circle_shift;
+        // right alignment mark for row
+        $pdf->Rect($x, $y + $align_mark_shift, $align_mark_lenght, $align_mark_width, 'F', array(), $align_mark_color);
+        $y += $row_height;
+    }
 
-        // --------------------
+    // --------------------
 
-        // bottom alignment marks for columns
-        $x = $start_x + $align_mark_lenght + 9;
-        $y += $circle_half_width;
-        $pdf->SetFont('helvetica', '', 10);
-        for ($i = 0; $i < 12; ++$i) {
-            // vertical alignment mark
-            $x += $circle_shift;
-            $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
-            $x += $circle_shift;
-            $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
-            $x += $circle_shift;
-        }
+    // bottom alignment marks for columns
+    $x = $start_x + $align_mark_lenght + 9;
+    $y += $circle_half_width;
+    $pdf->SetFont('helvetica', '', 10);
+    for ($i = 0; $i < 12; ++$i) {
+        // vertical alignment mark
+        $x += $circle_shift;
+        $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+        $x += $circle_shift;
+        $pdf->Rect($x + $align_mark_shift, $y, $align_mark_width, $align_mark_lenght, 'F', array(), $align_mark_color);
+        $x += $circle_shift;
+    }
 
-        // --------------------
+    // --------------------
 
-        // set barcode to identify starting question number
-        $pdf->write1DBarcode($qnum, 'C128C', 0, $bcy, '', 10, 0.8, $bcstyle, '');
+    // set barcode to identify starting question number
+    //Also encode in the barcode, the qrcode database id
+    //http://www.vfinspections.com/mpdf/examples/example37_barcodes.php
+    //CODE 128 C. Valid characters: [0-9]. Must be an even number of digits. Checksum digit: automatic.
+    //This means we cannot use C128C specs
+    //we are putting 0 so that we have same array length with answers when we eplode( @import) - in that zero location it would have been the starting_number for the page (i.e. if it were to be an anser page conf. identification page)
+    $answer_barcode_content = "$qrcode_id,0,$answer_sheet_code_for_barcode($answer_sheet_id),USERID";
+    $pdf->write1DBarcode($answer_barcode_content, 'C128A', 0, $bcy, '', 10, 0.8, $bcstyle, '');
+    // $pdf->write1DBarcode($qnum, 'C128C', 0, $bcy, '', 10, 0.8, $bcstyle, '');
 
-        // reset RTL mode
-        $pdf->setRTL($rtl);
-    } // end for each OMR page
+    // reset RTL mode
+    $pdf->setRTL($rtl);
+    /*
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    ********  E N D :: R E G I S T R A T I O N  P A G E***********
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    **************************************************************
+    */
+    }
 } //end for test_num
 
 $pdf->lastpage(true);
 $pdf->SetAutoPageBreak(false);
 $pdf->SetFont('helvetica', '', 5);
 $pdf->SetTextColor(0, 127, 255);
-$msg = "\x50\x6f\x77\x65\x72\x65\x64\x20\x62\x79\x20\x54\x43\x45\x78\x61\x6d\x20\x28\x77\x77\x77\x2e\x74\x63\x65\x78\x61\x6d\x2e\x6f\x72\x67\x29";
-$lnk = "\x68\x74\x74\x70\x3a\x2f\x2f\x77\x77\x77\x2e\x74\x63\x65\x78\x61\x6d\x2e\x6f\x72\x67";
+
+// $msg = "\x50\x6f\x77\x65\x72\x65\x64\x20\x62\x79\x20\x54\x43\x45\x78\x61\x6d\x20\x28\x77\x77\x77\x2e\x74\x63\x65\x78\x61\x6d\x2e\x6f\x72\x67\x29";
+// $lnk = "\x68\x74\x74\x70\x3a\x2f\x2f\x77\x77\x77\x2e\x74\x63\x65\x78\x61\x6d\x2e\x6f\x72\x67";
+$msg = "Powered by Anchis & Kolbins";
+$lnk = "http://www.anchisandkolbins.com";
 $pdf->SetXY(15, $pdf->getPageHeight(), true);
 $pdf->Cell(0, 0, $msg, 0, 0, 'R', 0, $lnk, 0, false, 'B', 'B');
 
