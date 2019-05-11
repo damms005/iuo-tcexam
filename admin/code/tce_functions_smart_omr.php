@@ -23,6 +23,8 @@
 function startProcessing($job_id, $job_db_primarykey, $job_files)
 {
 
+    require "./classes/ScannerTypes.php";
+
     set_time_limit(0);
 
     updateJobStatus($job_db_primarykey, 1, "percentage_progress");
@@ -40,6 +42,9 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
     $uploaded_data      = [];
     $universal_counter  = 1;
     $omr_insertion_data = [];
+
+    // $scannertype        = ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE;
+    $scannertype        = ScannerTypes::DEFAULT_SCANNER;
 
     $start_processing_all = microtime(true);
 
@@ -96,7 +101,7 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
         } else {
             if ($encoded_data['doc_type'] == "USERID") {
                 try {
-                    $userId = F_decodeIDentificationPage($filepath, $job_id);
+                    $userId = F_decodeIDentificationPage($filepath, $job_id, $scannertype);
                 } catch (\Exception $th) {
                     endMarkingSessionWithError($job_id, "Error: $th - " . $name);
                 }
@@ -200,7 +205,7 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
                 updateJobStatus($job_db_primarykey, "Checking answers for {$user['user_firstname']} {$user['user_lastname']}  [$name]");
             }
 
-            if ($insertion = mark_student_answer($job_id, $entries['user_id'], $entries['answer_pages'], $entries['filename'])) {
+            if ($insertion = mark_student_answer($job_id, $entries['user_id'], $entries['answer_pages'], $entries['filename'], $scannertype)) {
 
                 $omr_insertion_data[] = [
                     'omr_data'  => $entries['omr_data'],
@@ -273,14 +278,14 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
  * @param  Array  $omr_file_paths [description]
  * @return [Array]                [an array of omr reords to insert into db, typically after substracting the marking units from available marking units]
  */
-function mark_student_answer($job_id, $user_id, array $answersheets, $filename): array
+function mark_student_answer($job_id, $user_id, array $answersheets, $filename, int $scannertype): array
 {
     //TCExam now reduces paper wastage by saving qrcode into db and encoding same on
     //answer sheets
     $omr_answers = array();
 
     for ($i = 0; $i < count($answersheets); ++$i) {
-        $answers_page = F_realDecodeOMRPage($job_id, $answersheets[$i]['file'], $answersheets[$i]['start_number']);
+        $answers_page = F_realDecodeOMRPage($job_id, $answersheets[$i]['file'], $answersheets[$i]['start_number'], $scannertype);
         if (($answers_page !== false) and !empty($answers_page)) {
             $omr_answers += $answers_page;
         } else {
@@ -319,7 +324,7 @@ function ensureJobExistsInDb($job_id)
 function getJobFolder($job_id)
 {
     //cache definition has trailing slash
-    return K_PATH_CACHE . 'jobs/' . $job_id;
+    return K_PATH_CACHE . '/logs/jobs/' . $job_id;
 }
 
 /**
@@ -478,15 +483,15 @@ function notifyElapseTime($tag, $relative_microtime)
     echo "$tag took " . (microtime(true) - $relative_microtime) . " secs... <br /> \n";
 }
 
-function F_get_useable_image_base_on_scanner_type($image, $job_id, $scannertype = 1)
+function F_get_useable_image_base_on_scanner_type($image, $job_id, int $scannertype)
 {
     $scannertypes = ['default', 'FastHpScanner-genericMode'];
     require_once '../config/tce_config.php';
     $img = new Imagick();
     $img->readImage($image);
-    // write_debug_file($img, $job_id, "-0-before-touch-anything", basename($image));
-    $img = F_ensureImageIsUseable($img, $job_id, basename($image), $scannertypes[$scannertype]);
-    // write_debug_file($img, $job_id, "-3.1-after-ensure-useable", basename($image));
+    write_debug_file($img, $job_id, "-0-before-touch-anything", basename($image));
+    $img = F_ensureImageIsUseable($img, $job_id, basename($image), $scannertype);
+    write_debug_file($img, $job_id, "-3.1-after-ensure-useable", basename($image));
     $img->normalizeImage(Imagick::CHANNEL_ALL);
     $img->enhanceImage();
     $img->despeckleImage();
@@ -497,7 +502,7 @@ function F_get_useable_image_base_on_scanner_type($image, $job_id, $scannertype 
     $img->trimImage(85);
 
     switch ($scannertype) {
-        case 1:
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
             //Imagick::cropImage ($width ,$height , int $x , int $y )
             $img->cropImage($img->getImageWidth(), $img->getImageHeight(), 79, 69);
             $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);

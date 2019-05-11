@@ -83,8 +83,19 @@ function F_decodeOMRTestDataQRCode($image)
  * @param $image (string) image file to be decoded (scanned OMR page at 200 DPI with full color range).
  * @return array of answers data or false in case of error.
  */
-function F_decodeOMRPage($image)
+function F_decodeOMRPage($image, int $scannertype)
 {
+    switch ($scanner) {
+
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
+            echo "scanner: fast hp - generic mode <br />\n";
+            break;
+
+        case ScannerTypes::DEFAULT_SCANNER:
+            echo "scanner: default <br />\n";
+            break;
+    }
+
     require_once '../config/tce_config.php';
     // decode barcode containing first question number
     $command = K_OMR_PATH_ZBARIMG . ' --raw -Sdisable -Scode128.enable -q ' . escapeshellarg($image);
@@ -102,8 +113,19 @@ function F_decodeOMRPage($image)
  * @param $qstart (int) the question start number of this answer sheet
  * @return array of answers data or false in case of error.
  */
-function F_realDecodeOMRPage($job_id, $image, $qstart)
+function F_realDecodeOMRPage($job_id, $image, $qstart, int $scannertype)
 {
+
+    switch ($scannertype) {
+
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
+            echo "scanner: fast hp - generic mode <br />\n";
+            break;
+
+        case ScannerTypes::DEFAULT_SCANNER:
+            echo "scanner: default <br />\n";
+            break;
+    }
 
     require_once '../config/tce_config.php';
 
@@ -143,7 +165,7 @@ function F_realDecodeOMRPage($job_id, $image, $qstart)
     // $img->writeImage(K_PATH_CACHE. mktime() . '_DEBUG_OMR_.PNG'); // DEBUG
      */
 
-    $img = F_get_useable_image_base_on_scanner_type($image, $job_id);
+    $img = F_get_useable_image_base_on_scanner_type($image, $job_id, $scannertype);
 
     write_debug_file($img, $job_id, "-1-after-resize-for-decoding", basename($image));
 
@@ -161,12 +183,12 @@ function F_realDecodeOMRPage($job_id, $image, $qstart)
     $drow = 32.38;
 
     switch ($scannertype) {
-        case 'FastHpScanner':
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
             $x_offset = 111;
             break;
 
         default:
-            $x_offset = 113;
+            $x_offset = 112;
             break;
     }
 
@@ -228,6 +250,8 @@ function F_realDecodeOMRPage($job_id, $image, $qstart)
             // false option
             $opt_false = round(1.25 - $rmse[1]);
             // set array to be returned (-1 = unset, 0 = false, 1 = true)
+            //here, we may need to figure out if it is shaded region and thus breakout, so that student don't end up shading all options and
+            //thus will always get a right answer column shaded
             $val = ($opt_true + $opt_false - 1);
             if ($val > 1) {
                 $val = 1;
@@ -249,11 +273,22 @@ function F_realDecodeOMRPage($job_id, $image, $qstart)
  * @param $qstart (int) the question start number of this answer sheet
  * @return array of answers data or false in case of error.
  */
-function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
+function F_decodeIDentificationPage($image, $job_id, int $scannertype)
 {
-    $img = F_get_useable_image_base_on_scanner_type($image, $job_id);
+    switch ($scanner) {
 
-    // write_debug_file($img, $job_id, "-3.2-after-ensure-useable-named-deb", basename($image));
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
+            echo "scanner: fast hp - generic mode <br />\n";
+            break;
+
+        case ScannerTypes::DEFAULT_SCANNER:
+            echo "scanner: default <br />\n";
+            break;
+    }
+
+    $img = F_get_useable_image_base_on_scanner_type($image, $job_id, $scannertype);
+
+    write_debug_file($img, $job_id, "-3.2-after-ensure-useable-named-deb", basename($image), 1);
     // scan block width
     $blkw = 16;
     // starting column in pixels
@@ -269,12 +304,12 @@ function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
     // now verify image pattern
 
     switch ($scannertype) {
-        case 'FastHpScanner':
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
             $x_offset = 111;
             break;
 
         default:
-            $x_offset = 113;
+            $x_offset = 112;
             break;
     }
 
@@ -282,10 +317,9 @@ function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
     // $biggerCrop = clone $img;
 
     switch ($scannertype) {
-        case 1:
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
             //Imagick::cropImage ($width ,$height , int $x , int $y )
             $imgtmp->cropImage(1028, 10, 30, 10);
-            // $imgtmp->cropImage(1028, 10, 0, 10);
             break;
 
         default:
@@ -293,7 +327,7 @@ function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
             break;
     }
 
-    // write_debug_file($imgtmp, $job_id, "-4-crop-top-black-strip-from-deb", basename($image));
+    write_debug_file($imgtmp, $job_id, "-4-crop-top-black-strip-from-deb", basename($image), 1);
 
     $imgtmp->setImagePage(0, 0, 0, 0);
     // create reference block pattern
@@ -307,7 +341,7 @@ function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
         // Imagick::getImageRegion ($width ,$height , int $x , int $y )
         $imreg = $img->getImageRegion(3, 10, $x, 0);
         $imreg->setImagePage(0, 0, 0, 0);
-        // write_debug_file($imreg, $job_id, "-4-in-{$c}-crop-top-black-strip-from-deb", basename($image));
+        write_debug_file($imreg, $job_id, "-4-in-{$c}-crop-top-black-strip-from-deb", basename($image), 1);
 
         // get root-mean-square-error with reference image
         $rmse = $imreg->compareImages($impref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
@@ -325,21 +359,21 @@ function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
     // create reference block
     $imref = new Imagick();
     $imref->newImage($blkw, $blkw, new ImagickPixel('black'));
-    // write_debug_file($imref, $job_id, "-zzzz-a-template-file");
+    write_debug_file($imref, $job_id, "-zzzz-a-template-file", 1);
     // array to be returned
     $omrdata = array();
     // for each row (id)
     for ($r = 0; $r <= 6; ++$r) {
         $y = round($srow + ($r * $drow));
         // Imagick::getImageRegion ($width ,$height , int $x , int $y )
-        // write_debug_file($img->getImageRegion($img->getImageWidth(), $blkw, 0, $y), $job_id, "-zzzz-b-row-{$r}-afore");
+        write_debug_file($img->getImageRegion($img->getImageWidth(), $blkw, 0, $y), $job_id, "-zzzz-b-row-{$r}-afore", 1);
         // for each column (0-9)
         for ($c = 0; $c <= 10; ++$c) {
             // read true option
             $x = round($scol + ($c * $dcol));
             // get square region inside the current grid position
             $imreg = $img->getImageRegion($blkw, $blkw, $x, $y);
-            // write_debug_file($imreg, $job_id, "-zzzz-b-row-{$r}-col-{$c}");
+            write_debug_file($imreg, $job_id, "-zzzz-b-row-{$r}-col-{$c}", 1);
             $imreg->setImagePage(0, 0, 0, 0);
             // get root-mean-square-error with reference image
             $rmse = $imreg->compareImages($imref, Imagick::METRIC_ROOTMEANSQUAREDERROR);
@@ -383,15 +417,26 @@ function F_decodeIDentificationPage($image, $job_id, $scannertype = 1)
  * @param string $scanner
  * @return void
  */
-function F_ensureImageIsUseable($img, $job_id, $basename_filename, $scanner = "default")
+function F_ensureImageIsUseable($img, $job_id, $basename_filename, int $scanner)
 {
+    switch ($scanner) {
+
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
+            echo "scanner: fast hp - generic mode <br />\n";
+            break;
+
+        case ScannerTypes::DEFAULT_SCANNER:
+            echo "scanner: default <br />\n";
+            break;
+    }
+
     $imginfo = $img->identifyImage();
     // get image width and height
     $w = $imginfo['geometry']['width'];
     $h = $imginfo['geometry']['height'];
 
     switch ($scanner) {
-        case "FastHpScanner-genericMode":
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
 
             //for images scanned with our FastHpScanner, extra 850px was added to the
             //height of the scanned image (added as white spaces). So we need to crop-off
@@ -399,9 +444,9 @@ function F_ensureImageIsUseable($img, $job_id, $basename_filename, $scanner = "d
             //whole image with all the white padding is 4200px. Check drive link for sample file -
             //files named ALIDADA 002.PNG..etc)
 
-            // write_debug_file($img, $job_id, "-1-afix-beforecropforscannertype", $basename_filename);
+            write_debug_file($img, $job_id, "-1-afix-beforecropforscannertype", $basename_filename, 1);
             $img->cropImage($w, 1200, 0, 0);
-            // write_debug_file($img, $job_id, "-1-afix-immdtlyaftercropforscannertype", $basename_filename);
+            write_debug_file($img, $job_id, "-1-afix-immdtlyaftercropforscannertype", $basename_filename, 1);
             // $img->setImagePage(0, 0, 0, 0);
             break;
     }
@@ -414,9 +459,9 @@ function F_ensureImageIsUseable($img, $job_id, $basename_filename, $scanner = "d
         // $newWidth       = ceil($w * ($scaledownRatio));
         // $newHeight      = ceil($h * $scaledownRatio);
         // $img->resizeImage($newWidth, $newHeight, Imagick::FILTER_CUBIC, 1, TRUE);
-        // write_debug_file($img, $job_id, "-1.1-afix-beforescaling", $basename_filename);
+        write_debug_file($img, $job_id, "-1.1-afix-beforescaling", $basename_filename, 1);
         $img->scaleImage(0, $maxHeight);
-        // write_debug_file($img, $job_id, "-1.1-afix-immdtlyafterscaling", $basename_filename);
+        write_debug_file($img, $job_id, "-1.1-afix-immdtlyafterscaling", $basename_filename, 1);
     }
 
     if ($imginfo['type'] == 'TrueColor') {
@@ -428,23 +473,28 @@ function F_ensureImageIsUseable($img, $job_id, $basename_filename, $scanner = "d
     }
 
     if ($h > $w) {
+
         // crop header and footer
-        // write_debug_file($img, $job_id, "-2-beforecropawayheaderandfooter", $basename_filename);
+        write_debug_file($img, $job_id, "-2-beforecropawayheaderandfooter", $basename_filename, 1);
 
         switch ($scanner) {
 
-            case "FastHpScanner-genericMode":
+            case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
+            echo "cropping as FAST_HP_SCANNER_GENERIC_MODE... <br />\n";
                 //Imagick::cropImage($width, $height , int $x , int $y )
                 $img->cropImage(826, 826, 10, 175);
                 break;
 
-            default:
-                $img->cropImage($w, $w, 0, round(($h - $w) / 2));
+                default:
+                echo "cropping generically... <br />\n";
+                $img->cropImage(826, 826, 10, 175);
+                // $img->cropImage($w, $w, 0, round(($h - $w) / 2));
                 break;
         }
 
         $img->setImagePage(0, 0, 0, 0);
-        // write_debug_file($img, $job_id, "-2-immdtlyaftercropawayheaderandfooter", $basename_filename);
+        write_debug_file($img, $job_id, "-2-immdtlyaftercropawayheaderandfooter", $basename_filename, 1);
+
     }
 
     return $img;
@@ -702,16 +752,19 @@ function F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $over
     return true;
 }
 
-function write_debug_file($img, $job_id, $append, $original_filename = "")
+function write_debug_file($img, $job_id, $append, $original_filename = "", $debug_level = 2)
 {
-    $fullname = K_PATH_CACHE . "logs/debug/" . time() . '-JOB' . $job_id . "-{$append}-{$original_filename}-DEBUG_OMR.png";
-    // echo "\n <br /> writing: [$fullname] \n <br />";
-    try {
-        $img->writeImage($fullname);
-        // echo "\n <br /> done \n <br />";
-    } catch (\Exception $e) {
-        // echo "\n <br /> failed write work: " . $e->getMessage() . " \n <br />\n <br />";
-        endMarkingSessionWithError($job_id, $e->getMessage());
+    //we can control when to countenace this debug and when not to
+    if ($debug_level > 0) {
+        $fullname = K_PATH_CACHE . "logs/debug/" . time() . '-JOB' . $job_id . "-{$append}-{$original_filename}-DEBUG_OMR.png";
+        // echo "\n <br /> writing: [$fullname] \n <br />";
+        try {
+            $img->writeImage($fullname);
+            // echo "\n <br /> done \n <br />";
+        } catch (\Exception $e) {
+            // echo "\n <br /> failed write work: " . $e->getMessage() . " \n <br />\n <br />";
+            endMarkingSessionWithError($job_id, $e->getMessage());
+        }
     }
 }
 
