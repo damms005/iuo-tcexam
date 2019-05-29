@@ -5,7 +5,7 @@
     <div style="width: 8%"></div>
 
     <div style="width: 95%" class>
-      <div class="bg-grey-lightest rounded fixed w-4/5 pin-y overflow-visible m-5 border">
+      <div class="main-vue-app bg-grey-lightest rounded fixed w-4/5 pin-y overflow-visible m-5 border">
         <uploader
           v-if="1"
           @files_change="files_change"

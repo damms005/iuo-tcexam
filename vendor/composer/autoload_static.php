@@ -102,11 +102,16 @@ class ComposerStaticInitdf19929a3b085ad341c135b6c14a8c98
         ),
     );
 
+    public static $classMap = array (
+        'yidas\\phpSpreadsheet\\Helper' => __DIR__ . '/..' . '/yidas/phpspreadsheet-helper/src/phpSpreadsheet/Helper.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitdf19929a3b085ad341c135b6c14a8c98::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitdf19929a3b085ad341c135b6c14a8c98::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitdf19929a3b085ad341c135b6c14a8c98::$classMap;
 
         }, null, ClassLoader::class);
     }

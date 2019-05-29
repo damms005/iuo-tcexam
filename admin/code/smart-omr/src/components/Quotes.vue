@@ -15,7 +15,7 @@
             </span>
           </div>
         </transition>
-          
+
           <div class="self-center block pin-r mr-2 mt-6 leading-loose">
             <div class="relative flex">
               <div class="mt-1 pin-y inline absolute opacity-50 p-1 w-6 h-6" id="progressbar"></div>
@@ -56,9 +56,9 @@
    //we will be getting 100 quotes randomly from the db
    //we display  a quote every 7 secs
    //at each display iteration, if quotes available is less than 20, we fetch another 100
-export default {  
+export default {
   props: [
-      "webserver_url"
+      "base_path_url"
   ],
   data:function(){
     return {
@@ -158,7 +158,7 @@ export default {
       var vm = this;
       if( xhr == null ){
         xhr = new XMLHttpRequest();
-        xhr.url = `${this.webserver_url}/git-collaborations/tcexam/admin/code/tce_quotes.php`;
+        xhr.url = `${this.base_path_url}/tce_quotes.php`;
         xhr.open("GET", xhr.url, true);
         xhr.retry = 1;
       }
@@ -194,11 +194,11 @@ export default {
           }
       }
 
-      xhr.send("foo=bar&lorem=ipsum"); 
-      // xhr.send('string'); 
-      // xhr.send(new Blob()); 
-      // xhr.send(new Int8Array()); 
-      // xhr.send({ form: 'data' }); 
+      xhr.send("foo=bar&lorem=ipsum");
+      // xhr.send('string');
+      // xhr.send(new Blob());
+      // xhr.send(new Int8Array());
+      // xhr.send({ form: 'data' });
       // xhr.send(document);
     },
   }

@@ -3,7 +3,15 @@
     <div class="absolute w-full h-full">
       <div v-if="showUploadUI && !files.length">
         <div class="dropbox text-center absolute p-5 w-full h-full">
-          <h4>Drop folder to upload...</h4>
+          <h4>
+            <span class="bg-white p-10">
+              Drop folder to upload
+              <code>
+                (recommended:
+                <span class="rounded bg-grey-light p-2">300PPI jpeg</span> format)...
+              </code>
+            </span>
+          </h4>
           <!-- <br/>
             OR
             <br/>
@@ -103,9 +111,10 @@
 
     <!-- name="main-grey-background"  -->
 
-    <div>
+    <div class="w-full">
       <!-- :put-action="putAction" -->
       <file-upload
+        class="w-full"
         :name="name"
         :post-action="postAction"
         :extensions="extensions"
@@ -123,9 +132,11 @@
         @input-file="inputFile"
         ref="upload"
       >
-        <div v-show="!filesAvailable" class="btn btn-primary dropdown-toggle cursor-pointer">
-          <i class="fa fa-plus"></i>
-          Select
+        <div v-show="!filesAvailable" class="text-center p-5 mt-6">
+          <span class="cursor-pointer bg-red rounded p-2 text-white text-big">
+            <i class="fa fa-plus"></i>
+            Select
+          </span>
         </div>
       </file-upload>
     </div>
@@ -154,7 +165,6 @@
               @click.prevent="doUpload"
             >
               <!-- <i class="fa fa-arrow-up" aria-hidden="true"></i> -->
-
               {{ allUploadsCompleted ? 'Re-Upload All' : 'Upload All' }}
             </button>
 
@@ -233,7 +243,7 @@
                 </div>
 
                 <div v-if="showQuotes" class="h-auto relative flex text-white w-full">
-                  <quotes :webserver_url="webserver_url"></quotes>
+                  <quotes :base_path_url="base_path_url"></quotes>
                 </div>
 
                 <div class="self-center report relative" v-if="showFinalStatus">
@@ -321,11 +331,9 @@ export default {
 
       // var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
       // xhr.url="http://localhost/git-collaborations/tcexam/admin/code/tce_quotes.php";
-      webserver_url: location.protocol + "//" + location.hostname,
-      server_script_path:
-        "git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor.php",
+      server_script_path: "tce_import_omr_answers_bulk_smart_processor.php",
       status_upgrade_script_path:
-        "git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor_status.php",
+        "tce_import_omr_answers_bulk_smart_processor_status.php",
       // putAction: '/upload/put',
       minSize: 1024,
       size: 1024 * 1024 * 50,
@@ -385,13 +393,25 @@ export default {
     };
   },
   mounted: function() {
-    let that = this;
+    // let that = this;
     this.$nextTick(function() {
       this.ongoingServerPollTimestamp = new Date().getTime();
       this.isMounted = true;
     });
   },
+
   computed: {
+    base_path_url: function() {
+      if (window.location.href.indexOf(".php") >= 0) {
+        //we are NOT in Vue UI dev mode (...i.e. we not in localhost stuff http://localhost:8080). We are actually in live tcexam domain, not Vue test stuff
+        let path_chunks = window.location.href.split("/");
+        path_chunks.pop();
+        return path_chunks.join("/");
+      } else {
+        //we are in Vue UI dev mode (...http://localhost:8080)
+        return "http://localhost/git-collaborations/tcexam/admin/code/";
+      }
+    },
     enableResendUpload: function() {
       //after compelted mrking successfully, we need tihis to allow be able to do another makring
       return this.files && this.files.length > 0;
@@ -399,12 +419,14 @@ export default {
     succcessfullyCompletedMarkingSessions: function() {
       if (this.$refs.upload && this.$refs.upload.uploaded) {
         return this.succcessfullyCompletedMarkingSessionsCounter;
+      } else {
+        return false;
       }
     },
     postAction: function() {
       return `${
-        this.webserver_url
-      }/git-collaborations/tcexam/admin/code/tce_import_omr_answers_bulk_smart_processor.php`;
+        this.base_path_url
+      }/tce_import_omr_answers_bulk_smart_processor.php`;
     },
     allUploadsCompleted: function() {
       if (this.isMounted) {
@@ -414,20 +436,27 @@ export default {
           this.files.length > 0
         );
       }
+      return false;
     },
     isCurrentlyUploading: function() {
       if (this.isMounted) {
         return this.$refs.upload.active;
       }
+
+      return false;
     },
     isMarkingOngoing: function() {
       if (this.isMounted) {
-        return (!this.$refs.upload.active) && this.commandedServerToStartMarking && (!this.currentMarkingSessionAbortedWithError);
+        return (
+          !this.$refs.upload.active &&
+          this.commandedServerToStartMarking &&
+          !this.currentMarkingSessionAbortedWithError
+        );
       }
+
+      return false;
     },
     morphable_LoadingClass: function() {
-      this.showCompletionCheckmark = !this.showLoadingMode;
-      this.showPercentageCompletion = this.showLoadingMode;
       if (this.showLoadingMode) {
         return { "load-complete": false };
       } else {
@@ -439,41 +468,6 @@ export default {
     },
     greyMainBackground: function() {
       return this.current_bottom_main_grey_background_class;
-    },
-    uploadCompleted: function() {
-      //try optimize for when multiple progress reports will be updating
-      if (this.computationOngoin) {
-        return;
-      }
-
-      this.computationOngoin = true;
-
-      let complete = 0;
-      for (var i = this.files.length - 1; i >= 0; i--) {
-        let prog = Number(this.files[i].progress);
-        complete += prog == 100 ? 1 : 0;
-
-        //retry it if it stopped uploading
-        //we are checking preence of xhr because that is what confirms that
-        //there was a failed attempt to upload the file (conf. completely
-        //unattempted file e.g. when file rejected coz extension is part of
-        //blacklisted)
-        if (
-          prog < 100 &&
-          this.files[i].xhr &&
-          !this.files[i].xhr.readyState == 4
-        ) {
-          //automatically retry upload
-          this.$refs.update(this.files[i], {
-            active: true,
-            error: "",
-            progress: "0.00"
-          });
-        }
-      }
-
-      this.computationOngoin = false;
-      return complete == this.files.length;
     }
   },
   watch: {
@@ -506,6 +500,12 @@ export default {
     startMarking: function() {
       this.doUITransitionToStartMarking();
     },
+
+    showLoadingMode: function() {
+      this.showCompletionCheckmark = !this.showLoadingMode;
+      this.showPercentageCompletion = this.showLoadingMode;
+    },
+
     files: function() {
       this.$emit("files_change", this.files);
       this.filesAvailable = this.files && this.files.length > 0;
@@ -631,7 +631,7 @@ export default {
         (this.serverStatusText != undefined &&
           this.serverStatusText.length > 0);
 
-      if(this.showGreenWorkingBackground){
+      if (this.showGreenWorkingBackground) {
         // console.log("should now show greeny back")
         // this.current_bottom_green_background_class = this.parent.data.;
       }
@@ -732,7 +732,11 @@ export default {
               } else {
                 var temp = document.createElement("div");
                 temp.innerHTML = newFile.response;
-                if (newFile.response.indexOf("concurrent marking session prevented") == -1 ) {
+                if (
+                  newFile.response.indexOf(
+                    "concurrent marking session prevented"
+                  ) == -1
+                ) {
                   console.error(
                     "Error: ",
                     temp.textContent || temp.innerText || "",
@@ -789,9 +793,9 @@ export default {
     get_quotes_from_db: function() {
       var vm = this;
       var xhr = new XMLHttpRequest();
-      xhr.url = `${
-        this.webserver_url
-      }/git-collaborations/tcexam/admin/code/tce_quotes.php"`;
+
+      xhr.url = `${this.base_path_url}/tce_quotes.php"`;
+
       xhr.open("GET", xhr.url, true);
       xhr.retry = 1;
 
@@ -848,8 +852,7 @@ export default {
       var vm = this;
       if (xhr == null) {
         xhr = new XMLHttpRequest();
-        xhr.url = `${this.webserver_url}/${this.status_upgrade_script_path}`;
-        // xhr.url=`${this.webserver_url}/${this.status_upgrade_script_path}?getStatus=true&job_id=${this.ongoingServerPollTimestamp}`;
+        xhr.url = `${this.base_path_url}/${this.status_upgrade_script_path}`;
         xhr.retry = 1;
         xhr.ongoingServerPollTimestamp = this.ongoingServerPollTimestamp;
         xhr.isFinalRequest = isFinalRequest;
@@ -946,7 +949,7 @@ export default {
       var vm = this;
       if (xhr == null) {
         xhr = new XMLHttpRequest();
-        xhr.url = `${this.webserver_url}/${this.server_script_path}`;
+        xhr.url = `${this.base_path_url}/${this.server_script_path}`;
         xhr.retry = 1;
         xhr.sentData = `all_available_files_uploaded=true&job_id=${
           this.ongoingServerPollTimestamp
@@ -1006,7 +1009,7 @@ export default {
         }
 
         xhr = new XMLHttpRequest();
-        xhr.url = `${this.webserver_url}/${this.server_script_path}${addendum}`;
+        xhr.url = `${this.base_path_url}/${this.server_script_path}${addendum}`;
         // xhr.sentData = `startProessingUploadedScripts=true&job_id=${Number(this.ongoingServerPollTimestamp)}`;
         xhr.sentData = query;
         xhr.retry = 1;

@@ -22,10 +22,13 @@
 
 function startProcessing($job_id, $job_db_primarykey, $job_files)
 {
+    set_time_limit(0);
 
     require "./classes/ScannerTypes.php";
 
-    set_time_limit(0);
+    // $scannertype = ScannerTypes::DEFAULT_SCANNER;
+    // $scannertype = ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE;
+    $scannertype = ScannerTypes::FAST_HP_SCANNER_300PPI;
 
     updateJobStatus($job_db_primarykey, 1, "percentage_progress");
     //for debug purposes, clear it first:
@@ -42,9 +45,6 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
     $uploaded_data      = [];
     $universal_counter  = 1;
     $omr_insertion_data = [];
-
-    // $scannertype        = ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE;
-    $scannertype        = ScannerTypes::DEFAULT_SCANNER;
 
     $start_processing_all = microtime(true);
 
@@ -137,7 +137,7 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
                     updateJobStatus($job_db_primarykey, "Processing data for (user id: {$uploaded_data[$encoded_data['question_paper_type_unique_sum']][$this_user_dynamic_identifier]['user_id']}) {$user['user_firstname']} {$user['user_lastname']} [$name]");
                 } else {
                     //it is possible that user id wrongly read due to some rows well shaded while others not
-                    endMarkingSessionWithError($job_id, "Cannot processing for non-existing user (user id: {$uploaded_data[$encoded_data['question_paper_type_unique_sum']][$this_user_dynamic_identifier]['user_id']}) [$name]");
+                    endMarkingSessionWithError($job_id, "Cannot process non-existing user (user id: {$uploaded_data[$encoded_data['question_paper_type_unique_sum']][$this_user_dynamic_identifier]['user_id']}) [$name]");
                 }
             } else {
                 updateJobStatus($job_db_primarykey, "Read {$universal_counter} of " . count($job_files) . " uploaded files");
@@ -228,7 +228,7 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
 
     //at this point, we want to open another connection because we a connection for transaction
     if (!$transaction_connection = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
-        endMarkingSessionWithError("Could not open transactable connection");
+        endMarkingSessionWithError($job_id, "Could not open transactable connection");
     }
 
     //ensure we subtract the marking unit before inserting records into the db
@@ -249,7 +249,8 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
             $data = $extracted_data['insertion'];
 
             if (!F_importOMRTestData($data['user_id'], $date, $extracted_data['omr_data'], $data['omr_answers'], true)) {
-                endMarkingSessionWithError($job_id, "Could not mark a processed answer sheet");
+                //common failure from above is when user not found/user not in test group (usually error @F_importOMRTestData@F_count_rows#566)
+                endMarkingSessionWithError($job_id, "Could not mark a processed answer sheet. Likely cause: wrong user/group match [user-id: {$data['user_id']}]");
             }
 
             //update percentage progress. This part is not more than 25% because we have for loops that we are dealng with. The remianing loops also take 25%
@@ -257,7 +258,7 @@ function startProcessing($job_id, $job_db_primarykey, $job_files)
             doCompositeFourPartPercentageUpdate($job_db_primarykey, $universal_counter, $update_freq, ++$loop_counter, count($omr_insertion_data));
         }
     } else {
-        endMarkingSessionWithError("Error updating marking units");
+        endMarkingSessionWithError($job_id, "Error updating marking units");
     }
     // end atomic operation started above
     $transaction_connection->commit();
@@ -289,8 +290,8 @@ function mark_student_answer($job_id, $user_id, array $answersheets, $filename, 
         if (($answers_page !== false) and !empty($answers_page)) {
             $omr_answers += $answers_page;
         } else {
-            $user = F_getUserByID($entries['user_id']);
-            endMarkingSessionWithError($job_id, "Could not mark for {$user->firstname} ($filename)");
+            $user = F_getUserByID($user_id);
+            endMarkingSessionWithError($job_id, "Could not mark for {$user['user_firstname']} - $filename");
         }
     }
 
@@ -485,13 +486,21 @@ function notifyElapseTime($tag, $relative_microtime)
 
 function F_get_useable_image_base_on_scanner_type($image, $job_id, int $scannertype)
 {
-    $scannertypes = ['default', 'FastHpScanner-genericMode'];
+
     require_once '../config/tce_config.php';
+    global $global_debug_level_counter;
+    // $global_debug_level_counter; //function calls inside this function also do their increments, so preserve ours
+
     $img = new Imagick();
     $img->readImage($image);
-    write_debug_file($img, $job_id, "-0-before-touch-anything", basename($image));
-    $img = F_ensureImageIsUseable($img, $job_id, basename($image), $scannertype);
-    write_debug_file($img, $job_id, "-3.1-after-ensure-useable", basename($image));
+    $fname = basename($image);
+
+    //no need to write any file here. Simply depend on the writings by the function called below so that debug output filename naming continuum will be maintained
+    // write_debug_file($img, $job_id, "-{$global_debug_level_counter}." . ++$local_debug_level_counter . "-before-ensure-useable-scannertype", $fname);
+    $img = F_ensureImageIsUseable($img, $job_id, $fname, $scannertype);
+
+    write_debug_file($img, $job_id, "-" . ++$global_debug_level_counter . "-start-get-useable-based-on-scannertype", basename($image));
+
     $img->normalizeImage(Imagick::CHANNEL_ALL);
     $img->enhanceImage();
     $img->despeckleImage();
@@ -502,18 +511,34 @@ function F_get_useable_image_base_on_scanner_type($image, $job_id, int $scannert
     $img->trimImage(85);
 
     switch ($scannertype) {
-        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
-            //Imagick::cropImage ($width ,$height , int $x , int $y )
-            $img->cropImage($img->getImageWidth(), $img->getImageHeight(), 79, 69);
+
+        case ScannerTypes::DEFAULT_SCANNER:
             $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
             break;
 
-        default:
+        case ScannerTypes::FAST_HP_SCANNER_GENERIC_MODE:
+            //Imagick::cropImage ($width ,$height , int $x , int $y )
+            $img->cropImage($img->getImageWidth(), $img->getImageHeight(), 79, 69);
+            $img->setImagePage(0, 0, 0, 0);
+
+            write_debug_file($img, $job_id, "-" . ++$global_debug_level_counter . "-after-crop-useable-scanadjust", $fname);
+
+            $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
+            $img->setImagePage(0, 0, 0, 0);
+
+            write_debug_file($img, $job_id, "-" . ++$global_debug_level_counter . "-after-resize-useable-scanadjust", $fname);
+
+            break;
+
+        case ScannerTypes::FAST_HP_SCANNER_300PPI:
+            //Imagick::cropImage ($width ,$height , int $x , int $y )
+            $img->cropImage($img->getImageWidth() + 100, $img->getImageHeight() + 100, 0, 33);
             $img->resizeImage(1028, 1052, Imagick::FILTER_CUBIC, 1);
             break;
     }
 
     $img->setImagePage(0, 0, 0, 0);
+    write_debug_file($img, $job_id, "-" . ++$global_debug_level_counter . "-end-get-useable-based-on-scannertype", basename($image));
     return $img;
 }
 
