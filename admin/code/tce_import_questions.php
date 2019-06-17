@@ -31,7 +31,6 @@
  */
 
 require_once '../config/tce_config.php';
-
 $pagelevel = K_AUTH_ADMIN_IMPORT;
 require_once '../../shared/code/tce_authorization.php';
 
@@ -46,6 +45,7 @@ if (!isset($type) or (empty($type))) {
 } else {
     $type = intval($type);
 }
+
 
 if (isset($_POST['uploadable_module'])) {
     $uploadable_module = $_POST['uploadable_module'];
