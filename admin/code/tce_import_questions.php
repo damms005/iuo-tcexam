@@ -31,7 +31,6 @@
  */
 
 require_once '../config/tce_config.php';
-
 $pagelevel = K_AUTH_ADMIN_IMPORT;
 require_once '../../shared/code/tce_authorization.php';
 
@@ -48,9 +47,15 @@ if (!isset($type) or (empty($type))) {
 }
 
 if (isset($_POST['uploadable_module'])) {
+    //for some reasons I'm too lazy to figure out, tcexam double-addslashes() to the value of this entry
+    //And it seems that the custom F_formfield_striplashes() is what tcexam uses to correct this,
+    //but we are using a custom implementation here (i.e. does not pass through that custom function)
+    //Double-stripping solves our solution and we'll stick with tha temporarily
+    //(the debug done was to check Chrome's console for what was sent to server and then var_dump() here what was sent to this function and I noticed the double-addslashing() thing. It seems as though one of the files required()'ed did the addslashing thing)
+    $_POST['uploadable_module'] = stripslashes(stripslashes($_POST['uploadable_module']));
     $uploadable_module = $_POST['uploadable_module'];
-    $lines             = explode("\n", trim(str_replace("\r\n", "\n", $uploadable_module)));
-    $qimp              = F_TSVQuestionImporter_Process($lines);
+    $lines = explode("\n", trim(str_replace("\r\n", "\n", $uploadable_module)));
+    $qimp  = F_TSVQuestionImporter_Process($lines);
 
     if ($qimp) {
         F_print_error('MESSAGE', $l['m_importing_complete']);
@@ -186,6 +191,7 @@ function F_TSVQuestionImporter($tsvfile)
  */
 function F_TSVQuestionImporter_Process($lines_in_file)
 {
+
     global $l, $db;
     require_once '../config/tce_config.php';
     require_once '../../shared/code/tce_functions_auth_sql.php';

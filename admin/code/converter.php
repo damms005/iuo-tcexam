@@ -39,12 +39,19 @@ function doSubmission() {
 }
 </script>
 
+<style>
+    #final_transfer_form{
+        width:  0px;
+        height: 0px;
+    }
+</style>
+
 <form enctype="multipart/form-data" action="converter.php" method="POST">
     <!-- MAX_FILE_SIZE must precede the file input field -->
     <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
 
-    <input type="text" value="<?php echo @$_POST['course_code']; ?>" name="course_code" placeholder="course code" style="text_transform: uppercase" />
-    <input type="text" value="<?php echo @$_POST['course_title_description']; ?>" name="course_title_description" value="" placeholder="course title and/or description"  style="text_transform: uppercase"/>
+    <input type="text" value="<?php echo isset($_POST['course_code']) ? $_POST['course_code'] : ''; ?>" name="course_code" placeholder="course code" style="text_transform: uppercase" />
+    <input type="text" value="<?php echo isset($_POST['course_title_description']) ? $_POST['course_title_description'] : ''; ?>" name="course_title_description" value="" placeholder="course title and/or description"  style="text_transform: uppercase"/>
     <!-- Name of input element determines name in $_FILES array -->
     Send this file: <input name="questions_file" type="file" />
     <input type="submit" value="Upload" />
@@ -246,8 +253,8 @@ if (isset($_FILES['questions_file'])) {
         ?>
 
         <form id="transferForm" enctype="multipart/form-data" action="tce_import_questions.php" method="POST" >
-        <textarea width='1' height='1' style="width: 1px; height: 1px" name="uploadable_module" >
-        <?php echo replace_html_tags_with_tinymce_tages($_POST['transfer_box']); ?>
+        <textarea id="final_transfer_form" name="uploadable_module" >
+        <?php echo replace_html_tags_with_tinymce_tags($_POST['transfer_box']); ?>
         </textarea>
         </form>
 
@@ -334,7 +341,7 @@ function report_line($cols, $index)
     echo "}</pre>";
 }
 
-function replace_html_tags_with_tinymce_tages($stuff)
+function replace_html_tags_with_tinymce_tags($stuff)
 {
     $tcexam_html_tags_map = [
         'b'   => ['b', 'strong'],
