@@ -423,6 +423,7 @@ if (isset($_REQUEST['sel'])) {
 
         ?>
 
+        <script src="../../shared/jscripts/jquery-3.4.1.min.js"></script>
         <script src="../../shared/jscripts/xlsx.core.min.js"></script>
         <script src="../../shared/jscripts/FileSaver.js"></script>
         <script src="../../shared/jscripts/tableexport.js"></script>
@@ -442,6 +443,70 @@ if (isset($_REQUEST['sel'])) {
         RTL: false,                         // (Boolean), set direction of the worksheet to right-to-left (default: false)
         sheetname: "cbt"                     // (id, String), sheet name for the exported spreadsheet, (default: 'id')
         });
+
+
+        let table = $(".userselect").eq(0);
+        let index_of_cols = {};
+        let all_original_tr = {};
+        let possible_vals_of_cols = {};
+        let all_rows = $( table ).children('tr');
+
+        //add sorter to DOM
+        $(table).prepend(`
+            <div id='sorter'>
+                <select id='sortable_cols_holder'></select>
+                <select multiple id='filter_cols_to_this_value'></select>
+            </div>`
+        );
+
+        //now, be able to filter out rows based on values of cols
+        let sortable_cols = [
+            "department" ,
+            "college"
+        ];
+
+        console.log( sortable_cols );
+
+        //for each of the sortable_cols, append their 'widget' to #sorter
+        sortable_cols.forEach( col => {
+
+            //save the index for easy reference
+            let this_index = sortable_cols.findIndex(this_col => {
+                return this_col == col;
+            })
+            index_of_cols[this_index] = sortable_cols.findIndex(this_col => {
+
+            //get the possibble vals of this col
+            if(possible_vals_of_cols[col] == undefined ) {
+                possible_vals_of_cols[col] = [];
+            }
+            $( all_rows ).each( function( index, row ) {
+                let value_for_this_col = $(row).children('td').eq(this_index).text();
+                possible_vals_of_cols[col].push( value_for_this_col );
+            });
+
+            //append it to selectable cols
+            $( '#sortable_cols_holder' ).append( `<option>${col}</option>` );
+
+        });
+
+        //listener to attach possible values when selected
+        $( '#sortable_cols_holder' ).change(function(){
+            $("#filter_cols_to_this_value").html(" ");
+            $( possible_vals_of_cols[col] ).each( function( index, element ) {
+                $("#filter_cols_to_this_value").append( `<option selected >${element}</option>` );
+            });
+        });
+
+        $("#filter_cols_to_this_value").change(function(event) {
+            let sort_with = $(event.target).text();
+            console.log(`sorting with ${sort_with}`);
+
+            //rebuild the table such that only rows whose value for <selected col> is part of selected cols
+            table
+
+        });
+
         </script>
 
         <?php
@@ -475,7 +540,6 @@ echo '</div>' . K_NEWLINE;
 
 echo '<div class="pagehelp">' . $l['hp_result_alluser'] . '</div>' . K_NEWLINE;
 echo '</div>';
-
 
 require_once '../code/tce_page_footer.php';
 
