@@ -34,6 +34,8 @@ require_once 'tce_functions_user_select.php';
 // Report all errors except E_NOTICE
 error_reporting(E_ALL & ~E_NOTICE);
 
+$global_debug_level_counter = 0;
+
 if (!empty($_FILES)) {
 
     // *each file will carry a job_id and total_number_files
@@ -86,7 +88,7 @@ if (!empty($_FILES)) {
 
             if (!all_required_files_uploaded($_POST["job_id"])) {
                 updateJobStatus($job_db_primarykey, 1, "all_required_files_uploaded");
-                updateJobStatus($job_db_primarykey, "Files upload successfully completed [$name]");
+                updateJobStatus($job_db_primarykey, "Files upload completed successfully [$name]");
             } else {
                 exit("Exited: concurrent marking session prevented");
             }
@@ -105,7 +107,7 @@ if (!empty($_FILES)) {
     } else {
         //do not show this because browser does a pre-flight request to this script before making our
         //normal request, thus creating unecesaary xhr entries in Network tab of debug
-        //windos (we just to avoid clusters/noise in debug window coz of preflifhgt requests)
+        //window (we just want to avoid clusters/noise in debug window coz of preflifhgt requests)
         // exit('File error');
     }
 }

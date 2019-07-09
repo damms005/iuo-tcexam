@@ -64,49 +64,29 @@ if (isset($_REQUEST['date'])) {
 }
 
 ?>
-<?php
-echo '<div class="tceformbox">' . K_NEWLINE;
-echo '<form action="' . $_SERVER['SCRIPT_NAME'] . '" method="post" enctype="multipart/form-data" id="form_omrimport">' . K_NEWLINE;
 
-// -----------------------------------------------------------------------------
-// date
-echo getFormRowTextInput('date', $l['w_date'], $l['w_date'] . ' ' . $l['w_datetime_format'], '', $date, '', 19, false, true, false);
+<!-- now vue part -->
 
-// -----------------------------------------------------------------------------
+<link rel="stylesheet" href="./smart-omr/dist/css/app.4387946c.css">
+<link rel="stylesheet" href="./smart-omr/dist/css/chunk-vendors.427e74fb.css">
 
-echo '<div class="row">' . K_NEWLINE;
-echo '<br />' . K_NEWLINE;
-// show upload button
-F_submit_button('upload', $l['w_upload'], $l['h_submit_file']);
-echo '</div>' . K_NEWLINE;
+<style>
+.main-vue-app{
+  /* border:2px solid red; */
+}
+</style>
 
-echo '</form>' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
-
-// hide unused file upload fields
-echo '<script type="text/javascript">' . K_NEWLINE;
-echo '//<![CDATA[' . K_NEWLINE;
-echo 'for (i=2; i<=' . $max_omr_sheets . '; i++) {document.getElementById(\'divomrsheet\'+i).style.display=\'none\';}' . K_NEWLINE;
-echo '//]]>' . K_NEWLINE;
-echo '</script>' . K_NEWLINE;
-
-echo '<div class="pagehelp">' . $l['hp_omr_answers_importer'] . '</div>' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
-
-?>
-
-
-  <meta charset="utf-8">
-  <title>Vue-upload-component Test</title>
-  <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vue-upload-component"></script>
-
-<body>
-
-<div id="app">
-
+<div id="content-holder" style="position:absolute;  width:100%; height: 100%">
+  <div id="app">
+  </div>
 </div>
-<script src=""></script>
+
+<script src="./smart-omr/dist/js/chunk-vendors.31203818.js"></script>
+<script src="./smart-omr/dist/js/app.827ab7a4.js"></script>
+
+<script>
+    document.getElementsByClassName("header")[0].style.display="none";
+</script>
 
 <?php
 

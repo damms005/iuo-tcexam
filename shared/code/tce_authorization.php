@@ -47,7 +47,6 @@ require_once('../../shared/code/tce_functions_session.php');
 require_once('../../shared/code/tce_functions_otp.php');
 
 $logged = false; // the user is not yet logged in
-define('K_BRUTE_FORCE_DELAY_TIME_CAP', 5);//secs
 // --- read existing user's session data from database
 $PHPSESSIDSQL = F_escape_sql($db, $PHPSESSID);
 $fingerprintkey = getClientFingerprint();
@@ -125,8 +124,7 @@ $altusr = F_altLogin();
 // --- check if login information has been submitted
 if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_POST['xuser_name']) and isset($_POST['xuser_password'])) {
     $bruteforce = false;
-    // if (K_BRUTE_FORCE_DELAY_RATIO > 0) {
-    if (false) {
+    if (K_BRUTE_FORCE_DELAY_RATIO > 0) {
         // check login attempt from the current client device to avoid brute force attack
         $bruteforce = true;
         // we are using another entry in the session table to keep track of the login attempts
@@ -138,30 +136,11 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                     $bruteforce = false;
                 }
 
-                /* CODE CONFLICT POINT */
-
-                // update wait time
-                $wait = intval($mt['cpsession_data']);
-                // if ($wait < K_SECONDS_IN_HOUR) {
-                //     $wait *= K_BRUTE_FORCE_DELAY_RATIO;
-                // }
-                //wait for no more than K_BRUTE_FORCE_DELAY_TIME_CAP secs
-
-                if ($wait > K_BRUTE_FORCE_DELAY_TIME_CAP) {
-                    $wait = K_BRUTE_FORCE_DELAY_TIME_CAP;
-                }
-
-                /* ORIGINAL CODE UPSTREAM
                 // update wait time
                 $wait = intval($mt['cpsession_data']);
                 if ($wait < K_SECONDS_IN_HOUR) {
                     $wait *= K_BRUTE_FORCE_DELAY_RATIO;
                 }
-                */
-
-                /* CODE CONFLICT END */
-
-
                 $sqlup = 'UPDATE '.K_TABLE_SESSIONS.' SET
 					cpsession_expiry=\''.date(K_TIMESTAMP_FORMAT, (time() + $wait)).'\',
 					cpsession_data=\''.$wait.'\'
@@ -171,8 +150,7 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                 }
             } else {
                 // add new record
-                $wait = 10; // number of seconds to wait for the second attempt
-                // $wait = 1; // number of seconds to wait for the second attempt
+                $wait = 1; // number of seconds to wait for the second attempt
                 $sqls = 'INSERT INTO '.K_TABLE_SESSIONS.' (
 					cpsession_id,
 					cpsession_expiry,
@@ -386,7 +364,6 @@ if ($pagelevel) { // pagelevel=0 means access to anonymous user
 
 if ($logged) { //if user is just logged in: reloads page
     // html redirect
-	//exit('red int');
     $htmlredir = '<'.'?xml version="1.0" encoding="'.$l['a_meta_charset'].'"?'.'>'.K_NEWLINE;
     $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.K_NEWLINE;
     $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$l['a_meta_language'].'" lang="'.$l['a_meta_language'].'" dir="'.$l['a_meta_dir'].'">'.K_NEWLINE;
@@ -399,8 +376,6 @@ if ($logged) { //if user is just logged in: reloads page
     $htmlredir .= '</body>'.K_NEWLINE;
     $htmlredir .= '</html>'.K_NEWLINE;
 
-	// var_dump($_SERVER);
-	// exit('H:' . K_PATH_HOST);
     switch (K_REDIRECT_LOGIN_MODE) {
         case 1: {
             // relative redirect

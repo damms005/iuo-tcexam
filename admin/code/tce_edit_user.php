@@ -44,6 +44,8 @@ require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_otp.php');
 require_once('tce_functions_user_select.php');
 
+$user_id = "";
+
 if (isset($_REQUEST['user_id'])) {
     $user_id = intval($_REQUEST['user_id']);
     if (!F_isAuthorizedEditorForUser($user_id)) {
@@ -360,7 +362,7 @@ switch ($menu_mode) { // process submitted data
 if ($formstatus) {
     if ($menu_mode != 'clear') {
         if (!isset($user_id) or empty($user_id)) {
-            $user_id = 0;
+            $user_id = '';
             $user_regdate = '';
             $user_ip = '';
             $user_name = '';
@@ -464,10 +466,12 @@ if ($r = F_db_query($sql, $db)) {
     $countitem = 1;
     while ($m = F_db_fetch_array($r)) {
         $string = $countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']);
+        $selected = "";
         if ($m['user_id'] == $user_id) {
             $selection = "<script> document.getElementById('user_id').value = `$string` </script>";
+            $selected = ' selected="selected"';
         }
-        echo '<option value="'.$m['user_id'].'">' . $string . '</option>'.K_NEWLINE;
+        echo "<option $selected value='{$m['user_id']}'>{$string}</option>";
         $countitem++;
     }
 } else {
