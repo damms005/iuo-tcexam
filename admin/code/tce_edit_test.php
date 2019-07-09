@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_edit_test.php
 // Begin       : 2004-04-27
-// Last Update : 2018-07-06
+// Last Update : 2018-09-03
 //
 // Description : Edit Tests
 //
@@ -451,6 +451,7 @@ switch ($menu_mode) {
         if ($formstatus = F_check_form_fields()) {
             // check referential integrity (NOTE: mysql do not support "ON UPDATE" constraint)
             if (!F_check_unique(K_TABLE_TEST_USER, 'testuser_test_id='.$test_id.'')) {
+				//exit('non unique');
                 F_print_error('WARNING', $l['m_update_restrict']);
                 $formstatus = false;
                 F_stripslashes_formfields();
@@ -645,6 +646,11 @@ switch ($menu_mode) {
                         F_display_db_error(false);
                     }
                 }
+            }else {
+            	echo "
+				<b>
+					<code>Possible error: no user group(s) to take this test. Please set 'groups' options</code>
+				</b>";
             }
 
             // update authorized SSL certificates
@@ -737,13 +743,13 @@ switch ($menu_mode) {
         $test_random_answers_select = true;
         $test_random_answers_order = true;
         $test_answers_order_mode = 0;
-        $test_comment_enabled = true;
-        $test_menu_enabled = true;
-        $test_noanswer_enabled = true;
+        $test_comment_enabled = false;
+        $test_menu_enabled = false;
+        $test_noanswer_enabled = false;
         $test_mcma_radio = true;
         $test_repeatable = false;
-        $test_mcma_partial_score = true;
-        $test_logout_on_timeout = false;
+        $test_mcma_partial_score = false;
+        $test_logout_on_timeout = true;
         $test_password = '';
         break;
     }
@@ -769,7 +775,7 @@ if ($formstatus) {
             $test_end_time = date(K_TIMESTAMP_FORMAT, time() + K_SECONDS_IN_DAY);
             $test_duration_time = 60;
             $test_ip_range = '*.*.*.*';
-            $test_results_to_users = false;
+            $test_results_to_users = true;
             $test_report_to_users = false;
             $test_score_right = 1;
             $test_score_wrong = 0;
@@ -782,13 +788,13 @@ if ($formstatus) {
             $test_random_answers_select = true;
             $test_random_answers_order = true;
             $test_answers_order_mode = 0;
-            $test_comment_enabled = true;
-            $test_menu_enabled = true;
-            $test_noanswer_enabled = true;
+            $test_comment_enabled = false;
+            $test_menu_enabled = false;
+            $test_noanswer_enabled = false;
             $test_mcma_radio = true;
             $test_repeatable = false;
-            $test_mcma_partial_score = true;
-            $test_logout_on_timeout = false;
+            $test_mcma_partial_score = false;
+            $test_logout_on_timeout = true;
             $test_password = '';
         } else {
             $sql = 'SELECT * FROM '.K_TABLE_TESTS.' WHERE test_id='.$test_id.' LIMIT 1';
@@ -1080,6 +1086,10 @@ if (isset($test_id) and ($test_id > 0)) {
 }
 F_submit_button('clear', $l['w_clear'], $l['h_clear']);
 
+// comma separated list of required fields
+echo '<input type="hidden" name="ff_required" id="ff_required" value="test_name,test_description,test_ip_range,test_duration_time,test_score_right" />'.K_NEWLINE;
+echo '<input type="hidden" name="ff_required_labels" id="ff_required_labels" value="'.htmlspecialchars($l['w_name'].','.$l['w_description'].','.$l['w_ip_range'].','.$l['w_test_time'].','.$l['w_score_right'], ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
+
 echo '<br /><br />'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 
@@ -1304,6 +1314,25 @@ if (isset($test_id) and ($test_id > 0)) {
     echo '<br /><br />'.K_NEWLINE;
     echo '</div>'.K_NEWLINE;
 
+    ?>
+
+    <script>
+        function generate_pdf( test_id ){
+            var number_of_copies = 0;
+            pdfWindow=window.open(
+                    `tce_pdf_testgen.php?test_id=${test_id}`+
+                    '&num='
+                    + document.getElementById('form_testeditor').test_num.value 
+                    + '&number_of_users_per_test_copy_type='
+                    + document.getElementById('form_testeditor').number_of_users_per_test_copy_type.value 
+                    + '','pdfWindow','dependent,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes'
+                ); 
+            return false;
+        }
+    </script>
+
+    <?php
+
     echo '</fieldset>'.K_NEWLINE;
 
     echo '<div class="row"><br /></div>'.K_NEWLINE;
@@ -1314,8 +1343,12 @@ if (isset($test_id) and ($test_id > 0)) {
         echo '<label for="test_num">'.$l['w_pdf_offline_test'].'</label>'.K_NEWLINE;
         echo '</span>'.K_NEWLINE;
         echo '<span class="formw">'.K_NEWLINE;
-        echo '<input type="text" name="test_num" id="test_num" value="'.$test_num.'" size="4" maxlength="10" title="'.$l['h_pdf_offline_test'].'" />'.K_NEWLINE;
-        echo '<a href="tce_pdf_testgen.php?test_id='.$test_id.'&amp;num='.$test_num.'" title="'.$l['h_pdf_offline_test'].'" class="xmlbutton" onclick="pdfWindow=window.open(\'tce_pdf_testgen.php?test_id='.$test_id.'&amp;num=\' + document.getElementById(\'form_testeditor\').test_num.value + \'\',\'pdfWindow\',\'dependent,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes\'); return false;">'.$l['w_generate'].'</a>';
+        echo '<input type="number" name="test_num" id="test_num" value="'.$test_num.'" size="2" maxlength="3" title="'.$l['h_pdf_offline_test'].'" />'.K_NEWLINE;
+        echo '<input type="number" id="number_of_users_per_test_copy_type" size="2" maxlength="3" title="number of users per copy" />'.K_NEWLINE;
+        echo "<a href='#' title='{$l['h_pdf_offline_test']}' class='xmlbutton' 
+                onclick='return generate_pdf( {$test_id} )'>
+                {$l['w_generate']}
+             </a>";
         echo '</span>&nbsp;'.K_NEWLINE;
         echo '</div>'.K_NEWLINE;
     }

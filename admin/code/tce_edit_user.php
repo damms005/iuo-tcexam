@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_edit_user.php
 // Begin       : 2002-02-08
-// Last Update : 2018-07-06
+// Last Update : 2018-09-01
 //
 // Description : Edit user data.
 //
@@ -43,6 +43,8 @@ require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_otp.php');
 require_once('tce_functions_user_select.php');
+
+$user_id = "";
 
 if (isset($_REQUEST['user_id'])) {
     $user_id = intval($_REQUEST['user_id']);
@@ -172,7 +174,11 @@ switch ($menu_mode) { // process submitted data
 				user_email='.F_empty_to_null($user_email).',
 				user_password=\''.F_escape_sql($db, $user_password).'\',
 				user_regnumber='.F_empty_to_null($user_regnumber).',
-				user_firstname='.F_empty_to_null($user_firstname).',
+                user_department='.F_empty_to_null($user_department).',
+                user_college='.F_empty_to_null($user_college).',
+                user_year_level='.F_empty_to_null($user_year_level).',
+                user_passport='.F_empty_to_null($user_passport).',
+                user_firstname='.F_empty_to_null($user_firstname).',
 				user_lastname='.F_empty_to_null($user_lastname).',
 				user_birthdate='.F_empty_to_null($user_birthdate).',
 				user_birthplace='.F_empty_to_null($user_birthplace).',
@@ -270,6 +276,10 @@ switch ($menu_mode) { // process submitted data
 				user_email,
 				user_password,
 				user_regnumber,
+                user_department,
+                user_college,
+                user_year_level,
+                user_passport,
 				user_firstname,
 				user_lastname,
 				user_birthdate,
@@ -284,6 +294,10 @@ switch ($menu_mode) { // process submitted data
 				'.F_empty_to_null($user_email).',
 				\''.F_escape_sql($db, $user_password).'\',
 				'.F_empty_to_null($user_regnumber).',
+                '.F_empty_to_null($user_department).',
+                '.F_empty_to_null($user_college).',
+                '.F_empty_to_null($user_year_level).',
+                '.F_empty_to_null($user_passport).',
 				'.F_empty_to_null($user_firstname).',
 				'.F_empty_to_null($user_lastname).',
 				'.F_empty_to_null($user_birthdate).',
@@ -325,6 +339,10 @@ switch ($menu_mode) { // process submitted data
         $user_email = '';
         $user_password = '';
         $user_regnumber = '';
+        $user_department = '';
+        $user_college = '';
+        $user_year_level = '';
+        $user_passport = '';
         $user_firstname = '';
         $user_lastname = '';
         $user_birthdate = '';
@@ -344,13 +362,17 @@ switch ($menu_mode) { // process submitted data
 if ($formstatus) {
     if ($menu_mode != 'clear') {
         if (!isset($user_id) or empty($user_id)) {
-            $user_id = 0;
+            $user_id = '';
             $user_regdate = '';
             $user_ip = '';
             $user_name = '';
             $user_email = '';
             $user_password = '';
             $user_regnumber = '';
+            $user_department = '';
+            $user_college = '';
+            $user_year_level = '';
+            $user_passport = '';
             $user_firstname = '';
             $user_lastname = '';
             $user_birthdate = '';
@@ -369,6 +391,10 @@ if ($formstatus) {
                     $user_email = $m['user_email'];
                     $user_password = $m['user_password'];
                     $user_regnumber = $m['user_regnumber'];
+                    $user_department = $m['user_department'];
+                    $user_college = $m['user_college'];
+                    $user_year_level = $m['user_year_level'];
+                    $user_passport = $m['user_passport'];
                     $user_firstname = $m['user_firstname'];
                     $user_lastname = $m['user_lastname'];
                     $user_birthdate = substr($m['user_birthdate'], 0, 10);
@@ -383,6 +409,10 @@ if ($formstatus) {
                     $user_email = '';
                     $user_password = '';
                     $user_regnumber = '';
+                    $user_department = '';
+                    $user_college = '';
+                    $user_year_level = '';
+                    $user_passport = '';
                     $user_firstname = '';
                     $user_lastname = '';
                     $user_birthdate = '';
@@ -403,12 +433,19 @@ echo '<div class="container">'.K_NEWLINE;
 echo '<div class="tceformbox">'.K_NEWLINE;
 echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_usereditor">'.K_NEWLINE;
 
+echo "<div class='student_passport' style='float:right'>";
+echo "<img height='130px' src='../../shared/config/passports/{$user_passport}' />";
+echo "</div>";
+
 echo '<div class="row">'.K_NEWLINE;
 echo '<span class="label">'.K_NEWLINE;
 echo '<label for="user_id">'.$l['w_user'].'</label>'.K_NEWLINE;
 echo '</span>'.K_NEWLINE;
 echo '<span class="formw">'.K_NEWLINE;
-echo '<select name="user_id" id="user_id" size="0" onchange="document.getElementById(\'form_usereditor\').submit()">'.K_NEWLINE;
+
+echo "<input value='$user_id' list='user_data_list' name='user_id' id='user_id' size='0' onchange='document.getElementById(`form_usereditor`).submit()' />";
+
+echo '<datalist id="user_data_list">' . K_NEWLINE;
 echo '<option value="0" style="background-color:#009900;color:white;"';
 if ($user_id == 0) {
     echo ' selected="selected"';
@@ -425,22 +462,27 @@ if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
 			AND ta.usrgrp_user_id='.intval($_SESSION['session_user_id']).'
 			AND tb.usrgrp_user_id=user_id)';
 }
+$selection = "";
 $sql .= ' ORDER BY user_lastname, user_firstname, user_name';
 if ($r = F_db_query($sql, $db)) {
     $countitem = 1;
     while ($m = F_db_fetch_array($r)) {
-        echo '<option value="'.$m['user_id'].'"';
+        $string = $countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']);
+        $selected = "";
         if ($m['user_id'] == $user_id) {
-            echo ' selected="selected"';
+            $selection = "<script> document.getElementById('user_id').value = `$string` </script>";
+            $selected = ' selected="selected"';
         }
-        echo '>'.$countitem.'. '.htmlspecialchars($m['user_lastname'].' '.$m['user_firstname'].' - '.$m['user_name'].'', ENT_NOQUOTES, $l['a_meta_charset']).'</option>'.K_NEWLINE;
+        echo "<option $selected value='{$m['user_id']}'>{$string}</option>";
         $countitem++;
     }
 } else {
-    echo '</select></span></div>'.K_NEWLINE;
+    echo '</datalist></span></div>'.K_NEWLINE;
     F_display_db_error();
 }
-echo '</select>'.K_NEWLINE;
+
+//at this stage, we should echo $selection, but this will prevent dropdown suggestion unless user clears the input box
+echo "</datalist> ".K_NEWLINE;
 
 // link for user selection popup
 $jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';
@@ -463,6 +505,12 @@ echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_l
 echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
+
+echo getFormRowSelectBox('user_department', 'department', '', '', $user_department, $departments);
+echo getFormRowSelectBox('user_college', 'college', '', '', $user_college, $colleges);
+echo getFormRowSelectBox('user_year_level', 'year level', '', '', $user_level, $year_level);
+echo getFormRowTextInput('user_passport', 'passport', '', '', $user_passport, '', 255, false, false, false);
+
 echo getFormRowTextInput('user_birthdate', $l['w_birth_date'], $l['h_birth_date'].' '.$l['w_date_format'], '', $user_birthdate, '', 10, true, false, false);
 echo getFormRowTextInput('user_birthplace', $l['w_birth_place'], $l['h_birth_place'], '', $user_birthplace, '', 255, false, false, false);
 echo getFormRowTextInput('user_ssn', $l['w_fiscal_code'], $l['h_fiscal_code'], '', $user_ssn, '', 255, false, false, false);

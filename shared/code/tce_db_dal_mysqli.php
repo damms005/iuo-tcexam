@@ -40,7 +40,7 @@
  * @param $database (string) Database name.
  * @return MySQL link identifier on success, or FALSE on failure.
  */
-function F_db_connect($host = 'localhost', $port = '3306', $username = 'root', $password = '', $database = '')
+function F_db_connect($host = 'localhost', $port = '3306', $username = 'damms005', $password = 'p@$5w0rd', $database = 'tcexam')
 {
     if (!$db = @mysqli_connect($host, $username, $password, $database, $port)) {
         return false;
@@ -87,6 +87,9 @@ function F_db_query($query, $link_identifier)
 {
     // convert PostgreSQL RANDOM() function to MySQL RAND()
     //$query = preg_replace("/ORDER BY RANDOM\(\)/i", "ORDER BY RAND()", $query);
+    //For future reference, careful not to call close() on this link_identifer, because some new features now depend on database 
+    //transactions, and for transactions to be truly atomic, the implenetation of the transaction should have 
+    //control over the transaction lifespan
     return mysqli_query($link_identifier, $query);
 }
 
@@ -96,9 +99,9 @@ function F_db_query($query, $link_identifier)
  * @param $result (resource) result resource to the query result.
  * @return Returns an array that corresponds to the fetched row, or FALSE if there are no more rows.
  */
-function F_db_fetch_array($result)
+function F_db_fetch_array($result , $type = MYSQLI_BOTH ) //MYSQLI_ASSOC, MYSQLI_NUM, or MYSQLI_BOTH)
 {
-    return mysqli_fetch_array($result);
+    return mysqli_fetch_array($result , $type);
 }
 
 /**

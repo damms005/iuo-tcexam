@@ -242,7 +242,7 @@ div.header {
 /* header logo ------------ */
 div.header div.left {
 	background-color: #003399;
-	background-image: url(../../images/logo_tcexam_118x25.png);
+	/* background-image: url(../../images/logo_tcexam_118x25.png); */
 	background-position: top;
 	background-repeat: no-repeat;
 	border: 0px none;
@@ -818,7 +818,7 @@ ul.menu li:hover, ul.menu li.CSStoHighlight {
 	background-color: #003399;
 	color: #FFCC00;
 }
-
+ 
 ul.menu ul li {
 	background-color: #003399;
 	float: left;
@@ -837,7 +837,7 @@ ul.menu ul li:hover > ul, ul.menu ul *:focus + ul {
 	top: 0px;
 	margin: 0;
 	padding: 0;
-	background-color: #003399;	
+	background-color: #003399;
 	z-index: 1;
 }
 

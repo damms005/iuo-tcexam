@@ -4,7 +4,7 @@
 // Begin       : 2012-07-31
 // Last Update : 2014-05-14
 //
-// Description : Import in bulk test answers using OMR 
+// Description : Import in bulk test answers using OMR
 //               (Optical Mark Recognition)
 //               technique applied to images of scanned answer sheets.
 //
@@ -160,6 +160,8 @@ if (F_file_exists(K_PATH_CACHE.'OMR')) {
 }
 
 echo getFormRowCheckBox('overwrite', $l['w_overwrite'], $l['h_omr_overwrite'], '', 1, $overwrite, false, '');
+
+echo "<a href='tce_import_omr_answers_bulk_smart.php'>Smart Marking&trade; </a>";
 
 // -----------------------------------------------------------------------------
 

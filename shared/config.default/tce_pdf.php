@@ -42,7 +42,7 @@ define('PDF_HEADER_STRING', "first row\nsecond row\nthird row");
 /**
  * Image logo.
  */
-define('PDF_HEADER_LOGO', 'logo_example.png');
+define('PDF_HEADER_LOGO', 'logo_tcexam_118x25.png');
 
 /**
  * Header logo image width [mm].

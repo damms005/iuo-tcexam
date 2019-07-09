@@ -6,6 +6,10 @@
 //
 // Description : Import users from an XML file or tab-delimited
 //               TSV file.
+
+//import std records
+//convert existing question format to tcexam's
+//
 //
 // Author: Nicola Asuni
 //
@@ -32,6 +36,7 @@
  */
 
 require_once('../config/tce_config.php');
+ini_set('max_execution_time', 1800);
 
 $pagelevel = K_AUTH_IMPORT_USERS;
 require_once('../../shared/code/tce_authorization.php');
@@ -74,42 +79,75 @@ switch ($menu_mode) {
 <div class="container">
 
 <div class="tceformbox">
-<form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" id="form_importusers">
+	<table>
+		<tr>
+			<td>
+				<form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" id="form_importusers">
 
-<div class="row">
-<span class="label">
-<label for="userfile"><?php echo $l['w_upload_file']; ?></label>
-</span>
-<span class="formw">
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo K_MAX_UPLOAD_SIZE ?>" />
-<input type="file" name="userfile" id="userfile" size="20" title="<?php echo $l['h_upload_file']; ?>" />
-</span>
-&nbsp;
-</div>
+				<div class="row">
+				<span class="label">
+				<label for="userfile"><?php echo $l['w_upload_file']; ?></label>
+				</span>
+				<span class="formw">
+				<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo K_MAX_UPLOAD_SIZE ?>" />
+				<input type="file" name="userfile" id="userfile" size="20" title="<?php echo $l['h_upload_file']; ?>" />
+				</span>
+				&nbsp;
+				</div>
 
-<div class="row">
-<div class="formw">
-<fieldset class="noborder">
-<legend title="<?php echo $l['h_file_type']; ?>"><?php echo $l['w_type']; ?></legend>
+				<div class="row">
+				<div class="formw">
+				<fieldset class="noborder">
+				<legend title="<?php echo $l['h_file_type']; ?>"><?php echo $l['w_type']; ?></legend>
 
-<input type="radio" name="file_type" id="file_type_xml" value="1" checked="checked" title="<?php echo $l['h_file_type_xml']; ?>" />
-<label for="file_type_xml">XML</label>
-<br />
-<input type="radio" name="file_type" id="file_type_tsv" value="2" title="<?php echo $l['h_file_type_tsv']; ?>" />
-<label for="file_type_tsv">TSV</label>
-</fieldset>
-</div>
-</div>
+				<input type="radio" name="file_type" id="file_type_tsv" value="2" checked="checked" title="<?php echo $l['h_file_type_tsv']; ?>" />
+				<label for="file_type_tsv">TSV</label>
 
-<div class="row">
-<?php
-// show buttons by case
-F_submit_button("upload", $l['w_upload'], $l['h_submit_file']);
-?>
-</div>
+				<br />
 
-</form>
+				<input type="radio" name="file_type" id="file_type_xml" value="1" title="<?php echo $l['h_file_type_xml']; ?>" />
+				<label for="file_type_xml">XML</label>
+				</fieldset>
+				</div>
+				</div>
 
+				<div class="row">
+				<?php
+                // show buttons by case
+                F_submit_button("upload", $l['w_upload'], $l['h_submit_file']);
+                ?>
+				</div>
+
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<code>
+					Note: If you are uploading TSV, only plain, lean TSV file is allowed
+				</code>
+				<br>
+				<pre style="text-align:left">
+					<?php echo $import_instructions ?>
+				</pre>
+			</td>
+			<td>
+				<pre style="text-align:left">Recognized year_levels ('as is')
+				<?php print_r($year_level) ?>
+			</pre></td>
+		</tr>
+		<tr>
+			<td>
+				<pre style="text-align:left">Recognized colleges ('as is')
+					<?php print_r($colleges) ?>
+				</pre>
+			</td>
+			<td>
+				<pre style="text-align:left">Recognized departments ('as is')
+				<?php print_r($departments) ?>
+			</pre></td>
+		</tr>
+	</table>
 </div>
 <?php
 
@@ -485,7 +523,7 @@ class XMLUserImporter
  */
 function F_import_tsv_users($tsvfile)
 {
-    global $l, $db;
+    global $l, $db, $colleges, $departments, $year_level;
     require_once('../config/tce_config.php');
 
     // get file content as array
@@ -498,6 +536,10 @@ function F_import_tsv_users($tsvfile)
     for ($i = 1; $i < $nrows; $i++) {
         $rowdata = $tsvrows[$i];
 
+    // for each row
+	$new_addition = 0;
+	$updates = 0;
+    foreach ($tsvrows as $item => $rowdata) {
         // get user data into array
         $userdata = explode("\t", $rowdata);
 
@@ -505,21 +547,32 @@ function F_import_tsv_users($tsvfile)
         if (empty($userdata[4])) {
             $userdata[4] = date(K_TIMESTAMP_FORMAT);
         }
+
         if (empty($userdata[5])) {
             $userdata[5] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
         }
+
+        //group
+        $userdata[19] = 'students';
+
+        //transformations
+        $userdata[8] = get_item_index($userdata[8], $colleges);
+        $userdata[9] = get_item_index($userdata[9], $departments);
+        $userdata[10] = get_item_index($userdata[10], $year_level);
+
         // user level
-        if (!isset($userdata[12]) or (strlen($userdata[12]) == 0)) {
-            $userdata[12] = 1;
+        if (!isset($userdata[16]) or (strlen($userdata[16]) == 0)) {
+            $userdata[16] = 1;
         }
+
         if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
             // you cannot edit a user with a level equal or higher than yours
             $userdata[12] = min(max(0, ($_SESSION['session_user_level'] - 1)), $userdata[12]);
             // non-administrator can access only to his/her groups
-            if (empty($userdata[15])) {
+            if (empty($userdata[19])) {
                 break;
             }
-            $usrgroups = explode(',', addslashes($userdata[15]));
+            $usrgroups = explode(',', addslashes($userdata[19]));
             $common_groups = array_intersect(F_get_user_groups($_SESSION['session_user_id']), $usrgroups);
             if (empty($common_groups)) {
                 break;
@@ -528,13 +581,17 @@ function F_import_tsv_users($tsvfile)
         // check if user already exist
         $sql = 'SELECT user_id,user_level
 			FROM '.K_TABLE_USERS.'
-			WHERE user_name=\''.F_escape_sql($db, $userdata[1]).'\'
-				OR user_regnumber='.F_empty_to_null($userdata[10]).'
-				OR user_ssn='.F_empty_to_null($userdata[11]).'
-			LIMIT 1';
+			WHERE user_name=\''.F_escape_sql($db, $userdata[1]).'\'';
+        $sql .= (empty($userdata[14])) ? "" : ' OR user_regnumber='.F_empty_to_null($userdata[14]) ;
+        $sql .= (empty($userdata[15])) ? "" : ' OR user_ssn='.F_empty_to_null($userdata[15]);
+        $sql .= ' LIMIT 1';
+
+        //var_dump($sql);
+
         if ($r = F_db_query($sql, $db)) {
             if ($m = F_db_fetch_array($r)) {
-                // the user has been already added
+                // the user has been added already
+			   $updates++;
                 $user_id = $m['user_id'];
                 if (($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) or ($_SESSION['session_user_level'] > $m['user_level'])) {
                     //update user data
@@ -550,24 +607,32 @@ function F_import_tsv_users($tsvfile)
 						user_ip=\''.F_escape_sql($db, $userdata[5]).'\',
 						user_firstname='.F_empty_to_null($userdata[6]).',
 						user_lastname='.F_empty_to_null($userdata[7]).',
-						user_birthdate='.F_empty_to_null($userdata[8]).',
-						user_birthplace='.F_empty_to_null($userdata[9]).',
-						user_regnumber='.F_empty_to_null($userdata[10]).',
-						user_ssn='.F_empty_to_null($userdata[11]).',
-						user_level=\''.intval($userdata[12]).'\',
-						user_verifycode='.F_empty_to_null($userdata[13]).',
-						user_otpkey='.F_empty_to_null($userdata[14]).'
+
+                        user_college='.F_empty_to_null($userdata[8]).',
+                        user_department='.F_empty_to_null($userdata[9]).',
+                        user_year_level='.F_empty_to_null($userdata[10]).',
+                        user_passport='.F_empty_to_null($userdata[11]).',
+
+						user_birthdate='.F_empty_to_null($userdata[12]).',
+						user_birthplace='.F_empty_to_null($userdata[13]).',
+						user_regnumber='.F_empty_to_null($userdata[14]).',
+						user_ssn='.F_empty_to_null($userdata[15]).',
+						user_level=\''.intval($userdata[16]).'\',
+						user_verifycode='.F_empty_to_null($userdata[17]).',
+						user_otpkey='.F_empty_to_null($userdata[18]).'
 						WHERE user_id='.$user_id.'';
+                    //var_dump($sqlu);
                     if (!$ru = F_db_query($sqlu, $db)) {
                         F_display_db_error(false);
                         return false;
                     }
                 } else {
                     // no user is updated, so empty groups
-                    $userdata[15] = '';
+                    $userdata[19] = '';
                 }
             } else {
                 // add new user
+				$new_addition++;
                 $sqlu = 'INSERT INTO '.K_TABLE_USERS.' (
 					user_name,
 					user_password,
@@ -576,6 +641,10 @@ function F_import_tsv_users($tsvfile)
 					user_ip,
 					user_firstname,
 					user_lastname,
+                    user_college,
+                    user_department,
+                    user_year_level,
+                    user_passport,
 					user_birthdate,
 					user_birthplace,
 					user_regnumber,
@@ -595,10 +664,15 @@ function F_import_tsv_users($tsvfile)
 					'.F_empty_to_null($userdata[9]).',
 					'.F_empty_to_null($userdata[10]).',
 					'.F_empty_to_null($userdata[11]).',
-					\''.intval($userdata[12]).'\',
+					'.F_empty_to_null($userdata[12]).',
 					'.F_empty_to_null($userdata[13]).',
-					'.F_empty_to_null($userdata[14]).'
+					'.F_empty_to_null($userdata[14]).',
+					'.F_empty_to_null($userdata[15]).',
+					'.intval($userdata[16]).',
+					'.F_empty_to_null($userdata[17]).',
+					'.F_empty_to_null($userdata[18]).'
 					)';
+                //var_dump($sqlu);
                 if (!$ru = F_db_query($sqlu, $db)) {
                     F_display_db_error(false);
                     return false;
@@ -612,10 +686,10 @@ function F_import_tsv_users($tsvfile)
         }
 
         // user's groups
-        if (!empty($userdata[15])) {
-            $groups = preg_replace("/[\r\n]+/", '', $userdata[15]);
+        if (!empty($userdata[19])) {
+            $groups = preg_replace("/[\r\n]+/", '', $userdata[19]);
             $groups = explode(',', addslashes($groups));
-            foreach ($groups as $key => $group_name) {
+            while (list($key, $group_name)=each($groups)) {
                 $group_name = F_escape_sql($db, $group_name);
                 // check if group already exist
                 $sql = 'SELECT group_id
@@ -673,7 +747,21 @@ function F_import_tsv_users($tsvfile)
         }
     }
 
+	echo "
+	<pre>New additions: $new_addition</pre>
+	<pre>Updates: $updates</pre>
+	";
+
     return true;
+}
+
+function get_item_index($item, $stack)
+{
+    $index = array_search($item, $stack);
+    if (!is_numeric($index)) {
+        $index = 0;//default
+    }
+    return $index;
 }
 
 //============================================================+

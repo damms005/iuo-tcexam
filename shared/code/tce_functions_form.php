@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_functions_form.php
 // Begin       : 2001-11-07
-// Last Update : 2018-07-06
+// Last Update : 2018-09-01
 //
 // Description : Functions to handle XHTML Form Fields.
 //

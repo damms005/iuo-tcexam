@@ -67,6 +67,9 @@ if (!isset($thispage_style) or empty($thispage_style)) {
         $thispage_style = K_SITE_STYLE;
     }
 }
+if (!isset($custom_style) or empty($custom_style)) {
+    $custom_style = K_TCEXAM_STYLE_CUSTOM;
+}
 
 echo '<'.'?'.'xml version="1.0" encoding="'.$l['a_meta_charset'].'" '.'?'.'>'.K_NEWLINE;
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.K_NEWLINE;
@@ -82,8 +85,14 @@ echo '<meta name="author" content="nick"/>'.K_NEWLINE;
 echo '<meta name="reply-to" content="'.htmlspecialchars($thispage_reply, ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
 echo '<meta name="keywords" content="'.htmlspecialchars($thispage_keywords, ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
 echo '<link rel="stylesheet" href="'.$thispage_style.'" type="text/css" />'.K_NEWLINE;
+echo '<link rel="stylesheet" href="'.$custom_style.'" type="text/css" />'.K_NEWLINE;
+
+echo '<link rel="stylesheet" href="'. K_BOOTSTRAP_CSS .'" type="text/css" />'.K_NEWLINE;
 echo '<link rel="shortcut icon" href="'.$thispage_icon.'" />'.K_NEWLINE;
+echo '<script type="text/javascript" src="../js/jquery.js"></script>'.K_NEWLINE;
 // calendar
+
+
 if (isset($enable_calendar) and $enable_calendar) {
     echo '<style type="text/css">@import url('.K_PATH_SHARED_JSCRIPTS.'jscalendar/calendar-blue.css);</style>'.K_NEWLINE;
     echo '<script type="text/javascript" src="'.K_PATH_SHARED_JSCRIPTS.'jscalendar/calendar.js"></script>'.K_NEWLINE;

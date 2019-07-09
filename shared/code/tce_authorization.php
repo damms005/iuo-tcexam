@@ -47,7 +47,6 @@ require_once('../../shared/code/tce_functions_session.php');
 require_once('../../shared/code/tce_functions_otp.php');
 
 $logged = false; // the user is not yet logged in
-
 // --- read existing user's session data from database
 $PHPSESSIDSQL = F_escape_sql($db, $PHPSESSID);
 $fingerprintkey = getClientFingerprint();
@@ -77,6 +76,9 @@ if ($rs = F_db_query($sqls, $db)) {
         $_SESSION['session_user_level'] = 0;
         $_SESSION['session_user_firstname'] = '';
         $_SESSION['session_user_lastname'] = '';
+        $_SESSION['session_user_passport'] = '';
+        $_SESSION['session_user_department'] = '';
+        $_SESSION['session_user_year_level'] = '';
         $_SESSION['session_test_login'] = '';
         // read client cookie
         if (isset($_COOKIE['LastVisit'])) {
@@ -133,6 +135,7 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                 if (strtotime($mt['cpsession_expiry']) < time()) {
                     $bruteforce = false;
                 }
+
                 // update wait time
                 $wait = intval($mt['cpsession_data']);
                 if ($wait < K_SECONDS_IN_HOUR) {
@@ -211,6 +214,9 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                     $_SESSION['session_user_level'] = $m['user_level'];
                     $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
                     $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
+                    $_SESSION['session_user_passport'] = $m['user_passport'];
+                    $_SESSION['session_user_department'] = $departments[ $m['user_department']];
+                    $_SESSION['session_user_year_level'] = $year_level[$m['user_year_level']];
                     $_SESSION['session_test_login'] = '';
                     // read client cookie
                     if (isset($_COOKIE['LastVisit'])) {
@@ -244,6 +250,9 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                                 $_SESSION['session_user_level'] = $md['user_level'];
                                 $_SESSION['session_user_firstname'] = urlencode($md['user_firstname']);
                                 $_SESSION['session_user_lastname'] = urlencode($md['user_lastname']);
+                                $_SESSION['session_user_passport'] = $md['user_passport'];
+                                $_SESSION['session_user_department'] =$departments[ $md['user_department']];
+                                $_SESSION['session_user_year_level'] =$year_level[ $md['user_year_level']];
                                 $_SESSION['session_last_visit'] = 0;
                                 $_SESSION['session_test_login'] = '';
                                 $logged = true;
@@ -301,6 +310,9 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                             $_SESSION['session_user_level'] = intval($altusr['user_level']);
                             $_SESSION['session_user_firstname'] = urlencode($altusr['user_firstname']);
                             $_SESSION['session_user_lastname'] = urlencode($altusr['user_lastname']);
+                            $_SESSION['session_user_passport'] = $altusr['user_passport'];
+                            $_SESSION['session_user_department'] =$departments[ $altusr['user_department']];
+                            $_SESSION['session_user_year_level'] =$year_level[ $altusr['user_year_level']];
                             $_SESSION['session_last_visit'] = 0;
                             $_SESSION['session_test_login'] = '';
                             $logged = true;
@@ -363,6 +375,7 @@ if ($logged) { //if user is just logged in: reloads page
     $htmlredir .= '<a href="'.$_SERVER['SCRIPT_NAME'].'">ENTER</a>'.K_NEWLINE;
     $htmlredir .= '</body>'.K_NEWLINE;
     $htmlredir .= '</html>'.K_NEWLINE;
+
     switch (K_REDIRECT_LOGIN_MODE) {
         case 1: {
             // relative redirect
@@ -382,7 +395,13 @@ if ($logged) { //if user is just logged in: reloads page
         case 4:
         default: {
             // full redirect
-            header('Location: '.K_PATH_HOST.$_SERVER['SCRIPT_NAME']);
+			// echo "<pre>";
+			// print_r($_SERVER['SERVER_ADDR']);
+			// print_r($_SERVER);
+			// print_r($_REQUEST);
+            $loc = 'Location: '.K_PATH_HOST.$_SERVER['SCRIPT_NAME'];
+			// exit( $loc);
+            header( $loc );
             echo $htmlredir;
             break;
         }
