@@ -23,7 +23,7 @@
 function startProcessing($job_id, $job_db_primarykey, $job_files)
 {
 
-    require "./classes/ScannerTypes.php";
+    require "./smart-omr/classes/ScannerTypes.php";
 
     set_time_limit(0);
 
