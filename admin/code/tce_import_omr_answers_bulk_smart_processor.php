@@ -27,7 +27,6 @@ require_once '../config/tce_config.php';
 require_once '../../shared/code/tce_functions_tcecode.php';
 require_once '../../shared/code/tce_functions_auth_sql.php';
 require_once 'tce_functions_omr.php';
-require_once 'tce_functions_smart_omr.php';
 require_once 'tce_functions_user_select.php';
 
 // upload is done one-by-one so we do not clock the file upload limit

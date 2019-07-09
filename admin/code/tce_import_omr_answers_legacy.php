@@ -44,7 +44,6 @@ require_once '../../shared/code/tce_functions_form.php';
 require_once '../../shared/code/tce_functions_tcecode.php';
 require_once '../../shared/code/tce_functions_auth_sql.php';
 require_once 'tce_functions_omr.php';
-require_once 'tce_functions_smart_omr.php';
 require_once 'tce_functions_user_select.php';
 
 if (isset($_REQUEST['user_id'])) {

@@ -23,7 +23,6 @@ header('Access-Control-Allow-Origin: *');
 
 require_once '../config/tce_config.php';
 require_once '../../shared/code/tce_functions_auth_sql.php';
-require_once 'tce_functions_smart_omr.php';
 
 if( isset( $_REQUEST['getStatus'] ) ) {
     $status = getJobStatus( $_REQUEST['job_id']);
