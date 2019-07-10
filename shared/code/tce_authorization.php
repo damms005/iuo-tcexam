@@ -526,9 +526,35 @@ function load_custom_ui()
                     $(el).attr("title" , '');
                 }
             })
-            $('[data-toggle="tooltip"]').tooltip({
-                delay: { "show": 850, "hide": 50 },
-                placement: 'auto'
+            // $('[data-toggle="tooltip"]').tooltip({
+            //     delay: { "show": 850, "hide": 50 },
+            //     placement: 'auto'
+            // });
+            var HasTooltip = $('[data-toggle="tooltip"]');
+            HasTooltip.on('enter focus mouseover', function(e) {
+                e.preventDefault();
+                var isShowing = $(this).data('isShowing');
+                HasTooltip.removeData('isShowing');
+                if (isShowing !== 'true')
+                {
+                    HasTooltip.not(this).tooltip('hide');
+                    $(this).data('isShowing', "true");
+                    $(this).tooltip('show');
+                }
+                else
+                {
+                    $(this).tooltip('hide');
+                }
+            })
+            .on('blur mouseout leave mouseleave', function(){
+                $(this).tooltip('hide');
+            })
+            .tooltip({
+                animation: true,
+                trigger: 'manual',
+                delay: {
+                    "show": 850, "hide": 50
+                }
             });
 
             //make tables more presentable
