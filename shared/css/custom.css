@@ -29226,3 +29226,7 @@ div.header div.right {
 #userLcd * {
 	overflow-wrap: break-word;
 }
+
+div.left img{
+	height: 120px;
+}
