@@ -167,7 +167,7 @@ if (!isset($custom_style) or empty($custom_style)) {
         $('acronym').addClass('cursor-pointer');
 
         //fix layout login button
-        $("#login").css({marginLeft: '-500px'})
+        $("#login").css({marginLeft: '-567px'})
 
         //testform
         $("#testform").addClass('border rounded bg-red-lightest pb-4')
@@ -176,6 +176,9 @@ if (!isset($custom_style) or empty($custom_style)) {
 
         //all bootstrap table that they put td text as centered is bad layout
         $(".table td").css({textAlign: 'left'});
+
+        //some space for h1s
+        $("h1").addClass('pt-4 pb-2')
 
     })
 </script>

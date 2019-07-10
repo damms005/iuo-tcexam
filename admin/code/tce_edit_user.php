@@ -433,8 +433,8 @@ echo '<div class="container">'.K_NEWLINE;
 echo '<div class="tceformbox">'.K_NEWLINE;
 echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_usereditor">'.K_NEWLINE;
 
-echo "<div class='student_passport' style='float:right'>";
-echo "<img height='130px' src='../../shared/config/passports/{$user_passport}' />";
+echo "<div class='student_passport rounded border'>";
+echo "<img src='../../shared/config/passports/{$user_passport}' />";
 echo "</div>";
 
 echo '<div class="row">'.K_NEWLINE;

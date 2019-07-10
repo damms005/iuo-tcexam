@@ -30,64 +30,67 @@
 /**
  */
 
-require_once('tce_xhtml_header.php');
+require_once 'tce_xhtml_header.php';
 
 // display header (image logo + timer)
-echo '<div class="header">'.K_NEWLINE;
-echo '<div class="left"> <img src="../../images/logo_tcexam_118x25.png" /> </div>'.K_NEWLINE;
-echo '<div class="right">'.K_NEWLINE;
-echo '<a name="timersection" id="timersection"></a>'.K_NEWLINE;
-include('../../shared/code/tce_page_timer.php');
-echo '</div>'.K_NEWLINE;
-echo '</div>'.K_NEWLINE;
+echo '<div class="header">' . K_NEWLINE;
+echo '<div class="left"></div>' . K_NEWLINE;
+echo '<div class="right">' . K_NEWLINE;
+echo '<a name="timersection" id="timersection"></a>' . K_NEWLINE;
+include '../../shared/code/tce_page_timer.php';
+echo '</div>' . K_NEWLINE;
+echo '</div>' . K_NEWLINE;
 
 // display menu
 // CSS changes for old browsers
-echo '<!--[if lte IE 7]>'.K_NEWLINE;
-echo '<style type="text/css">'.K_NEWLINE;
-echo 'ul.menu li {text-align:left;behavior:url("../../shared/jscripts/IEmen.htc");}'.K_NEWLINE;
-echo 'ul.menu ul {background-color:#003399;margin:0;padding:0;display:none;position:absolute;top:20px;left:0px;}'.K_NEWLINE;
-echo 'ul.menu ul li {width:200px;text-align:left;margin:0;}'.K_NEWLINE;
-echo 'ul.menu ul ul {display:none;position:absolute;top:0px;left:190px;}'.K_NEWLINE;
-echo '</style>'.K_NEWLINE;
-echo '<![endif]-->'.K_NEWLINE;
-require_once(dirname(__FILE__).'/tce_page_menu.php');
+echo '<!--[if lte IE 7]>' . K_NEWLINE;
+echo '<style type="text/css">' . K_NEWLINE;
+echo 'ul.menu li {text-align:left;behavior:url("../../shared/jscripts/IEmen.htc");}' . K_NEWLINE;
+echo 'ul.menu ul {background-color:#003399;margin:0;padding:0;display:none;position:absolute;top:20px;left:0px;}' . K_NEWLINE;
+echo 'ul.menu ul li {width:200px;text-align:left;margin:0;}' . K_NEWLINE;
+echo 'ul.menu ul ul {display:none;position:absolute;top:0px;left:190px;}' . K_NEWLINE;
+echo '</style>' . K_NEWLINE;
+echo '<![endif]-->' . K_NEWLINE;
+require_once dirname(__FILE__) . '/tce_page_menu.php';
 
-echo '<div class="body">'.K_NEWLINE;
+echo '<div class="body">' . K_NEWLINE;
 
-        echo "<div id='userLcd'>";
-        echo "<table>";
-            echo "<tr>";
-                if(is_file( "../../shared/config/passports/{$_SESSION['session_user_passport']}" )){
-                    echo "<td>";
-                    echo "<img height='130px' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
-                    echo "</td>";
-                }
-                echo "<td>";
-                    echo "<span>
-                                <code>
-                                    ({$_SESSION['session_user_name']})
-                                </code>
-                                <br>
-                                <code>
-                                    {$_SESSION['session_user_firstname']} {$_SESSION['session_user_lastname']}
-                                </code>
-                                <br>
-                                <code>
-                                    {$_SESSION['session_user_department']}
-                                </code>
-                                <br>
-                                <code>
-                                    {$_SESSION['session_user_year_level']} LEVEL
-                                </code>
-                            </span>";
-                echo "</td>";
-            echo "</tr>";
-        echo "</table>";
-        echo "</div>";
+if (isset($_SESSION['session_user_firstname']) && !empty($_SESSION['session_user_firstname'] ) ) {
+    echo "<div id='userLcd' class='z-10 fixed p-4 float-right ' >";
+    ?>
+            <div class="inner rounded overflow-hidden shadow-lg m-auto bg-white">
+                <?php
+if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport'])) {
+        echo "<img class='' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
+    }
+    ?>
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2"><?php echo @$_SESSION['session_user_firstname'] . ' ' . @$_SESSION['session_user_lastname']; ?></div>
+                    <p class="text-grey-darker text-base">
+                    </p>
+                </div>
+                <div class="px-6 py-4">
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
+                    <?php echo @$_SESSION['session_user_name']; ?>
+                    </span>
+                    <br>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
+                    <?php echo @$_SESSION['session_user_department']; ?>
+                    </span>
+                    <br>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">
+                    <?php echo @$_SESSION['session_user_year_level']; ?> Level
+                    </span>
+                </div>
+            </div>
 
-echo '<a name="topofdoc" id="topofdoc"></a>'.K_NEWLINE;
-echo '<h1>'.htmlspecialchars($thispage_title, ENT_NOQUOTES, $l['a_meta_charset']).'</h1>'.K_NEWLINE;
+        <?php
+echo "
+</div>";
+}
+
+echo '<a name="topofdoc" id="topofdoc"></a>' . K_NEWLINE;
+echo '<h1>' . htmlspecialchars($thispage_title, ENT_NOQUOTES, $l['a_meta_charset']) . '</h1>' . K_NEWLINE;
 
 //============================================================+
 // END OF FILE

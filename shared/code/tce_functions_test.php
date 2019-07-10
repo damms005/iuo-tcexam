@@ -344,7 +344,7 @@ function F_terminateUserTest($test_id)
  * @param $user_id (int) user ID
  * @param $test_id (int) test ID
  * @param $duration (int) test duration in seconds
- * @return array of (test_status_code, testuser_id). 
+ * @return array of (test_status_code, testuser_id).
  *                  test_status_code: <ul>
  *                  <li>0 = the test generation process is started but not completed;</li>
  *                  <li>1 = the test has been successfully created;</li>
@@ -2176,7 +2176,7 @@ function F_testLoginForm($faction, $fid, $fmethod, $fenctype, $test_id)
     $str .= getFormRowTextInput('xtest_password', $l['w_test_password'], $l['h_test_password'], '', '', '', 255, false, false, true, '');
     // buttons
     $str .= '<div class="row">'.K_NEWLINE;
-    $str .= '<input type="submit" class="btn btn-danger" name="login" id="login" value="'.$l['w_login'].'" title="'.$l['h_login_button'].'" />'.K_NEWLINE;
+    $str .= '<input type="submit" class="" name="login" id="login" value="'.$l['w_login'].'" title="'.$l['h_login_button'].'" />'.K_NEWLINE;
     // the following field is used to check if the form has been submitted
     $str .= '<input type="hidden" name="testpswaction" id="testpswaction" value="login" />'.K_NEWLINE;
     $str .= '<input type="hidden" name="testid" id="testid" value="'.intval($test_id).'" />'.K_NEWLINE;

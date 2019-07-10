@@ -1,4 +1,3 @@
-
 /**
  * This injects Tailwind's base styles, which is a combination of
  * Normalize.css and some additional base styles.
@@ -21,7 +20,7 @@
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
- html {
+html {
 	line-height: 1.15;
 	/* 1 */
 	-webkit-text-size-adjust: 100%;
@@ -510,7 +509,7 @@ textarea {
 }
 
 img {
-	max-width: 100%;
+	/* max-width: 100%; */
 	height: auto;
 }
 
@@ -28960,7 +28959,7 @@ table {
 }
 
 #cssmenu {
-	margin-top: 3%;
+	margin-top: 5%;
 	width: auto;
 	border-bottom: 3px solid #47c9af;
 	font-family: Raleway, sans-serif;
@@ -29160,6 +29159,40 @@ span.formw div.pretty {
 	}
 }
 
-.student_passport{
+.student_passport {
 	width: 100px;
+}
+
+.student_passport img {
+	height: 195px;
+}
+
+div.header div.right {
+	/* background-color: #003399; */
+	border: 0px none;
+	/* float: right; */
+	/* height: 25px; */
+	/* margin: 20px 0px 0px 0px; */
+	/* padding: 0px 0px 0px 0px; */
+	text-align: right;
+	/* width: 400px; */
+	position: absolute;
+	margin: 143px 2px auto auto;
+	right: 2px;
+	z-index: 2;
+}
+
+#userLcd {
+	width: 350px;
+	right: 50px;
+	bottom: 4px;
+}
+
+#userLcd .inner {
+	width: 250px;
+}
+
+#userLcd img {
+	width: 100px;
+	margin: auto;
 }
