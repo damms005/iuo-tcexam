@@ -643,8 +643,8 @@ sup.tcecode {}
 
 /* user select table --------------------------*/
 table.userselect {
-	background-color: #F6F6F6;
-	border: 1px solid #808080;
+	/* background-color: #F6F6F6; */
+	/* border: 1px solid #808080; */
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	text-align: center;
