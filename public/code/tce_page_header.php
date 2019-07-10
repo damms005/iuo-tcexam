@@ -58,10 +58,10 @@ echo '<div class="body">' . K_NEWLINE;
 if (isset($_SESSION['session_user_firstname']) && !empty($_SESSION['session_user_firstname'] ) ) {
     echo "<div id='userLcd' class='z-10 fixed p-4 float-right cursor-pointer' >";
     ?>
-            <div class="inner rounded overflow-hidden shadow-lg m-auto bg-white">
+            <div class="flex flex-column inner rounded overflow-hidden shadow-lg m-auto bg-white">
                 <?php
     if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport'])) {
-        echo "<img class='' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
+        echo "<img class='mt-2' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
     }
     ?>
                 <div class="px-6 py-4">

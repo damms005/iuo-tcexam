@@ -549,6 +549,9 @@ function load_custom_ui()
             //all bootstrap table that they put td text as centered is bad layout
             $(".table td").css({textAlign: 'left'});
 
+            //effizy
+            $("#userLcd").addClass("animate shake");
+
         })
     </script>
 
