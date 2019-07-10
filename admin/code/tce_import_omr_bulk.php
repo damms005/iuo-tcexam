@@ -57,6 +57,9 @@ if (isset($_REQUEST['date'])) {
 
 if (isset($_REQUEST['omrdir']) and (strpos($_REQUEST['omrdir'], K_PATH_CACHE.'OMR') == 0)) {
     $omrdir = $_REQUEST['omrdir'];
+    if (strpos($omrdir, '://') !== false) {
+        F_print_error('ERROR', 'Invalid omrdir!', true);
+    }
 } else {
     $omrdir = K_PATH_CACHE.'OMR/';
 }
@@ -68,7 +71,7 @@ if (!isset($_REQUEST['overwrite']) or (empty($_REQUEST['overwrite']))) {
 }
 
 // process OMR files on the specified directory
-if (isset($menu_mode) and ($menu_mode == 'upload') and file_exists($omrdir)) {
+if (isset($menu_mode) and ($menu_mode == 'upload') and F_file_exists($omrdir)) {
     $logfilename = 'log_import_omr_'.time().'.txt';
     $logfile = K_PATH_CACHE.'OMR/'.$logfilename;
     $dirhdl = @opendir($omrdir);
@@ -91,7 +94,7 @@ if (isset($menu_mode) and ($menu_mode == 'upload') and file_exists($omrdir)) {
                         $omr_answers = array();
                         for ($i = 1; $i <= $num_pages; ++$i) {
                             $answerfile = 'OMR_'.$matches[1].'_A'.$i.'.'.$matches[2];
-                            if (file_exists($omrdir.$answerfile)) {
+                            if (F_file_exists($omrdir.$answerfile)) {
                                 $answers_page = F_decodeOMRPage($omrdir.$answerfile);
                                 if (($answers_page !== false) and !empty($answers_page)) {
                                     $omr_answers += $answers_page;
@@ -137,7 +140,7 @@ echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipar
 // date
 echo getFormRowTextInput('date', $l['w_date'], $l['w_date'].' '.$l['w_datetime_format'], '', $date, '', 19, false, true, false);
 
-if (file_exists(K_PATH_CACHE.'OMR')) {
+if (F_file_exists(K_PATH_CACHE.'OMR')) {
     // directory containing files to import
     $dirs = array('OMR/');
     $dirhdl = @opendir(K_PATH_CACHE.'OMR/');

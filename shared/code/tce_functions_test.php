@@ -100,7 +100,7 @@ function F_getUserTests()
                 }
                 $str .= '</td>'.K_NEWLINE;
                 // display various action links by status case
-                $str .= '<td style="text-align:center;">';
+                $str .= '<td style="">';
                 if (!$expired) {
                     switch ($test_status) {
                         case 0: { // 0 = the test generation process is started but not completed

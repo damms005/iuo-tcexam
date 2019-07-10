@@ -16,7 +16,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2016 Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -32,7 +32,7 @@
 /**
  * TCExam version (do not change).
  */
-define('K_TCEXAM_VERSION', '14.1.2');
+define('K_TCEXAM_VERSION', '14.1.9');
 
 /**
  * 2-letters code for default language.

@@ -34,39 +34,49 @@
  * @param $data (array) link data
  * @param $level (int) item level
  */
-function F_menu_link($link, $data, $level = 0)
+function F_menu_link($link, $data, $level = 0, $notSublink = true)
 {
     global $l, $db;
-    require_once('../config/tce_config.php');
+    require_once '../config/tce_config.php';
     if (!$data['enabled'] or ($_SESSION['session_user_level'] < $data['level'])) {
         // this item is disabled
         return;
     }
-    $str = '<li>';
-    if ($link != basename($_SERVER['SCRIPT_NAME'])) {
-        $str .= '<a href="'.$data['link'].'" title="'.$data['title'].'"';
+
+    $hasActiveChild = F_menu_isChildActive($data);
+    $isCurrentPage  = $link == basename($_SERVER['SCRIPT_NAME']);
+    $hasSubmenu     = (isset($data['sub']) and !empty($data['sub']));
+
+    $str = $notSublink ? "<li class=' " . ($hasSubmenu ? " dropbtn " : " ") : "";
+
+    $str .= $notSublink ? ($hasActiveChild || $isCurrentPage ? " active " : " ") . "'>" : "";
+
+    if (!$isCurrentPage) {
+        $str .= '<a href="' . $data['link'] . '" no-title="' . $data['title'] . '"';
         if (!empty($data['key'])) {
-            $str .= ' accesskey="'.$data['key'].'"';
+            $str .= ' accesskey="' . $data['key'] . '"';
         }
-        if (F_menu_isChildActive($data)) {
-            $str .= ' class="active"';
-        }
-        $str .= '>'.$data['name'].'</a>';
+        $str .= '>' . ucwords($data['name']) . '</a>';
     } else {
         // active link
-        $str .= '<span class="active">'.$data['name'].'</span>';
+        $str .= '<a href="javascript:void(0)" class="">' . ucwords($data['name']) . '</a>';
     }
-    if (isset($data['sub']) and !empty($data['sub'])) {
-        // print sub-items
-        $sublevel = ($level + 1);
-        $str .= K_NEWLINE.'<!--[if lte IE 6]><iframe class="menu"></iframe><![endif]-->'.K_NEWLINE;
-        $str .= '<ul>'.K_NEWLINE;
-        foreach ($data['sub'] as $sublink => $subdata) {
-            $str .= F_menu_link($sublink, $subdata, $sublevel);
+
+    //we do not support more than one submenu for now
+    if ($notSublink) {
+        if (isset($data['sub']) and !empty($data['sub'])) {
+            // print sub-items
+            $sublevel = ($level + 1);
+            $str .= K_NEWLINE . '<!--[if lte IE 6]><iframe class="menu"></iframe><![endif]-->' . K_NEWLINE;
+            $str .= "<div  class='dropdown'>" . K_NEWLINE;
+            foreach ($data['sub'] as $sublink => $subdata) {
+                $str .= F_menu_link($sublink, $subdata, $sublevel, false);
+            }
+            $str .= '</div>' . K_NEWLINE;
         }
-        $str .= '</ul>'.K_NEWLINE;
+        $str .= '</li>' . K_NEWLINE;
     }
-    $str .= '</li>'.K_NEWLINE;
+
     return $str;
 }
 

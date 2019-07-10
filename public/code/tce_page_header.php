@@ -42,7 +42,6 @@ echo '</div>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 
 // display menu
-echo '<div id="scrollayer" class="scrollmenu">'.K_NEWLINE;
 // CSS changes for old browsers
 echo '<!--[if lte IE 7]>'.K_NEWLINE;
 echo '<style type="text/css">'.K_NEWLINE;
@@ -53,7 +52,6 @@ echo 'ul.menu ul ul {display:none;position:absolute;top:0px;left:190px;}'.K_NEWL
 echo '</style>'.K_NEWLINE;
 echo '<![endif]-->'.K_NEWLINE;
 require_once(dirname(__FILE__).'/tce_page_menu.php');
-echo '</div>'.K_NEWLINE;
 
 echo '<div class="body">'.K_NEWLINE;
 

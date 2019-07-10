@@ -28,6 +28,25 @@
  */
 
 /**
+ *
+ *
+<div class="">
+<div id="cssmenu">
+<ul>
+<li class="active"><a href="#" target="_blank">Home</a></li>
+<li><a href="#">Menus</a></li>
+<li class="dropbtn">
+<a href="javascript:void(0)" >Dropdown</a>
+<div class='dropdown'>
+<a href="">Things</a>
+<a href="">One</a>
+<a href="">Two</a>
+</div>
+</li>
+<li><a href="#">Support</a></li>
+</ul>
+</div>
+</div>
  */
 
 require_once('../../shared/code/tce_functions_menu.php');
@@ -53,16 +72,13 @@ echo '<div class="hidden">';
 echo '<a href="#topofdoc" accesskey="2" title="[2] '.$l['w_skip_navigation'].'">'.$l['w_skip_navigation'].'</a>';
 echo '</div>'.K_NEWLINE;
 
-$menudata = '';
-foreach ($menu as $link => $data) {
-    $menudata .= F_menu_link($link, $data, 0);
-}
 
-if (!empty($menudata)) {
-    echo '<ul class="menu">'.K_NEWLINE;
-    echo $menudata;
-    echo '</ul>'.K_NEWLINE; // end of menu
+echo '<div class=""><div id="cssmenu"><ul>' . K_NEWLINE;
+
+foreach ($menu as $link => $data) {
+    echo F_menu_link($link, $data, 0);
 }
+echo '</ul></div></div>' . K_NEWLINE; // end of menu
 
 //============================================================+
 // END OF FILE
