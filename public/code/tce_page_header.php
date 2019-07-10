@@ -58,30 +58,30 @@ echo '</div>'.K_NEWLINE;
 echo '<div class="body">'.K_NEWLINE;
 
         echo "<div id='userLcd'>";
-        echo "<table>";
+        echo "<table class='table-bordered table-striped'>";
             echo "<tr>";
-                if(is_file( "../../shared/config/passports/{$_SESSION['session_user_passport']}" )){
+                if(is_file( "../../shared/config/passports/" . @$_SESSION['session_user_passport'] )){
                     echo "<td>";
                     echo "<img height='130px' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
                     echo "</td>";
                 }
                 echo "<td>";
                     echo "<span>
-                                <code>
-                                    ({$_SESSION['session_user_name']})
-                                </code>
+                                <span>
+                                    (" . @$_SESSION['session_user_name'] . ")
+                                </span>
                                 <br>
-                                <code>
-                                    {$_SESSION['session_user_firstname']} {$_SESSION['session_user_lastname']}
-                                </code>
+                                <span>
+                                    " . @$_SESSION['session_user_firstname'] . @$_SESSION['session_user_lastname'] . "
+                                </span>
                                 <br>
-                                <code>
-                                    {$_SESSION['session_user_department']}
-                                </code>
+                                <span>
+                                    " . @$_SESSION['session_user_department'] . "
+                                </span>
                                 <br>
-                                <code>
-                                    {$_SESSION['session_user_year_level']} LEVEL
-                                </code>
+                                <span>
+                                    " . @$_SESSION['session_user_year_level'] . " LEVEL
+                                </span>
                             </span>";
                 echo "</td>";
             echo "</tr>";
