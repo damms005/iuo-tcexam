@@ -29183,16 +29183,42 @@ div.header div.right {
 }
 
 #userLcd {
-	width: 350px;
-	right: 50px;
+	width: 280px;
+	right: 5px;
 	bottom: 4px;
+	transition: all 0.5s ease-in;
+	/* pointer-events: none; */
+}
+
+#userLcd:hover {
+	/* transform: scale(0.5) translate(400px, 0); */
+	transform: translate(400px, 0);
+	/* animation: 4s linear 0s infinite alternate slideout; */
+}
+
+/* @keyframes slideout {
+	from {
+		margin-left: -20%;
+	}
+
+	to {
+		margin-left: 100%;
+	}
+} */
+
+#userLcd * {
+	overflow-wrap: break-word;
+}
+
+#userLcd span.inline-block {
+	margin-bottom: 10px;
 }
 
 #userLcd .inner {
-	width: 250px;
+	width: 230px;
 }
 
 #userLcd img {
-	width: 100px;
+	width: 150px;
 	margin: auto;
 }
