@@ -241,7 +241,7 @@ div.header {
 
 /* header logo ------------ */
 div.header div.left {
-	background-color: #003399;
+	/* background-color: #003399; */
 	/* background-image: url(../../images/logo_tcexam_118x25.png); */
 	background-position: top;
 	background-repeat: no-repeat;
