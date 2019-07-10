@@ -115,7 +115,7 @@ require_once '../../shared/code/tce_functions_otp.php';
         })
 
         //style information boxes
-        $("div.warning").removeClass('warning').addClass("mt-5 mb-5 p-4 bg-red text-white rounded animated shake")
+        $("div.warning , div.error").removeClass('warning').removeClass('error').addClass("mt-5 mb-5 p-4 bg-red text-white rounded animated shake")
         $("div.message").removeClass('message').addClass("mt-5 mb-5 p-4 bg-pink-darkest text-white rounded animated shake")
         $("div.preview").removeClass('preview').addClass('rounded border bg-pink-lightest p-3')
         $("div.tceformbox").removeClass('tceformbox').addClass('rounded border bg-transparent p-3')
