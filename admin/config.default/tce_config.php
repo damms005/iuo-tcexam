@@ -95,6 +95,7 @@ define('K_TCEXAM_ICON', '../../favicon.ico');
  * Full path to CSS stylesheet.
  */
 define('K_TCEXAM_STYLE', K_PATH_STYLE_SHEETS.'default.css');
+define('K_TCEXAM_STYLE_CUSTOM', K_PATH_STYLE_SHEETS.'custom.css');
 
 /**
  * Full path to CSS stylesheet for RTL languages.

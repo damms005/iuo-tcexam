@@ -46,12 +46,17 @@ require_once '../../shared/code/tce_functions_authorization.php';
 require_once '../../shared/code/tce_functions_session.php';
 require_once '../../shared/code/tce_functions_otp.php';
 
+if (!isset($custom_style) or empty($custom_style)) {
+    $custom_style = K_TCEXAM_STYLE_CUSTOM;
+}
+
 ?>
 
 <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>/shared/css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>/shared/css/pretty-checkbox.min.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>shared/css/materialdesignicons.min.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>shared/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $custom_style ?>" type="text/css" />
 <script src="<?php echo K_PATH_URL; ?>shared/jscripts/jquery.js"></script>
 <script src="<?php echo K_PATH_URL; ?>shared/jscripts/popper.js"></script>
 <script src="<?php echo K_PATH_URL; ?>shared/jscripts/bootstrap.min.js"></script>
