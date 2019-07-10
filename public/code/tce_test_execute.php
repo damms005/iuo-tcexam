@@ -241,18 +241,6 @@ echo '<div class="pagehelp">'.$l['hp_test_execute'].'</div>'.K_NEWLINE;
 
 echo '</div>'.K_NEWLINE; // container
 
-echo "
-
-<script>
-$(function(){
-    $('.container form input[type=\"submit\"]').addClass('btn btn-info');
-    \n
-    // $().addClass('col-sm-2');
-});
-</script>
-
-";
-
 require_once('../code/tce_page_footer.php');
 
 //============================================================+

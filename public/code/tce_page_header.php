@@ -56,16 +56,16 @@ require_once dirname(__FILE__) . '/tce_page_menu.php';
 echo '<div class="body">' . K_NEWLINE;
 
 if (isset($_SESSION['session_user_firstname']) && !empty($_SESSION['session_user_firstname'] ) ) {
-    echo "<div id='userLcd' class='z-10 fixed p-4 float-right ' >";
+    echo "<div id='userLcd' class='z-10 fixed p-4 float-right cursor-pointer' >";
     ?>
             <div class="inner rounded overflow-hidden shadow-lg m-auto bg-white">
                 <?php
-if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport'])) {
+    if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport'])) {
         echo "<img class='' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
     }
     ?>
                 <div class="px-6 py-4">
-                    <div class="font-bold text-xl mb-2"><?php echo @$_SESSION['session_user_firstname'] . ' ' . @$_SESSION['session_user_lastname']; ?></div>
+                    <div class="font-bold text-lg mb-2"><?php echo @$_SESSION['session_user_firstname'] . ' ' . @$_SESSION['session_user_lastname']; ?></div>
                     <p class="text-grey-darker text-base">
                     </p>
                 </div>
@@ -79,7 +79,7 @@ if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport
                     </span>
                     <br>
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">
-                    <?php echo @$_SESSION['session_user_year_level']; ?> Level
+                    <?php echo (!isset( $_SESSION['session_user_year_level'] ) ? "" : $_SESSION['session_user_year_level'] . ' Level'); ?>
                     </span>
                 </div>
             </div>

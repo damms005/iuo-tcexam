@@ -53,19 +53,6 @@ echo '<div class="pagehelp">'.$thispage_description.'</div>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 
 
-echo "
-
-<script>
-$(function(){
-    $('input[type=\"submit\"]').addClass('btn btn-info');
-    \n
-    // $().addClass('col-sm-2');
-});
-</script>
-
-";
-
-
 require_once('tce_page_footer.php');
 
 //============================================================+

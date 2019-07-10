@@ -29183,16 +29183,25 @@ div.header div.right {
 }
 
 #userLcd {
-	width: 350px;
-	right: 50px;
+	width: 280px;
+	right: 5px;
 	bottom: 4px;
+	/* pointer-events: none; */
+}
+
+#userLcd:hover {
+	opacity: .50;
 }
 
 #userLcd .inner {
-	width: 250px;
+	width: 230px;
 }
 
 #userLcd img {
 	width: 100px;
 	margin: auto;
+}
+
+#userLcd * {
+	overflow-wrap: break-word;
 }
