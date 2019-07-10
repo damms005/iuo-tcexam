@@ -41,147 +41,12 @@
 /**
  */
 
+register_shutdown_function('load_custom_ui');
+
 require_once '../config/tce_config.php';
 require_once '../../shared/code/tce_functions_authorization.php';
 require_once '../../shared/code/tce_functions_session.php';
 require_once '../../shared/code/tce_functions_otp.php';
-
-if (!isset($custom_style) or empty($custom_style)) {
-    $custom_style = K_TCEXAM_STYLE_CUSTOM;
-}
-
-?>
-
-<link rel="stylesheet" href="<?php echo K_PATH_URL; ?>/shared/css/bootstrap.min.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo K_PATH_URL; ?>/shared/css/pretty-checkbox.min.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo K_PATH_URL; ?>shared/css/materialdesignicons.min.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo K_PATH_URL; ?>shared/css/animate.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo $custom_style ?>" type="text/css" />
-<script src="<?php echo K_PATH_URL; ?>shared/jscripts/jquery.js"></script>
-<script src="<?php echo K_PATH_URL; ?>shared/jscripts/popper.js"></script>
-<script src="<?php echo K_PATH_URL; ?>shared/jscripts/bootstrap.min.js"></script>
-
-<script>
-
-    //we are doing this in this auth file because this
-    //one file that is sure to be added to all pages we desire to restyle
-
-    $(function(){
-
-        //space content
-        $('.content h1').addClass('mt-5 mb-8')
-
-        //change all radioboxes to pretty
-        $("input[type='radio']").each(function( index , elmnt ){
-            let closest_label = $(elmnt).siblings(`label[for='${$(elmnt).attr('id')}']`);
-            if( closest_label ) {
-                $(elmnt).wrap('<div class="mb-5 pretty p-default p-round p-pulse" />');
-                $( elmnt ).closest('div').append( ` <div class="state p-primary-o"> <label> ${$( closest_label ).text()} </label> </div> `);
-                $( closest_label ).remove();
-            }else{
-                console.log(` ${$(closest_label).attr('for')} != ${$(elmnt).attr('id')} `);
-            }
-        })
-
-        //change all cheackboxes
-        $("span.formw input[type='checkbox']").each(function( index , elmnt ){
-            let closest_label = $(elmnt).closest('div').children(`label[for='${$(elmnt).attr('id')}']`);
-            if( closest_label ) {
-                $(elmnt).wrap('<div class="pretty p-icon p-smooth" />');
-                $( elmnt ).closest('div').append( ` <div class="state p-danger-o"> <i class="icon mdi mdi-check"></i> <label> ${$( closest_label ).text()} </label> </div> `);
-                $( closest_label ).remove();
-            }else{
-                console.log(` ${$(closest_label).attr('for')} != ${$(elmnt).attr('id')} `);
-            }
-        })
-        $("input[type=checkbox]").each(function(ind , elmnt){
-            let filterOut = $(elmnt).parents("span.formw").length;
-            console.log(filterOut)
-            if( filterOut == 0 && ((!!$(elmnt).attr('class')) == false  || $(elmnt).attr('class') == '') ){
-                $(elmnt).wrap('<div class="pretty p-icon p-smooth" />');
-                $( elmnt ).closest('div').append( ` <div class="state p-danger-o"> <i class="icon mdi mdi-check"></i> <label>&nbsp;</label> </div> `);
-                let sp = $(elmnt).closest('span');
-                sp.css({backgroundColor: ''});
-                sp.addClass('rounded border border-green-darkest p-1');
-            }
-        })
-
-        //unstyled buttons, and button-like elements
-        let stylable = [ 'buttongreen' , 'xmlbutton' ];
-        $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen " ).each(function(index , el){
-            if( (!!$(el).attr('class')) == false  || $(el).attr('class') == '' || stylable.indexOf( ($(el).attr('class') ) >= 0) ){
-                $(el).removeClass('xmlbutton').addClass('border-blue border-2 bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
-            }
-        })
-
-        //input boxes unstyled
-        $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] ").each(function( index , elmnt ){
-            let closest_label = $(elmnt).addClass('form-control rounded')
-        })
-
-        //style information boxes
-        $("div.warning , div.error").removeClass('warning').removeClass('error').addClass("mt-5 mb-5 p-4 bg-red text-white rounded animated shake")
-        $("div.message").removeClass('message').addClass("mt-5 mb-5 p-4 bg-pink-darkest text-white rounded animated shake")
-        $("div.preview").removeClass('preview').addClass('rounded border bg-pink-lightest p-3')
-        $("div.tceformbox").removeClass('tceformbox').addClass('rounded border bg-transparent p-3')
-        //this is also the class for test form. So style it differntly
-        $("div.tcecontentbox").each(function(ind,el){
-            let examTakingForm = $(el).closest('form#testform').length;
-            if(examTakingForm > 0){
-                $("div.tcecontentbox").removeClass('tcecontentbox').addClass('rounded border bg-white p-4 animated fadeIn')
-            }else{
-                $("div.tcecontentbox").removeClass('tcecontentbox').addClass('rounded border bg-blue-lighter p-4 text-leading')
-            }
-        })
-
-
-        //div.tceformbox
-        $("div.tceformbox").addClass("m-5 p-5 rounded bg-blue animated fadeIn")
-
-        //div.pagehelp
-        $("div.pagehelp").removeClass('pagehelp').addClass("mt-4 p-3 rounded bg-blue-lighter")
-
-        //hide unecesary elements
-        $(".langselector").hide();
-        $(".minibutton").hide();
-
-        //do fine tooltips
-        $("a, input, select, acronym").each(function(ind,el){
-            let title = $(el).attr('title');
-            if(!!title){
-                $(el).attr("data-title" , title);
-                $(el).attr("data-toggle" , "tooltip");
-                $(el).attr("title" , '');
-            }
-        })
-        $('[data-toggle="tooltip"]').tooltip({
-            delay: { "show": 850, "hide": 50 },
-            placement: 'auto'
-        });
-
-        //make tables more presentable
-        $(".userselect").addClass('table table-bordered table-hover table-striped');//results table
-        $(".testlist").addClass('table table-bordered table-hover table-striped');
-
-        //give user clue that there is tooltip on acronymns
-        $('acronym').addClass('cursor-pointer');
-
-        //fix layout login button
-        $("#login").css({marginLeft: '-500px'})
-
-        //testform
-        $("#testform").addClass('border rounded bg-red-lightest pb-4')
-        $(".navlink").addClass('pt-4 pl-4')
-        $("#terminatetest").addClass('mb-4 ml-4')
-
-        //all bootstrap table that they put td text as centered is bad layout
-        $(".table td").css({textAlign: 'left'});
-
-    })
-</script>
-
-
-<?php
 
 $logged = false; // the user is not yet logged in
 // --- read existing user's session data from database
@@ -537,4 +402,144 @@ if (isset($_POST['testpswaction']) and ($_POST['testpswaction'] == 'login') and 
         F_print_error('WARNING', $l['m_wrong_test_password']);
     }
 }
+
+function load_custom_ui()
+{
+
+    if (!isset($custom_style) or empty($custom_style)) {
+        $custom_style = K_TCEXAM_STYLE_CUSTOM;
+    }
+
+    ?>
+
+    <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>/shared/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>/shared/css/pretty-checkbox.min.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>shared/css/materialdesignicons.min.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo K_PATH_URL; ?>shared/css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $custom_style; ?>" type="text/css" />
+    <script src="<?php echo K_PATH_URL; ?>shared/jscripts/jquery.js"></script>
+    <script src="<?php echo K_PATH_URL; ?>shared/jscripts/popper.js"></script>
+    <script src="<?php echo K_PATH_URL; ?>shared/jscripts/bootstrap.min.js"></script>
+
+    <script>
+
+        //we are doing this in this auth file because this
+        //one file that is sure to be added to all pages we desire to restyle
+
+        $(function(){
+
+            //space content
+            $(' .content h1 , div.body h1 ').addClass('mt-5 mb-8')
+
+            //change all radioboxes to pretty
+            $("input[type='radio']").each(function( index , elmnt ){
+                let closest_label = $(elmnt).siblings(`label[for='${$(elmnt).attr('id')}']`);
+                if( closest_label ) {
+                    $(elmnt).wrap('<div class="mb-5 pretty p-default p-round p-pulse" />');
+                    $( elmnt ).closest('div').append( ` <div class="state p-primary-o"> <label> ${$( closest_label ).text()} </label> </div> `);
+                    $( closest_label ).remove();
+                }else{
+                    console.log(` ${$(closest_label).attr('for')} != ${$(elmnt).attr('id')} `);
+                }
+            })
+
+            //change all cheackboxes
+            $("span.formw input[type='checkbox']").each(function( index , elmnt ){
+                let closest_label = $(elmnt).closest('div').children(`label[for='${$(elmnt).attr('id')}']`);
+                if( closest_label ) {
+                    $(elmnt).wrap('<div class="pretty p-icon p-smooth" />');
+                    $( elmnt ).closest('div').append( ` <div class="state p-danger-o"> <i class="icon mdi mdi-check"></i> <label> ${$( closest_label ).text()} </label> </div> `);
+                    $( closest_label ).remove();
+                }else{
+                    console.log(` ${$(closest_label).attr('for')} != ${$(elmnt).attr('id')} `);
+                }
+            })
+            $("input[type=checkbox]").each(function(ind , elmnt){
+                let filterOut = $(elmnt).parents("span.formw").length;
+                if( filterOut == 0 && ((!!$(elmnt).attr('class')) == false  || $(elmnt).attr('class') == '') ){
+                    $(elmnt).wrap('<div class="pretty p-icon p-smooth" />');
+                    $( elmnt ).closest('div').append( ` <div class="state p-danger-o"> <i class="icon mdi mdi-check"></i> <label>&nbsp;</label> </div> `);
+                    let sp = $(elmnt).closest('span');
+                    sp.css({backgroundColor: ''});
+                    sp.addClass('rounded border border-green-darkest p-1');
+                }
+            })
+
+            //unstyled buttons, and button-like elements
+            let stylable = [ 'buttongreen' , 'xmlbutton' ];
+            $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen " ).each(function(index , el){
+                if( (!!$(el).attr('class')) == false  || $(el).attr('class') == '' || stylable.indexOf( ($(el).attr('class') ) >= 0) ){
+                    $(el).removeClass('xmlbutton').addClass('border-blue border-2 bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
+                }
+            })
+
+            //input boxes unstyled
+            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] ").each(function( index , elmnt ){
+                let closest_label = $(elmnt).addClass('form-control rounded')
+            })
+
+            //style information boxes
+            $("div.warning , div.error").removeClass('warning').removeClass('error').addClass("mt-5 mb-5 p-4 bg-red text-white rounded animated shake")
+            $("div.message").removeClass('message').addClass("mt-5 mb-5 p-4 bg-pink-darkest text-white rounded animated shake")
+            $("div.preview").removeClass('preview').addClass('rounded border bg-pink-lightest p-3')
+            $("div.tceformbox").removeClass('tceformbox').addClass('rounded border bg-transparent p-3')
+            //this is also the class for test form. So style it differntly
+            $("div.tcecontentbox").each(function(ind,el){
+                let examTakingForm = $(el).closest('form#testform').length;
+                if(examTakingForm > 0){
+                    $("div.tcecontentbox").removeClass('tcecontentbox').addClass('rounded border bg-white p-4 animated fadeIn')
+                }else{
+                    $("div.tcecontentbox").removeClass('tcecontentbox').addClass('rounded border bg-blue-lighter p-4 text-leading')
+                }
+            })
+
+
+            //div.tceformbox
+            $("div.tceformbox").addClass("m-5 p-5 rounded bg-blue animated fadeIn")
+
+            //div.pagehelp
+            $("div.pagehelp").removeClass('pagehelp').addClass("mt-4 p-3 rounded bg-blue-lighter")
+
+            //hide unecesary elements
+            $(".langselector").hide();
+            $(".minibutton").hide();
+
+            //do fine tooltips
+            $("a, input, select, acronym").each(function(ind,el){
+                let title = $(el).attr('title');
+                if(!!title){
+                    $(el).attr("data-title" , title);
+                    $(el).attr("data-toggle" , "tooltip");
+                    $(el).attr("title" , '');
+                }
+            })
+            $('[data-toggle="tooltip"]').tooltip({
+                delay: { "show": 850, "hide": 50 },
+                placement: 'auto'
+            });
+
+            //make tables more presentable
+            $(".userselect").addClass('table table-bordered table-hover table-striped');//results table
+            $(".testlist").addClass('table table-bordered table-hover table-striped');
+
+            //give user clue that there is tooltip on acronymns
+            $('acronym').addClass('cursor-pointer');
+
+            //fix layout login button
+            $("#login").css({marginLeft: '-500px'})
+
+            //testform
+            $("#testform").addClass('border rounded bg-red-lightest pb-4')
+            $(".navlink").addClass('pt-4 pl-4')
+            $("#terminatetest").addClass('mb-4 ml-4')
+
+            //all bootstrap table that they put td text as centered is bad layout
+            $(".table td").css({textAlign: 'left'});
+
+        })
+    </script>
+
+    <?php
+}
+
 ; //============================================================+; // END OF FILE; //============================================================+
