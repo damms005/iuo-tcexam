@@ -194,7 +194,7 @@ contains form box and help box */
 div.container {
 	margin: 0px 0px 0px 0px;
 	padding: 5px 5px 5px 5px;
-	width: 99%;
+	width: 100%;
 }
 
 div.content {
@@ -382,6 +382,8 @@ div.row span.formw {
 	font-size: 95%;
 	text-align: left;
 	width: 69%;
+	min-height: 15px;
+	margin-top: -2px;
 }
 
 div.row span.label {
@@ -1164,6 +1166,7 @@ textarea {
 	/* 1 */
 	margin: 0;
 	/* 2 */
+	margin-top: 12px;
 }
 
 /**
@@ -1549,7 +1552,7 @@ table {
 
 @media (min-width: 1200px) {
 	.container {
-		max-width: 1200px;
+		max-width: 100%;
 	}
 }
 
@@ -7275,15 +7278,6 @@ table {
 	font-size: .75rem;
 	border-radius: .25rem;
 	padding: .25rem;
-}
-
-.label {
-	background-color: #2779bd;
-	border-radius: .25rem;
-	padding: .25rem;
-	font-family: Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-	font-size: .75rem;
-	color: #fff;
 }
 
 @media (min-width: 576px) {
@@ -29906,7 +29900,6 @@ table {
 	font-family: system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 	/* line-height: 32px; */
 	text-align: justify;
-
 }
 
 
@@ -30033,6 +30026,7 @@ table {
 	color: white;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
+	z-index: 3;
 }
 
 .dropdown a {
@@ -30045,14 +30039,96 @@ table {
 	border: 1px solid #47c9af !important;
 	background-color: #47c9af;
 	font-size: 14px;
-	opacity: 0.7;
+	opacity: 0.8;
 }
 
 .dropdown a:hover {
-	transform: scale(1.1);
+	transform: scaleX(1.1);
 	opacity: 1;
 }
 
 .dropbtn:hover .dropdown {
 	display: block;
+}
+
+span.formw div.pretty {
+	min-height: 15px;
+	margin-top: 13px;
+}
+
+
+/******************F O R M    C O N T R O L************************/
+@media all {
+
+	.form-control {
+		/* display: block; */
+		/* width: 100%; */
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		/* line-height: 1.5; */
+		color: #495057;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: .25rem;
+		transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	}
+
+	@media screen and (prefers-reduced-motion:reduce) {
+		.form-control {
+			transition: none;
+		}
+	}
+
+	.form-control::-ms-expand {
+		background-color: transparent;
+		border: 0;
+	}
+
+	.form-control:focus {
+		color: #495057;
+		background-color: #fff;
+		border-color: #80bdff;
+		outline: 0;
+		box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+	}
+
+	.form-control::-webkit-input-placeholder {
+		color: #6c757d;
+		opacity: 1;
+	}
+
+	.form-control::-moz-placeholder {
+		color: #6c757d;
+		opacity: 1;
+	}
+
+	.form-control:-ms-input-placeholder {
+		color: #6c757d;
+		opacity: 1;
+	}
+
+	.form-control::-ms-input-placeholder {
+		color: #6c757d;
+		opacity: 1;
+	}
+
+	.form-control::placeholder {
+		color: #6c757d;
+		opacity: 1;
+	}
+
+	.form-control:disabled {
+		background-color: #e9ecef;
+		opacity: 1;
+	}
+}
+
+/*! CSS Used from: file:///opt/lampp/htdocs/iuo/portal/templates/CoolAdmin/css/theme.css ; media=all */
+@media all {
+	.form-control {
+		-webkit-border-radius: 2px;
+		-moz-border-radius: 2px;
+		border-radius: 2px;
+	}
 }
