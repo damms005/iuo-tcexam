@@ -57,7 +57,7 @@ echo '<div class="body">'.K_NEWLINE;
 
 echo '<div class="content">'.K_NEWLINE;
 echo '<a name="topofdoc" id="topofdoc"></a>'.K_NEWLINE;
-echo '<h1>'.htmlspecialchars($thispage_title, ENT_NOQUOTES, $l['a_meta_charset']).'</h1>'.K_NEWLINE;
+echo '<h1>'.htmlspecialchars("Anchis & Kolbins CBT", ENT_NOQUOTES, $l['a_meta_charset']).'</h1>'.K_NEWLINE;
 
 //============================================================+
 // END OF FILE

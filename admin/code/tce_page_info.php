@@ -54,7 +54,7 @@ echo '</ul>'.K_NEWLINE;
 
 echo '<h2>'.$l['t_third_parties'].'</h2>'.K_NEWLINE;
 
-echo '<p>TCExam includes some third-party software components that are not strictly required but have been included as you convenience, and if used are subject to their respective licenses.</p>'.K_NEWLINE;
+echo '<p>Anchis & Kolbins CBT includes some third-party software components that are not strictly required but have been included as you convenience, and if used are subject to their respective licenses.</p>'.K_NEWLINE;
 
 echo '<ul class="credits">'.K_NEWLINE;
 
@@ -104,7 +104,7 @@ Location: /shared/cas/<br /><br />
 
 echo '<li><strong>Fonts</strong><br />
 
-TCExam includes fonts for the <a href="http://www.tcpdf.org" title="TCPDF - PHP class for PDF">TCPDF</a> library, they are not strictly required but have been included as you convenience.<br />
+Anchis & Kolbins CBT includes fonts for the <a href="http://www.tcpdf.org" title="TCPDF - PHP class for PDF">TCPDF</a> library, they are not strictly required but have been included as you convenience.<br />
 <br />
 All the PHP files on the fonts directory are subject to the general TCPDF license (GNU-LGPLv3), they do not contain any binary data but just a description of the general properties of a particular font. These files can be also generated on the fly using the font utilities and TCPDF methods.
 <br />
@@ -166,7 +166,7 @@ echo '<br />'.K_NEWLINE;
 
 // display credit logos
 echo '<div class="creditslogos">'.K_NEWLINE;
-echo '<a href="http://www.tcexam.org/license.php"><img src="../../images/credits/agplv3-88x31.png" alt="TCExam License" width="88" height="31" style="border:none;" /></a>'.K_NEWLINE;
+echo '<a href="http://www.tcexam.org/license.php"><img src="../../images/credits/agplv3-88x31.png" alt="Anchis & Kolbins CBT License" width="88" height="31" style="border:none;" /></a>'.K_NEWLINE;
 //echo '<a href="http://www.php.net"><img src="../../images/credits/poweredby_php_88x31.png" alt="Powered by PHP" width="88" height="31" /></a>'.K_NEWLINE;
 //echo '<a href="http://www.mysql.com"><img src="../../images/credits/poweredbymysql_88x31.png" alt="Powered by MySQL" width="88" height="31" /></a>'.K_NEWLINE;
 //echo '<a href="http://www.postgresql.org"><img src="../../images/credits/poweredbypgsql_88x31.png" alt="Powered by PostgreSQL" width="88" height="31" /></a>'.K_NEWLINE;
