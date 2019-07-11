@@ -519,7 +519,7 @@ function load_custom_ui()
             $(".minibutton").hide();
 
             //do fine tooltips
-            $("a, input, select, acronym").each(function(ind,el){
+            $("a, input, select, acronym, span.formw textarea").each(function(ind,el){
                 let title = $(el).attr('title');
                 if(!!title){
                     $(el).attr("data-title" , title);
@@ -561,6 +561,8 @@ function load_custom_ui()
             //make tables more presentable
             $(".userselect").addClass('table table-bordered table-hover table-striped');//results table
             $(".testlist").addClass('table table-bordered table-hover table-striped');
+            $(".testlist").css({ width: '70%' });//because when list of test too long, we need to make the 'execute' button clickable: not covered by the user details card
+            $(".testlist").closest('div.bg-blue-lighter').removeClass('bg-blue-lighter');//we have already added this bg to all 'tcecontentbox', which .testlist falls into the category. However, it feels awful on this design, so we are exempting it
 
             //give user clue that there is tooltip on acronymns
             $('acronym').addClass('cursor-pointer');
@@ -578,6 +580,9 @@ function load_custom_ui()
 
             //effizy
             $("#userLcd").addClass("animate shake");
+
+            //make test description editable
+            $("textarea.test_description").addClass('keyboardInput')
 
         })
     </script>

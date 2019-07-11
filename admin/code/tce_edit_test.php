@@ -42,7 +42,7 @@ require_once('tce_functions_tcecode_editor.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 require_once('tce_functions_user_select.php');
 require_once('tce_functions_test_select.php');
-
+echo '<script src="'.K_PATH_SHARED_JSCRIPTS.'inserttag.js" type="text/javascript"></script>'.K_NEWLINE;
 
 // comma separated list of required fields
 $_REQUEST['ff_required'] = 'test_name,test_description,test_ip_range,test_duration_time,test_score_right';
@@ -800,7 +800,6 @@ if ($formstatus) {
             $sql = 'SELECT * FROM '.K_TABLE_TESTS.' WHERE test_id='.$test_id.' LIMIT 1';
             if ($r = F_db_query($sql, $db)) {
                 if ($m = F_db_fetch_array($r)) {
-                    $test_id = $m['test_id'];
                     $test_name = $m['test_name'];
                     $test_description = $m['test_description'];
                     $test_begin_time = $m['test_begin_time'];
@@ -917,11 +916,16 @@ echo '<fieldset>'.K_NEWLINE;
 echo '<legend>'.$l['w_test'].'</legend>'.K_NEWLINE;
 
 echo getFormRowTextInput('test_name', $l['w_name'], $l['h_test_name'], '', $test_name, '', 255, false, false, false);
+
 echo getFormRowTextBox('test_description', $l['w_description'], $l['h_test_description'], $test_description, false);
+echo '<br />'.K_NEWLINE;
+echo tcecodeEditorTagButtons('form_testeditor', 'test_description');
+
 echo getFormRowTextInput('test_begin_time', $l['w_time_begin'], $l['w_time_begin'].' '.$l['w_datetime_format'], '', $test_begin_time, '', 19, false, true, false);
 echo getFormRowTextInput('test_end_time', $l['w_time_end'], $l['w_time_end'].' '.$l['w_datetime_format'], '', $test_end_time, '', 19, false, true, false);
 echo getFormRowTextInput('test_duration_time', $l['w_test_time'], $l['h_test_time'], '['.$l['w_minutes'].']', $test_duration_time, '^([0-9]*)$', 20, false, false, false);
 echo getFormRowTextInput('test_ip_range', $l['w_ip_range'], $l['h_ip_range'], '', $test_ip_range, '^([0-9a-fA-F,\:\.\*-]*)$', 255, false, false, false);
+
 
 echo '<div class="row">'.K_NEWLINE;
 echo '<span class="label">'.K_NEWLINE;
@@ -1322,11 +1326,11 @@ if (isset($test_id) and ($test_id > 0)) {
             pdfWindow=window.open(
                     `tce_pdf_testgen.php?test_id=${test_id}`+
                     '&num='
-                    + document.getElementById('form_testeditor').test_num.value 
+                    + document.getElementById('form_testeditor').test_num.value
                     + '&number_of_users_per_test_copy_type='
-                    + document.getElementById('form_testeditor').number_of_users_per_test_copy_type.value 
+                    + document.getElementById('form_testeditor').number_of_users_per_test_copy_type.value
                     + '','pdfWindow','dependent,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes'
-                ); 
+                );
             return false;
         }
     </script>
@@ -1345,7 +1349,7 @@ if (isset($test_id) and ($test_id > 0)) {
         echo '<span class="formw">'.K_NEWLINE;
         echo '<input type="number" name="test_num" id="test_num" value="'.$test_num.'" size="2" maxlength="3" title="'.$l['h_pdf_offline_test'].'" />'.K_NEWLINE;
         echo '<input type="number" id="number_of_users_per_test_copy_type" size="2" maxlength="3" title="number of users per copy" />'.K_NEWLINE;
-        echo "<a href='#' title='{$l['h_pdf_offline_test']}' class='xmlbutton' 
+        echo "<a href='#' title='{$l['h_pdf_offline_test']}' class='xmlbutton'
                 onclick='return generate_pdf( {$test_id} )'>
                 {$l['w_generate']}
              </a>";

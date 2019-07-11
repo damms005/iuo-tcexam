@@ -29192,8 +29192,9 @@ div.header div.right {
 
 #userLcd:hover {
 	/* transform: scale(0.5) translate(400px, 0); */
-	transform: translate(400px, 0);
+	/* transform: translate(400px, 0); */
 	/* animation: 4s linear 0s infinite alternate slideout; */
+	opacity: 0.4;
 }
 
 /* @keyframes slideout {
