@@ -433,6 +433,7 @@ function load_custom_ui()
     <script src="<?php echo K_PATH_URL; ?>shared/jscripts/jquery.js"></script>
     <script src="<?php echo K_PATH_URL; ?>shared/jscripts/popper.js"></script>
     <script src="<?php echo K_PATH_URL; ?>shared/jscripts/bootstrap.min.js"></script>
+    <script src="<?php echo K_PATH_URL; ?>shared/jscripts/tinymce/js/tinymce/tinymce.min.js"></script>
 
     <script>
 
@@ -487,8 +488,8 @@ function load_custom_ui()
             })
 
             //input boxes unstyled
-            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] ").each(function( index , elmnt ){
-                let closest_label = $(elmnt).addClass('form-control rounded')
+            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] , span.formw input[type='number'] ").each(function( index , elmnt ){
+                $(elmnt).addClass('form-control rounded')
             })
 
             //style information boxes
