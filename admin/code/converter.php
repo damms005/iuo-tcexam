@@ -11,7 +11,7 @@ require_once '../../shared/code/tce_functions_auth_sql.php';
 if (true) {
     ?>
 
-<script src="../../public/js/jquery.js"></script>
+<script src="../../shared/jscripts/jquery.js"></script>
 <script src="../../shared/jscripts/tinymce/js/tinymce/tinymce.min.js"></script>
 
 <script>
