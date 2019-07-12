@@ -466,8 +466,8 @@ function load_custom_ui()
             })
 
             //unstyled buttons, and button-like elements
-            let stylable = [ 'buttongreen' , 'xmlbutton' ];
-            $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen " ).each(function(index , el){
+            let stylable = [ 'buttongreen' , 'xmlbutton' , 'styledbutton' ];
+            $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen , .styledbutton" ).each(function(index , el){
                 if( (!!$(el).attr('class')) == false  || $(el).attr('class') == '' || stylable.indexOf( ($(el).attr('class') ) >= 0) ){
                     $(el).removeClass('xmlbutton').addClass('border-blue border-2 bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
                 }
