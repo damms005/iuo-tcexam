@@ -35,6 +35,84 @@ $(function(){
     });
 });
 
+function validateTinymceEdit(tinymceData) {
+
+    //ensure that user does not mess-up our conversion due to tinymce editing
+    //We will be guided by the following rules:
+    //1. Line index[0] should start with "M=", and when we split by '\t', the resulting array should have a length of 3
+    //2. Line index[1] should start with "S=", and when we split by '\t', the resulting array should have a length of 4
+    //3. Line index[2] should start with "Q=", and when we split by '\t', the resulting array should have a length of 11
+    //4. Line index[3] should start with "A=", and when we split by '\t', the resulting array should have a length of 7
+    //5. Line index[4] should be empty
+    //6. Any line that starts with 'A', when we split by '\t', the resulting array should have a length of 11
+    //7. Any line that starts with 'Q', when we split by '\t', the resulting array should have a length of 11
+    //any other line that does not fit into any of the above is an error
+
+    let lines = tinymceData.split(/\n/);
+
+    for (let index = 0; index < lines.length; index++) {
+
+        switch (index) {
+            case 0:
+            if( !assertStartsWith( lines[index] , 'M=', index) || !assertSplittedLengthIs( lines[index] , 3, index ) ) {
+                return false;
+            }
+            break;
+
+            case 1:
+            if( !assertStartsWith( lines[index] , 'S=', index) || !assertSplittedLengthIs( lines[index] , 4, index ) ) {
+                return false;
+            }
+            break;
+
+            case 2:
+            if( !assertStartsWith( lines[index] , 'Q=', index) || !assertSplittedLengthIs( lines[index] , 11, index ) ) {
+                return false;
+            }
+            break;
+
+            case 3:
+            if( !assertStartsWith( lines[index] , 'A=', index) || !assertSplittedLengthIs( lines[index] , 7, index ) ) {
+                return false;
+            }
+            break;
+
+            case 4:
+            if(lines[index].trim().length > 0){
+                alert(`Line at zero-index ${index} with content (${lines[index]}) should be empty` );
+            }
+            break;
+
+            default:
+            //6. Any line that starts with 'A', when we split by '\t', the resulting array should have a length of 11
+            //7. Any line that starts with 'Q', when we split by '\t', the resulting array should have a length of 11
+            //any other line that does not fit into any of the above is an error
+            break;
+        }
+    }
+
+    return true;
+
+}
+
+function assertStartsWith(subject, startString, lineNumber){
+    if(subject.startsWith(startString)){
+        return true;
+    }else{
+        alert(`Line at zero-index ${lineNumber} with content (${subject}) should start with the string "${startString}"` );
+        return false;
+    }
+}
+
+function assertSplittedLengthIs( subject , length , lineNumber ){
+    let splitLength = subject.split("\t").length;
+    if( splitLength == length ){
+        return true;
+    }else{
+        alert(`Line at zero-index ${lineNumber} with content (${subject}) should have a tab-splitted length of "${length}" instead of the current ${splitLength}` );
+        return false;
+    }
+}
 
 function doSubmission() {
     document.getElementById( 'transfer_box' ).innerHTML = document.getElementById( 'importedExcel' ).innerHTML;
