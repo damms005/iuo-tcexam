@@ -11,8 +11,11 @@ require_once '../../shared/code/tce_functions_auth_sql.php';
 if (true) {
     ?>
 
+<link rel="stylesheet" href="../../shared/jscripts/jquery-toast/jquery.toast.min.css" />
+
 <script src="../../shared/jscripts/jquery.js"></script>
 <script src="../../shared/jscripts/tinymce/js/tinymce/tinymce.min.js"></script>
+<script src="../../shared/jscripts/jquery-toast/jquery.toast.min.js"></script>
 
 <script>
 
@@ -54,39 +57,79 @@ function validateTinymceEdit(tinymceData) {
 
         switch (index) {
             case 0:
-            if( !assertStartsWith( lines[index] , 'M=', index) || !assertSplittedLengthIs( lines[index] , 3, index ) ) {
+            if( !assertStartsWith( lines[index] , 'M=', (index+1)) || !assertTabSplittedLengthIs( lines[index] , 3, index ) ) {
                 return false;
             }
             break;
 
             case 1:
-            if( !assertStartsWith( lines[index] , 'S=', index) || !assertSplittedLengthIs( lines[index] , 4, index ) ) {
+            if( !assertStartsWith( lines[index] , 'S=', (index+1)) || !assertTabSplittedLengthIs( lines[index] , 4, index ) ) {
                 return false;
             }
             break;
 
             case 2:
-            if( !assertStartsWith( lines[index] , 'Q=', index) || !assertSplittedLengthIs( lines[index] , 11, index ) ) {
+            if( !assertStartsWith( lines[index] , 'Q=', (index+1)) || !assertTabSplittedLengthIs( lines[index] , 11, index ) ) {
                 return false;
             }
             break;
 
             case 3:
-            if( !assertStartsWith( lines[index] , 'A=', index) || !assertSplittedLengthIs( lines[index] , 7, index ) ) {
+            if( !assertStartsWith( lines[index] , 'A=', (index+1)) || !assertTabSplittedLengthIs( lines[index] , 7, index ) ) {
                 return false;
             }
             break;
 
             case 4:
             if(lines[index].trim().length > 0){
-                alert(`Line at zero-index ${index} with content (${lines[index]}) should be empty` );
+                toastAlert(`Line #${index+1} with content (${lines[index]}) should be empty` );
+                return false;
             }
             break;
+
+            case 5:
+            if( !assertStartsWith( lines[index] , "M\t", (index+1)) || !assertTabSplittedLengthIs( lines[index] , 3, index ) ) {
+                return false;
+            }
+            break;
+
+            case 6:
+            if( !assertStartsWith( lines[index] , "S\t", (index+1)) || !assertTabSplittedLengthIs( lines[index] ,4, index ) ) {
+                return false;
+            }
+            break;
+
 
             default:
             //6. Any line that starts with 'A', when we split by '\t', the resulting array should have a length of 11
             //7. Any line that starts with 'Q', when we split by '\t', the resulting array should have a length of 11
             //any other line that does not fit into any of the above is an error
+
+            let startString = lines[index].substr( 0 , 2 );
+
+            switch (startString) {
+                case "Q\t":
+                if( !assertTabSplittedLengthIs( lines[index] , 11 , index ) ) {
+                    return false;
+                }
+                break;
+
+                case "A\t":
+                if( !assertTabSplittedLengthIs( lines[index] , 11 , index ) ) {
+                    return false;
+                }
+                break;
+
+                default:
+                //the last line is empty
+                if(lines[index].trim() == ''){
+                    return true;
+                }else{
+                    toastAlert(`Line #${index+1} whose content specified below cannot be parsed: \n\n ${lines[index]}\n\n`)
+                    return false;
+                }
+                break;
+            }
             break;
         }
     }
@@ -99,24 +142,43 @@ function assertStartsWith(subject, startString, lineNumber){
     if(subject.startsWith(startString)){
         return true;
     }else{
-        alert(`Line at zero-index ${lineNumber} with content (${subject}) should start with the string "${startString}"` );
+        toastAlert(`Line #${lineNumber} with content (${subject}) should start with the string "${startString}"` );
         return false;
     }
 }
 
-function assertSplittedLengthIs( subject , length , lineNumber ){
+function assertTabSplittedLengthIs( subject , length , lineNumber ){
     let splitLength = subject.split("\t").length;
     if( splitLength == length ){
         return true;
     }else{
-        alert(`Line at zero-index ${lineNumber} with content (${subject}) should have a tab-splitted length of "${length}" instead of the current ${splitLength}` );
+        toastAlert(`Line #${lineNumber+1} with content (${subject}) should have a tab-splitted length of "${length}" instead of the current ${splitLength}` );
         return false;
     }
 }
 
 function doSubmission() {
-    document.getElementById( 'transfer_box' ).innerHTML = document.getElementById( 'importedExcel' ).innerHTML;
-    document.getElementById( 'finalForm' ).submit();
+    var data = ( document.getElementById( 'importedExcel' ).innerHTML ).trimLeft();//we cannot trim right because it will affect the last question
+    if(validateTinymceEdit( data )){
+        document.getElementById( 'transfer_box' ).innerHTML = data;
+        document.getElementById( 'finalForm' ).submit();
+    }
+}
+
+function toastAlert( message ){
+    $.toast({
+        heading: 'Parse Error',
+        icon: 'error',
+        // bgColor : 'blue',              // Background color for toast
+        // textColor : '#eee',            // text color
+        text : message,
+        showHideTransition : 'slide',  // It can be plain, fade or slide
+        allowToastClose : true,       // Show the close button or not
+        hideAfter : false,              // `false` to make it sticky or time in miliseconds to hide after
+        stack : 1,                     // `fakse` to show one stack at a time count showing the number of toasts that can be shown at once
+        textAlign : 'left',            // Alignment of text i.e. left, right, center
+        position : {right: '5%', top:'40%'}       // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values to position the toast on page
+    })
 }
 </script>
 
