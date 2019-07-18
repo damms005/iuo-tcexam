@@ -710,10 +710,6 @@ ul.question {
 	list-style-type: none;
 }
 
-ul.question li {
-	margin: 10px 0px 10px 0px;
-	padding: 0px 0px 0px 0px;
-}
 
 ul.question li div.paddingleft {
 	padding-left: 30px;

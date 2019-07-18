@@ -567,6 +567,9 @@ function load_custom_ui()
             //effizy
             $("#userLcd").addClass("animate shake");
 
+            //question list
+            $(" ul.question > li").addClass("m-4 p-10 border rounded bg-grey-lightest mb-5")
+
         })
     </script>
 
