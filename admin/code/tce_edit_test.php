@@ -800,6 +800,7 @@ if ($formstatus) {
             $sql = 'SELECT * FROM ' . K_TABLE_TESTS . ' WHERE test_id=' . $test_id . ' LIMIT 1';
             if ($r = F_db_query($sql, $db)) {
                 if ($m = F_db_fetch_array($r)) {
+                    $test_id                      = $m['test_id'];
                     $test_name                    = $m['test_name'];
                     $test_description             = $m['test_description'];
                     $test_begin_time              = $m['test_begin_time'];
@@ -1359,19 +1360,53 @@ echo '<div class="pagehelp">' . $l['hp_edit_test'] . '</div>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 
 // javascript controls
-echo '<script type="text/javascript">' . K_NEWLINE;
-echo '//<![CDATA[' . K_NEWLINE;
-echo 'function JF_check_random_boxes() {' . K_NEWLINE;
-echo ' if (document.getElementById(\'test_random_questions_select\').checked==true){document.getElementById(\'test_random_questions_order\').checked=true;}' . K_NEWLINE;
-echo ' if ((document.getElementById(\'test_random_questions_order\').checked==false)&&(document.getElementById(\'test_random_questions_select\').checked==true)){document.getElementById(\'test_random_questions_order\').checked=true;}' . K_NEWLINE;
-echo ' if (document.getElementById(\'test_random_questions_order\').checked==false){document.getElementById(\'select_questions_order_mode\').style.visibility="visible";}else{document.getElementById(\'select_questions_order_mode\').style.visibility="hidden";}' . K_NEWLINE;
-echo ' if (document.getElementById(\'test_random_answers_select\').checked==true){document.getElementById(\'test_random_answers_order\').checked=true;}' . K_NEWLINE;
-echo ' if ((document.getElementById(\'test_random_answers_order\').checked==false)&&(document.getElementById(\'test_random_answers_select\').checked==true)){document.getElementById(\'test_random_answers_order\').checked=true;}' . K_NEWLINE;
-echo ' if (document.getElementById(\'test_random_answers_order\').checked==false){document.getElementById(\'select_answers_order_mode\').style.visibility="visible";}else{document.getElementById(\'select_answers_order_mode\').style.visibility="hidden";}' . K_NEWLINE;
-echo '}' . K_NEWLINE;
-echo 'JF_check_random_boxes();' . K_NEWLINE;
-echo '//]]>' . K_NEWLINE;
-echo '</script>' . K_NEWLINE;
+?>
+
+<script type="text/javascript">
+
+    //<![CDATA[
+    function JF_check_random_boxes() {
+
+        //when randomness is checked, disable ordering
+        if (document.getElementById('test_random_questions_select').checked==true) {
+            document.getElementById('test_random_questions_order').checked=false;
+        }
+
+        if ((document.getElementById('test_random_questions_order').checked==false)&&(document.getElementById('test_random_questions_select').checked==true)) {
+            document.getElementById('test_random_questions_order').checked=true;
+        }
+
+        if (document.getElementById('test_random_questions_order').checked==true) {
+            document.getElementById('select_questions_order_mode').style.visibility="visible";
+        }
+        else {
+            document.getElementById('select_questions_order_mode').style.visibility="hidden";
+        }
+
+        //when randomness is checked, disable ordering
+        if (document.getElementById('test_random_answers_select').checked==true) {
+            document.getElementById('test_random_answers_order').checked=false;
+        }
+
+        if ((document.getElementById('test_random_answers_order').checked==false)&&(document.getElementById('test_random_answers_select').checked==true)) {
+            document.getElementById('test_random_answers_order').checked=true;
+        }
+
+        if (document.getElementById('test_random_answers_order').checked==true) {
+            document.getElementById('select_answers_order_mode').style.visibility="visible";
+        }
+        else {
+            document.getElementById('select_answers_order_mode').style.visibility="hidden";
+        }
+    }
+
+    JF_check_random_boxes();
+
+    //]]>
+
+</script>
+
+<?php
 
 require_once '../code/tce_page_footer.php';
 
