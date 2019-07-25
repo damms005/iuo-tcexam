@@ -480,17 +480,27 @@ function load_custom_ui()
             })
 
             //unstyled buttons, and button-like elements
-            let stylable = [ 'buttongreen' , 'xmlbutton' ];
-            $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen " ).each(function(index , el){
+            let stylable = [ 'buttongreen' , 'xmlbutton' , 'styledbutton' ];
+            $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen , .styledbutton" ).each(function(index , el){
                 if( (!!$(el).attr('class')) == false  || $(el).attr('class') == '' || stylable.indexOf( ($(el).attr('class') ) >= 0) ){
                     $(el).removeClass('xmlbutton').addClass('border-blue border-2 bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
                 }
             })
 
             //input boxes unstyled
-            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] , span.formw input[type='number'] ").each(function( index , elmnt ){
+            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] , span.formw input[type='number']")
+            .each(function( index , elmnt ){
                 $(elmnt).addClass('form-control rounded')
             })
+
+            //restylings for the questions page
+            $('label[for="answertext"] , textarea#answertext') .each(function( index , elmnt ){
+                $(elmnt).addClass('m-4')
+            });
+            $('textarea#answertext').addClass('form-control rounded p-2').attr('placeholder','type your answer here');
+            $('form#testform div.rowl') .each(function( index , elmnt ){
+                $(elmnt).addClass('p-4')
+            });
 
             //style information boxes
             $("div.warning , div.error").removeClass('warning').removeClass('error').addClass("mt-5 mb-5 p-4 bg-red text-white rounded animated shake")
@@ -583,6 +593,8 @@ function load_custom_ui()
 
             //make test description editable
             $("textarea.test_description").addClass('keyboardInput')
+            //question list
+            $(" ul.question > li").addClass("m-4 p-10 border rounded bg-grey-lightest mb-5")
 
         })
     </script>

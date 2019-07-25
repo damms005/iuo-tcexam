@@ -233,15 +233,8 @@ div.float {
 div.header {
 	/* background-color: #003399; */
 	border: 0px none;
-<<<<<<< HEAD
 	height: 140px;
-=======
-<<<<<<< Updated upstream
-	height: 40px;
-=======
 	/* height: 140px; */
->>>>>>> Stashed changes
->>>>>>> ui-revamp
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	width: 100%;
@@ -255,19 +248,11 @@ div.header div.left {
 	background-repeat: no-repeat;
 	border: 0px none;
 	float: left;
-<<<<<<< HEAD
 	height: 135px;
 	margin: 4px 0px 0px 4px;
 	padding: 0px 0px 0px 0px;
 	text-align: left;
 	width: 130px;
-=======
-	/* height: 135px; */
-	margin: 4px 0px 0px 4px;
-	padding: 0px 0px 0px 0px;
-	text-align: left;
-	/* width: 130px; */
->>>>>>> ui-revamp
 }
 
 /* header banner ------------ */
