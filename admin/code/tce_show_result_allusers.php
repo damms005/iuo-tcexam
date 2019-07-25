@@ -474,7 +474,7 @@ if (isset($_REQUEST['sel'])) {
             let this_index = sortable_cols.findIndex(this_col => {
                 return this_col == col;
             })
-            index_of_cols[this_index] = sortable_cols.findIndex(this_col => {
+            index_of_cols[this_index] = col;
 
             //get the possibble vals of this col
             if(possible_vals_of_cols[col] == undefined ) {
@@ -503,7 +503,7 @@ if (isset($_REQUEST['sel'])) {
             console.log(`sorting with ${sort_with}`);
 
             //rebuild the table such that only rows whose value for <selected col> is part of selected cols
-            table
+            // table
 
         });
 
