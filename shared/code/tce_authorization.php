@@ -474,9 +474,19 @@ function load_custom_ui()
             })
 
             //input boxes unstyled
-            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] , span.formw input[type='number'] ").each(function( index , elmnt ){
+            $(" span.formw select , span.formw textarea , span.formw input[type='text'] , span.formw input[type='password'] , span.formw input[type='number']")
+            .each(function( index , elmnt ){
                 $(elmnt).addClass('form-control rounded')
             })
+
+            //restylings for the questions page
+            $('label[for="answertext"] , textarea#answertext') .each(function( index , elmnt ){
+                $(elmnt).addClass('m-4')
+            });
+            $('textarea#answertext').addClass('form-control rounded p-2').attr('placeholder','type your answer here');
+            $('form#testform div.rowl') .each(function( index , elmnt ){
+                $(elmnt).addClass('p-4')
+            });
 
             //style information boxes
             $("div.warning , div.error").removeClass('warning').removeClass('error').addClass("mt-5 mb-5 p-4 bg-red text-white rounded animated shake")
