@@ -241,29 +241,20 @@ div.header {
 
 /* header logo ------------ */
 div.header div.left {
-	/* background-color: #003399; */
 	background-image: url(../../images/logo_tcexam_118x25.png);
 	background-position: top;
 	background-repeat: no-repeat;
 	border: 0px none;
 	float: left;
-	/* height: 135px; */
 	margin: 4px 0px 0px 4px;
 	padding: 0px 0px 0px 0px;
 	text-align: left;
-	/* width: 130px; */
 }
 
 /* header banner ------------ */
 div.header div.right {
-	/* background-color: #003399; */
 	border: 0px none;
-	/* float: right; */
-	/* height: 25px; */
-	/* margin: 20px 0px 0px 0px; */
-	/* padding: 0px 0px 0px 0px; */
 	text-align: right;
-	/* width: 400px; */
 	position: absolute;
 	margin: 13px 2px auto auto;
 	right: 2px;
