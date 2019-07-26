@@ -968,6 +968,7 @@ echo getFormRowTextInput('test_score_wrong', $l['w_score_wrong'], $l['h_score_wr
 echo getFormRowTextInput('test_score_unanswered', $l['w_score_unanswered'], $l['h_score_unanswered'], '', $test_score_unanswered, '^([0-9\+\-]*)([\.]?)([0-9]*)$', 20, false, false, false);
 echo getFormRowTextInput('test_score_threshold', $l['w_test_score_threshold'], $l['h_test_score_threshold'], '', $test_score_threshold, '^([0-9\+\-]*)([\.]?)([0-9]*)$', 20, false, false, false);
 
+//TODO:: sor out the ambiguity in the naming/description of "random questions" and "random answers"
 echo '<div class="row">' . K_NEWLINE;
 echo '<span class="label">' . K_NEWLINE;
 echo '<label for="test_random_questions_select">' . $l['w_random_questions'] . ':</label>' . K_NEWLINE;
