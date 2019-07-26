@@ -1086,6 +1086,9 @@ function F_createTest($test_id, $user_id)
     $firsttest = F_getFirstTestUser($test_id);
     // select questions
     if ($test_random_questions_select or ($firsttest == 0)) {
+
+        var_dump('normal');
+
         // selected questions IDs
         $selected_questions = '0';
         // 2. for each set of subjects
@@ -1170,8 +1173,10 @@ function F_createTest($test_id, $user_id)
                     $sqlq .= ' AND question_id IN (' . $answers_order_questions_ids . ')';
                 }
                 if ($random_questions) {
+                    var_dump('randomized question');
                     $sqlq .= ' ORDER BY RAND()';
                 } else {
+                    var_dump('non-randomized question');
                     $sqlq .= $sql_questions_order_by;
                 }
                 if (K_DATABASE_TYPE == 'ORACLE') {
@@ -1189,8 +1194,10 @@ function F_createTest($test_id, $user_id)
                             'score'   => ($testdata['test_score_unanswered'] * $mq['question_difficulty']),
                         );
                         if ($random_questions or ($test_questions_order_mode != 0)) {
+                            var_dump('no sorting');
                             $questions_data[] = $tmp_data;
                         } else {
+                            var_dump('sorting by position');
                             $questions_data[$mq['question_position']] = $tmp_data;
                         }
                         $selected_questions .= ',' . $mq['question_id'] . '';
@@ -1203,8 +1210,10 @@ function F_createTest($test_id, $user_id)
             // 5. STORE QUESTIONS AND ANSWERS
             // ------------------------------
             if ($random_questions) {
+                var_dump('shuffling');
                 shuffle($questions_data);
             } else {
+                var_dump('finalizing sort...');
                 ksort($questions_data);
             }
             // add questions to database
@@ -1224,6 +1233,9 @@ function F_createTest($test_id, $user_id)
     } else {
         // same questions for all test-takers
         // ---------------------------------------
+
+        var_dump('abnormal');
+
         $sql = 'SELECT *
 			FROM ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_QUESTIONS . '
 			WHERE question_id=testlog_question_id
