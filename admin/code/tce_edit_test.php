@@ -1326,53 +1326,19 @@ echo '<div class="pagehelp">' . $l['hp_edit_test'] . '</div>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 
 // javascript controls
-?>
-
-<script type="text/javascript">
-
-    //<![CDATA[
-    function JF_check_random_boxes() {
-
-        //when randomness is checked, disable ordering
-        if (document.getElementById('test_random_questions_select').checked==true) {
-            document.getElementById('test_random_questions_order').checked=false;
-        }
-
-        if ((document.getElementById('test_random_questions_order').checked==false)&&(document.getElementById('test_random_questions_select').checked==true)) {
-            document.getElementById('test_random_questions_order').checked=true;
-        }
-
-        if (document.getElementById('test_random_questions_order').checked==true) {
-            document.getElementById('select_questions_order_mode').style.visibility="visible";
-        }
-        else {
-            document.getElementById('select_questions_order_mode').style.visibility="hidden";
-        }
-
-        //when randomness is checked, disable ordering
-        if (document.getElementById('test_random_answers_select').checked==true) {
-            document.getElementById('test_random_answers_order').checked=false;
-        }
-
-        if ((document.getElementById('test_random_answers_order').checked==false)&&(document.getElementById('test_random_answers_select').checked==true)) {
-            document.getElementById('test_random_answers_order').checked=true;
-        }
-
-        if (document.getElementById('test_random_answers_order').checked==true) {
-            document.getElementById('select_answers_order_mode').style.visibility="visible";
-        }
-        else {
-            document.getElementById('select_answers_order_mode').style.visibility="hidden";
-        }
-    }
-
-    JF_check_random_boxes();
-
-    //]]>
-
-</script>
-
-<?php
+echo '<script type="text/javascript">'.K_NEWLINE;
+echo '//<![CDATA['.K_NEWLINE;
+echo 'function JF_check_random_boxes() {'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_questions_select\').checked==true){document.getElementById(\'test_random_questions_order\').checked=true;}'.K_NEWLINE;
+echo ' if ((document.getElementById(\'test_random_questions_order\').checked==false)&&(document.getElementById(\'test_random_questions_select\').checked==true)){document.getElementById(\'test_random_questions_order\').checked=true;}'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_questions_order\').checked==false){document.getElementById(\'select_questions_order_mode\').style.visibility="visible";}else{document.getElementById(\'select_questions_order_mode\').style.visibility="hidden";}'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_answers_select\').checked==true){document.getElementById(\'test_random_answers_order\').checked=true;}'.K_NEWLINE;
+echo ' if ((document.getElementById(\'test_random_answers_order\').checked==false)&&(document.getElementById(\'test_random_answers_select\').checked==true)){document.getElementById(\'test_random_answers_order\').checked=true;}'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_answers_order\').checked==false){document.getElementById(\'select_answers_order_mode\').style.visibility="visible";}else{document.getElementById(\'select_answers_order_mode\').style.visibility="hidden";}'.K_NEWLINE;
+echo '}'.K_NEWLINE;
+echo 'JF_check_random_boxes();'.K_NEWLINE;
+echo '//]]>'.K_NEWLINE;
+echo '</script>'.K_NEWLINE;
 
 require_once '../code/tce_page_footer.php';
 
