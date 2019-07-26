@@ -95,8 +95,6 @@ echo '<div class="container">' . K_NEWLINE;
 
 echo '<div class="tceformbox">' . K_NEWLINE;
 
-echo "<a href='converter.php'>convert questions file</a>";
-
 echo '<form action="' . $_SERVER['SCRIPT_NAME'] . '" method="post" enctype="multipart/form-data" id="form_importquestions">' . K_NEWLINE;
 
 echo '<div class="row">' . K_NEWLINE;
@@ -152,6 +150,9 @@ F_submit_button('upload', $l['w_upload'], $l['h_submit_file']);
 
 echo '</div>' . K_NEWLINE;
 echo '</form>' . K_NEWLINE;
+
+echo "<br /><br /> OR <br /><br /><a href='converter.php'>convert questions file</a> <br /><br />";
+
 echo '</div>' . K_NEWLINE;
 
 echo '<div class="pagehelp">' . $l['hp_import_xml_questions'] . '</div>' . K_NEWLINE;
