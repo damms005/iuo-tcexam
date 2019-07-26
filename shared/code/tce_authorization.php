@@ -426,6 +426,8 @@ function load_custom_ui()
         //we are doing this in this auth file because this
         //one file that is sure to be added to all pages we desire to restyle
 
+        let default_boorder = 'border-2';
+
         $(function(){
 
             //space content
@@ -469,7 +471,7 @@ function load_custom_ui()
             let stylable = [ 'buttongreen' , 'xmlbutton' , 'styledbutton' ];
             $( "input[type='submit'] , .xmlbutton , .testlist a.buttongreen , .styledbutton" ).each(function(index , el){
                 if( (!!$(el).attr('class')) == false  || $(el).attr('class') == '' || stylable.indexOf( ($(el).attr('class') ) >= 0) ){
-                    $(el).removeClass('xmlbutton').addClass('border-blue border-2 bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
+                    $(el).removeClass('xmlbutton').addClass('border-blue ' + default_boorder + ' bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
                 }
             })
 
@@ -579,6 +581,36 @@ function load_custom_ui()
 
             //question list
             $(" ul.question > li").addClass("m-4 p-10 border rounded bg-grey-lightest mb-5")
+
+            //our styling gave "life" to disbaled elements. Fix that:
+            //1. remove hover classes
+            //2. make bg-grey
+            //3. make border darker grey
+            $("input[disabled='disabled']").each(function( index,element ){
+                let classes = $(element).attr("class");
+                classes = classes.replace("'","");
+                classes = classes.replace('"',"");
+                classes = classes.split(" ");
+                $.each( classes , function( index , value ){
+                    //remove hovers
+                    if( value.indexOf('hover') >= 0 ){
+                        $(element).removeClass( value);
+                    }
+                    //remove bg's
+                    if( value.indexOf('bg-') >= 0 ){
+                        $(element).removeClass( value);
+                    }
+                    //remove borders
+                    if( value.indexOf('border-') >= 0 ){
+                        $(element).removeClass( value);
+                    }
+                    //text color
+                    if( value.indexOf('text-') >= 0 ){
+                        $(element).removeClass( value);
+                    }
+                });
+                $(element).addClass( 'bg-grey-lightest border-grey-light text-grey ' + default_boorder );
+            });
 
         })
     </script>
