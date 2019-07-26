@@ -975,6 +975,7 @@ echo getFormRowTextInput('test_score_wrong', $l['w_score_wrong'], $l['h_score_wr
 echo getFormRowTextInput('test_score_unanswered', $l['w_score_unanswered'], $l['h_score_unanswered'], '', $test_score_unanswered, '^([0-9\+\-]*)([\.]?)([0-9]*)$', 20, false, false, false);
 echo getFormRowTextInput('test_score_threshold', $l['w_test_score_threshold'], $l['h_test_score_threshold'], '', $test_score_threshold, '^([0-9\+\-]*)([\.]?)([0-9]*)$', 20, false, false, false);
 
+//TODO:: sor out the ambiguity in the naming/description of "random questions" and "random answers"
 echo '<div class="row">' . K_NEWLINE;
 echo '<span class="label">' . K_NEWLINE;
 echo '<label for="test_random_questions_select">' . $l['w_random_questions'] . ':</label>' . K_NEWLINE;
@@ -1360,53 +1361,19 @@ echo '<div class="pagehelp">' . $l['hp_edit_test'] . '</div>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 
 // javascript controls
-?>
-
-<script type="text/javascript">
-
-    //<![CDATA[
-    function JF_check_random_boxes() {
-
-        //when randomness is checked, disable ordering
-        if (document.getElementById('test_random_questions_select').checked==true) {
-            document.getElementById('test_random_questions_order').checked=false;
-        }
-
-        if ((document.getElementById('test_random_questions_order').checked==false)&&(document.getElementById('test_random_questions_select').checked==true)) {
-            document.getElementById('test_random_questions_order').checked=true;
-        }
-
-        if (document.getElementById('test_random_questions_order').checked==true) {
-            document.getElementById('select_questions_order_mode').style.visibility="visible";
-        }
-        else {
-            document.getElementById('select_questions_order_mode').style.visibility="hidden";
-        }
-
-        //when randomness is checked, disable ordering
-        if (document.getElementById('test_random_answers_select').checked==true) {
-            document.getElementById('test_random_answers_order').checked=false;
-        }
-
-        if ((document.getElementById('test_random_answers_order').checked==false)&&(document.getElementById('test_random_answers_select').checked==true)) {
-            document.getElementById('test_random_answers_order').checked=true;
-        }
-
-        if (document.getElementById('test_random_answers_order').checked==true) {
-            document.getElementById('select_answers_order_mode').style.visibility="visible";
-        }
-        else {
-            document.getElementById('select_answers_order_mode').style.visibility="hidden";
-        }
-    }
-
-    JF_check_random_boxes();
-
-    //]]>
-
-</script>
-
-<?php
+echo '<script type="text/javascript">'.K_NEWLINE;
+echo '//<![CDATA['.K_NEWLINE;
+echo 'function JF_check_random_boxes() {'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_questions_select\').checked==true){document.getElementById(\'test_random_questions_order\').checked=true;}'.K_NEWLINE;
+echo ' if ((document.getElementById(\'test_random_questions_order\').checked==false)&&(document.getElementById(\'test_random_questions_select\').checked==true)){document.getElementById(\'test_random_questions_order\').checked=true;}'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_questions_order\').checked==false){document.getElementById(\'select_questions_order_mode\').style.visibility="visible";}else{document.getElementById(\'select_questions_order_mode\').style.visibility="hidden";}'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_answers_select\').checked==true){document.getElementById(\'test_random_answers_order\').checked=true;}'.K_NEWLINE;
+echo ' if ((document.getElementById(\'test_random_answers_order\').checked==false)&&(document.getElementById(\'test_random_answers_select\').checked==true)){document.getElementById(\'test_random_answers_order\').checked=true;}'.K_NEWLINE;
+echo ' if (document.getElementById(\'test_random_answers_order\').checked==false){document.getElementById(\'select_answers_order_mode\').style.visibility="visible";}else{document.getElementById(\'select_answers_order_mode\').style.visibility="hidden";}'.K_NEWLINE;
+echo '}'.K_NEWLINE;
+echo 'JF_check_random_boxes();'.K_NEWLINE;
+echo '//]]>'.K_NEWLINE;
+echo '</script>'.K_NEWLINE;
 
 require_once '../code/tce_page_footer.php';
 
