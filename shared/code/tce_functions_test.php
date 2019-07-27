@@ -1010,13 +1010,14 @@ function F_createTest($test_id, $user_id)
     // get test data
     $testdata = F_getTestData($test_id);
     $test_random_questions_select = F_getBoolean($testdata['test_random_questions_select']);
-    $test_random_questions_order = F_getBoolean($testdata['test_random_questions_order']);
-    $test_questions_order_mode = intval($testdata['test_questions_order_mode']);
-    $test_random_answers_select = F_getBoolean($testdata['test_random_answers_select']);
-    $test_random_answers_order = F_getBoolean($testdata['test_random_answers_order']);
-    $test_answers_order_mode = intval($testdata['test_answers_order_mode']);
-    $random_questions = ($test_random_questions_select or $test_random_questions_order);
-    $sql_answer_position = '';
+    $test_random_questions_order  = F_getBoolean($testdata['test_random_questions_order']);
+    $test_questions_order_mode    = intval($testdata['test_questions_order_mode']);
+    $test_random_answers_select   = F_getBoolean($testdata['test_random_answers_select']);
+    $test_random_answers_order    = F_getBoolean($testdata['test_random_answers_order']);
+    $test_answers_order_mode      = intval($testdata['test_answers_order_mode']);
+    $random_questions             = ($test_random_questions_select or $test_random_questions_order);
+    $sql_answer_position          = '';
+
     if (!$test_random_answers_order and ($test_answers_order_mode == 0)) {
         $sql_answer_position = ' AND answer_position>0';
     }
