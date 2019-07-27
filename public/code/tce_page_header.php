@@ -68,13 +68,13 @@ if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport
             </div>
 
                 <div class="px-6 py-4">
-                    <div class="font-bold text-lg mb-2"><?php echo @$_SESSION['session_user_firstname'] . ' ' . @$_SESSION['session_user_lastname']; ?></div>
+                    <div class="font-bold text-lg mb-2"><?php echo str_replace("+", " ",  @$_SESSION['session_user_firstname'] . ' ' . @$_SESSION['session_user_lastname'] ); ?></div>
                     <p class="text-grey-darker text-base">
                     </p>
                 </div>
                 <div class="px-6 py-4">
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
-                    <?php echo str_replace("+", " ", @$_SESSION['session_user_name']); ?>
+                    <?php @$_SESSION['session_user_name']; ?>
                     </span>
                 </div>
             </div>
