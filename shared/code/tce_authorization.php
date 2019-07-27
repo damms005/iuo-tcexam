@@ -604,28 +604,32 @@ function load_custom_ui()
             //3. make border darker grey
             $("input[disabled='disabled']").each(function( index,element ){
                 let classes = $(element).attr("class");
-                classes = classes.replace("'","");
-                classes = classes.replace('"',"");
-                classes = classes.split(" ");
-                $.each( classes , function( index , value ){
-                    //remove hovers
-                    if( value.indexOf('hover') >= 0 ){
-                        $(element).removeClass( value);
+                if(classes) {
+                    classes = classes.replace("'","");
+                        if(classes) {
+                            classes = classes.replace('"',"");
+                            classes = classes.split(" ");
+                            $.each( classes , function( index , value ){
+                                //remove hovers
+                                if( value.indexOf('hover') >= 0 ){
+                                    $(element).removeClass( value);
+                                }
+                                //remove bg's
+                                if( value.indexOf('bg-') >= 0 ){
+                                    $(element).removeClass( value);
+                                }
+                                //remove borders
+                                if( value.indexOf('border-') >= 0 ){
+                                    $(element).removeClass( value);
+                                }
+                                //text color
+                                if( value.indexOf('text-') >= 0 ){
+                                    $(element).removeClass( value);
+                                }
+                            });
+                            $(element).addClass( 'bg-grey-lightest border-grey-light text-grey ' + default_boorder );
+                        }
                     }
-                    //remove bg's
-                    if( value.indexOf('bg-') >= 0 ){
-                        $(element).removeClass( value);
-                    }
-                    //remove borders
-                    if( value.indexOf('border-') >= 0 ){
-                        $(element).removeClass( value);
-                    }
-                    //text color
-                    if( value.indexOf('text-') >= 0 ){
-                        $(element).removeClass( value);
-                    }
-                });
-                $(element).addClass( 'bg-grey-lightest border-grey-light text-grey ' + default_boorder );
             });
 
         })
