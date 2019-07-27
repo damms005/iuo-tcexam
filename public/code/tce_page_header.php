@@ -55,13 +55,13 @@ require_once dirname(__FILE__) . '/tce_page_menu.php';
 
 echo '<div class="body">' . K_NEWLINE;
 
-if (isset($_SESSION['session_user_firstname']) && !empty($_SESSION['session_user_firstname'] ) ) {
+if (isset($_SESSION['session_user_firstname']) && !empty($_SESSION['session_user_firstname'])) {
     echo "<div draggable='true' id='userLcd' class='z-10 fixed p-4 float-right cursor-pointer' >";
     ?>
             <div class="flex flex-column inner rounded overflow-hidden shadow-lg m-auto bg-white">
             <div class="w-full bg-red-lightest text-center">
                 <?php
-    if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport'])) {
+if (is_file("../../shared/config/passports/" . @$_SESSION['session_user_passport'])) {
         echo "<img draggable='false' src='../../shared/config/passports/{$_SESSION['session_user_passport']}' />";
     }
     ?>
@@ -74,15 +74,7 @@ if (isset($_SESSION['session_user_firstname']) && !empty($_SESSION['session_user
                 </div>
                 <div class="px-6 py-4">
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
-                    <?php echo @$_SESSION['session_user_name']; ?>
-                    </span>
-                    <br>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
-                    <?php echo @$_SESSION['session_user_department']; ?>
-                    </span>
-                    <br>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">
-                    <?php echo (!isset( $_SESSION['session_user_year_level'] ) ? "" : $_SESSION['session_user_year_level'] . ' Level'); ?>
+                    <?php echo str_replace("+", " ", @$_SESSION['session_user_name']); ?>
                     </span>
                 </div>
             </div>
