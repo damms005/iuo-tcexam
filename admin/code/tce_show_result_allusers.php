@@ -84,7 +84,11 @@ if (isset($_REQUEST['startdate'])) {
     $startdate_time = strtotime($startdate);
     $startdate      = date(K_TIMESTAMP_FORMAT, $startdate_time);
 } else {
-    $startdate = date('Y') . '-01-01 00:00:00';
+    //assuming first day of the current year is not really a practical default start time. In most Universities or
+    //examination settings, periods of assessment may span accross months, usually starting @september till aorund June.
+    //It does makes more sense to make pull all possible result available for the selected test. Else, it is possible to
+    //that admin will inadvertently generate incomplete result
+    $startdate = '1970-01-01 00:00:00';
 }
 $filter .= '&amp;startdate=' . urlencode($startdate);
 if (isset($_REQUEST['enddate'])) {
@@ -165,7 +169,7 @@ if (isset($menu_mode) and (!empty($menu_mode))) {
 						LIMIT 1';
                         if ($rus = F_db_query($sqlus, $db)) {
                             if ($mus = F_db_fetch_array($rus)) {
-                                $newstarttime = F_getTestNewStartTime($testuser_id, isset($_POST['relative_to_current_time']), (isset($_POST['add_mins']) && is_numeric($_POST['add_mins'])) ? $_POST['add_mins'] : null);
+                                $newstarttime = date(K_TIMESTAMP_FORMAT, strtotime($mus['testuser_creation_time']) + $extseconds);
                                 $sqlu         = 'UPDATE ' . K_TABLE_TEST_USER . '
 								SET testuser_creation_time=\'' . $newstarttime . '\'
 								WHERE testuser_id=' . $testuser_id . '';
@@ -389,8 +393,6 @@ if (isset($_REQUEST['sel'])) {
         F_submit_button('lock', $l['w_lock'], $l['w_lock']);
         F_submit_button('unlock', $l['w_unlock'], $l['w_unlock']);
         F_submit_button('extendtime', '+' . K_EXTEND_TIME_MINUTES . ' min', $l['h_add_five_minutes']);
-        echo " OR <input placeholder='enter time in mins' title='enter time in mins' type='text' name='add_mins' />";
-        echo "<label title='add time relative to current time' value='yes'><input type='checkbox' name='relative_to_current_time' />add relative to current time</label>";
         echo '<br /><br />' . K_NEWLINE;
     }
 
