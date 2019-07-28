@@ -431,7 +431,7 @@ if (isset($_REQUEST['sel'])) {
         <script src="../../shared/jscripts/tableexport.js"></script>
 
         <script>
-        TableExport(document.getElementsByClassName("userselect")[0] , {
+        var tExport = TableExport(document.getElementsByClassName("userselect")[0] , {
         headers: true,                      // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
         footers: true,                      // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
         formats: ["xlsx", "csv", "txt"],    // (String[]), filetype(s) for the export, (default: ['xlsx', 'csv', 'txt'])
@@ -446,18 +446,23 @@ if (isset($_REQUEST['sel'])) {
         sheetname: "cbt"                     // (id, String), sheet name for the exported spreadsheet, (default: 'id')
         });
 
-
         let table = $(".userselect").eq(0);
         let index_of_cols = {};
         let all_original_tr = {};
         let possible_vals_of_cols = {};
-        let all_rows = $( table ).children('tr');
+        let all_rows = $( table ).find('tr');
 
         //add sorter to DOM
-        $(table).prepend(`
+        $(table).before(`
             <div id='sorter'>
-                <select id='sortable_cols_holder'></select>
-                <select multiple id='filter_cols_to_this_value'></select>
+                Sort by: <br />
+                <select class='form-control col-4' id='sortable_cols_holder'>
+                    <option selected></option>
+                </select>
+                <br>
+                <select style='height: 200px;' class='form-control col-4' multiple id='filter_cols_to_this_value'>
+                    <option selected></option>
+                </select>
             </div>`
         );
 
@@ -467,24 +472,30 @@ if (isset($_REQUEST['sel'])) {
             "college"
         ];
 
-        console.log( sortable_cols );
-
         //for each of the sortable_cols, append their 'widget' to #sorter
         sortable_cols.forEach( col => {
 
             //save the index for easy reference
-            let this_index = sortable_cols.findIndex(this_col => {
-                return this_col == col;
-            })
+            var this_index = undefined;
+            $( table ).find('th').filter(function( i , el ){
+                if( $(el).text() == col ){
+                    this_index = i;
+                    return $(el).text() == col;
+                }
+            });
+
             index_of_cols[this_index] = col;
 
             //get the possibble vals of this col
             if(possible_vals_of_cols[col] == undefined ) {
                 possible_vals_of_cols[col] = [];
             }
+
             $( all_rows ).each( function( index, row ) {
-                let value_for_this_col = $(row).children('td').eq(this_index).text();
-                possible_vals_of_cols[col].push( value_for_this_col );
+                let value_for_this_col = $(row).children('td').eq(this_index).text().trim();
+                if( possible_vals_of_cols[col].indexOf( value_for_this_col ) == -1 ) {
+                    possible_vals_of_cols[col].push( value_for_this_col );
+                }
             });
 
             //append it to selectable cols
@@ -494,19 +505,65 @@ if (isset($_REQUEST['sel'])) {
 
         //listener to attach possible values when selected
         $( '#sortable_cols_holder' ).change(function(){
-            $("#filter_cols_to_this_value").html(" ");
+            let col = $( '#sortable_cols_holder' ).val();
+            $("#filter_cols_to_this_value").children("option").remove();
             $( possible_vals_of_cols[col] ).each( function( index, element ) {
-                $("#filter_cols_to_this_value").append( `<option selected >${element}</option>` );
+                $("#filter_cols_to_this_value").append( `<option>${element}</option>` );
             });
         });
 
-        $("#filter_cols_to_this_value").change(function(event) {
-            let sort_with = $(event.target).text();
-            console.log(`sorting with ${sort_with}`);
+        $( "#filter_cols_to_this_value" ).change( function( event ) {
 
-            //rebuild the table such that only rows whose value for <selected col> is part of selected cols
-            // table
+            //get a <list of all selected items>
+            let selectedItems = [];
+            $("#filter_cols_to_this_value").find("option").each(function( ndx , el ) {
+                if( $( el ).prop("selected") ) {
+                    selectedItems.push( $( el ).text() );
+                }
+            });
 
+            console.log(`sorting with ${selectedItems}`);
+
+            //rebuild the table such that only rows whose value for <selected col> is part of the <list of selected items>
+            //to do this, we will remove all rows, loop through `${all_rows}`, and only add relevant rows
+            //We do not want to remove headers
+            $(table).find("tr").each( function( ind , elm ) {
+                if( $(elm).find( 'td' ).length > 0 ){
+                    $(elm).remove()
+                }
+            })
+
+
+            let conditionColIndex;
+            let possibleIndexes = Object.keys( index_of_cols );
+            let selectedValue = $( '#sortable_cols_holder' ).val();
+            for (let index = 0; index < possibleIndexes.length; index++) {
+                let current = index_of_cols[ possibleIndexes[index] ];
+                if( current == selectedValue ) {
+                    conditionColIndex = possibleIndexes[index];
+                    break;
+                }
+            }
+
+            if(conditionColIndex){
+                $.each( all_rows , function( ind , el ){
+                    let tdS = $( el ).find("td");
+                    if(tdS.length > 0){
+                        // debugger
+                        let valAtRelevantIndex = tdS.eq( conditionColIndex ).text().trim();
+                        if( selectedItems.indexOf( valAtRelevantIndex ) >= 0 ){
+                            $(table).append( el );
+                        }
+                    }
+                })
+
+                tExport.reset();
+
+                $( "button.button-default" ).each(function(index , el){
+                    $(el).addClass('border-blue ' + default_boorder + ' bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
+                })
+
+            }
         });
 
         </script>
