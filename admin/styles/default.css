@@ -26,17 +26,18 @@ a {
 }
 
 a:visited {
-	color: #0060BF;
-	text-decoration: none;
+	/* color: #0060BF; */
+	/* text-decoration: none; */
 }
 
 a:hover {
-	color: #FF8000;
-	text-decoration: underline;
+	/* color: #FF8000; */
+	/* text-decoration: underline; */
 }
 
 /* delete link ------------ */
-a.deletebutton:link, a.deletebutton:visited {
+a.deletebutton:link,
+a.deletebutton:visited {
 	border: 1px solid #000000;
 	color: #003399;
 	font-size: 75%;
@@ -57,24 +58,23 @@ a.minibutton span {
 	text-decoration: none;
 }
 
-a.minibutton:link, a.minibutton:visited, a.minibutton:hover {
+a.minibutton:link,
+a.minibutton:visited,
+a.minibutton:hover {
 	background: #FFFFFF;
 	border: 1px solid #000000;
 	color: #000000;
-	font-family: Arial,FreeSans,sans-serif;
+	font-family: Arial, FreeSans, sans-serif;
 	font-size: 9px;
 	padding: 0px 0px 0px 3px;
 	text-decoration: none;
 }
 
-a.tcecode{
-}
+a.tcecode {}
 
-a.tcecode:visited{
-}
+a.tcecode:visited {}
 
-a.tcecode:hover{
-}
+a.tcecode:hover {}
 
 a.white {
 	color: #FFFFFF;
@@ -89,7 +89,8 @@ a.white:hover {
 	color: #FFFFFF;
 }
 
-a.xmlbutton:link, a.xmlbutton:visited {
+a.xmlbutton:link,
+a.xmlbutton:visited {
 	background-color: #D3D3D3;
 	border: 1px solid;
 	border-color: #FFFFFF #696969 #696969 #FFFFFF;
@@ -152,16 +153,14 @@ acronym.onbox {
 	text-decoration: none;
 }
 
-b.tcecode{
-}
+b.tcecode {}
 
-blockquote.tcecode{
-}
+blockquote.tcecode {}
 
 body {
 	background-color: #FFFFFF;
 	color: #000000;
-	font-family: Arial,FreeSans,sans-serif;
+	font-family: Arial, FreeSans, sans-serif;
 	font-size: 100%;
 	margin-bottom: 0px;
 	margin-left: 0px;
@@ -195,15 +194,16 @@ contains form box and help box */
 div.container {
 	margin: 0px 0px 0px 0px;
 	padding: 5px 5px 5px 5px;
-	width: 99%;
+	width: 100%;
 }
 
 div.content {
 	float: left;
 	margin: 0px 0px 0px 0px;
-	padding: 5px 15px 5px 15px;
+	padding: 15px 35px 5px 45px;
 	text-align: left;
 	width: 98%;
+	line-height: 35px;
 }
 
 /* ---------- */
@@ -231,7 +231,7 @@ div.float {
 
 /* header (logo + timer) ------------ */
 div.header {
-	background-color: #003399;
+	/* background-color: #003399; */
 	border: 0px none;
 	height: 40px;
 	margin: 0px 0px 0px 0px;
@@ -241,7 +241,7 @@ div.header {
 
 /* header logo ------------ */
 div.header div.left {
-	background-color: #003399;
+	/* background-color: #003399; */
 	/* background-image: url(../../images/logo_tcexam_118x25.png); */
 	background-position: top;
 	background-repeat: no-repeat;
@@ -256,23 +256,39 @@ div.header div.left {
 
 /* header banner ------------ */
 div.header div.right {
-	background-color: #003399;
+	/* background-color: #003399; */
 	border: 0px none;
-	float: right;
-	height: 25px;
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
+	/* float: right; */
+	/* height: 25px; */
+	/* margin: 20px 0px 0px 0px; */
+	/* padding: 0px 0px 0px 0px; */
 	text-align: right;
-	width: 400px;
+	/* width: 400px; */
+	position: absolute;
+	margin: 105px 2px auto auto;
+	right: 2px;
+	z-index: 2;
 }
 
-div.header div.right input{
-	background-color: #003399;
+
+div.header div.right form span {
+	padding: -50px !important;
+	display: inline-block;
+	height: 20px;
+	padding: 5px !important;
+	line-height: 15px;
+}
+
+div.header div.right input {
+	/* background-color: #003399; */
 	border: 0px none;
-	color: #FFFFFF;
+	color: grey;
 	font-size: 100%;
-	font-weight: bold;
+	/* font-weight: bold; */
 	text-align: right;
+	max-width: 170px;
+	margin-top: 10px;
+	margin-right: 2px;
 }
 
 div.message {
@@ -294,7 +310,7 @@ div.minibutton {
 div.minibutton span.copyright {
 	background: #FFFFFF;
 	color: #000000;
-	font-family: Arial,FreeSans,sans-serif;
+	font-family: Arial, FreeSans, sans-serif;
 	font-size: 70%;
 	text-decoration: none;
 }
@@ -313,7 +329,7 @@ div.pagehelp {
 	margin: 5px 0px 0px 0px;
 	padding: 5px 5px 5px 5px;
 	width: 100%;
-	text-align:justify;
+	text-align: justify;
 }
 
 /* Page selector --------------------------*/
@@ -366,6 +382,8 @@ div.row span.formw {
 	font-size: 95%;
 	text-align: left;
 	width: 69%;
+	min-height: 15px;
+	margin-top: -2px;
 }
 
 div.row span.label {
@@ -402,12 +420,12 @@ div.rowl {
 }
 
 div.row fieldset {
-	display:inline;
-	position:relative;
-    border:none;
-    margin:0;
-    padding:0;
-    width: 100%;
+	display: inline;
+	position: relative;
+	border: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
 }
 
 div.row fieldset span.label {
@@ -428,7 +446,7 @@ div.spacer {
 	clear: both;
 }
 
-div.tcecodepre{
+div.tcecodepre {
 	display: block;
 	white-space: pre;
 }
@@ -473,7 +491,7 @@ div.title {
 
 /* USER BAR  ------------------- */
 div.userbar {
-	background-color: #003399;
+	background-color: #47C9B5;
 	clear: both;
 	color: #FFFFFF;
 	font-size: 95%;
@@ -484,7 +502,8 @@ div.userbar {
 }
 
 /* Logout link ------------ */
-div.userbar a.logoutbutton:link, a.logoutbutton:visited {
+div.userbar a.logoutbutton:link,
+a.logoutbutton:visited {
 	background-color: #B22222;
 	border: 1px solid #000000;
 	color: #FFFFFF;
@@ -498,7 +517,8 @@ div.userbar a.logoutbutton:hover {
 }
 
 /* Login link ------------ */
-div.userbar a.loginbutton:link, a.loginbutton:visited {
+div.userbar a.loginbutton:link,
+a.loginbutton:visited {
 	background-color: #22A222;
 	border: 1px solid #000000;
 	color: #FFFFFF;
@@ -506,7 +526,8 @@ div.userbar a.loginbutton:link, a.loginbutton:visited {
 	text-decoration: none;
 }
 
-div.userbar a.loginbutton:hover, div.userbar a.loginbutton:focus {
+div.userbar a.loginbutton:hover,
+div.userbar a.loginbutton:focus {
 	background-color: #00FF00;
 	color: #000000;
 }
@@ -543,18 +564,16 @@ h2 {
 	width: 85%;
 }
 
-html {
-}
+html {}
 
-i.tcecode{
-}
+i.tcecode {}
 
 img.button {
 	border: 1px solid #808080;
 	margin: 0px 0px 0px 0px;
 }
 
-img.tcecode{
+img.tcecode {
 	border: 0px none #FFFFFF;
 }
 
@@ -571,8 +590,7 @@ label.timerlabel {
 	color: #003399;
 }
 
-li.tcecode{
-}
+li.tcecode {}
 
 ol.answer {
 	list-style-type: decimal;
@@ -588,28 +606,24 @@ ol.qlist li {
 	font-size: 95%;
 }
 
-ol.tcecode{
-}
+ol.tcecode {}
 
 /* PME CODE TAGS --------------------------*/
-p.tcecode{
-}
+p.tcecode {}
 
-pre {
-}
+pre {}
 
 select {
 	font-size: 95%;
 }
 
-small.tcecode{
-}
+small.tcecode {}
 
 span.langselector {
 	background: #FFFFFF;
 	border: 1px solid #000000;
 	color: #000000;
-	font-family: Arial,FreeSans,sans-serif;
+	font-family: Arial, FreeSans, sans-serif;
 	font-size: 9px;
 	padding: 0px 3px 0px 3px;
 	text-decoration: none;
@@ -621,19 +635,16 @@ span.langselector span.selected {
 	color: #000000;
 }
 
-strong.tcecode{
-}
+strong.tcecode {}
 
-sub.tcecode{
-}
+sub.tcecode {}
 
-sup.tcecode{
-}
+sup.tcecode {}
 
 /* user select table --------------------------*/
 table.userselect {
-	background-color: #F6F6F6;
-	border: 1px solid #808080;
+	/* background-color: #F6F6F6; */
+	/* border: 1px solid #808080; */
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	text-align: center;
@@ -649,7 +660,7 @@ table.userselect th {
 	border: 1px solid #808080;
 }
 
-table.userselect tr{
+table.userselect tr {
 	border: 1px solid #808080;
 	font-size: 95%;
 }
@@ -688,10 +699,9 @@ ul.credits {
 	text-align: left;
 }
 
-ul.log {
-}
+ul.log {}
 
-ul.log li{
+ul.log li {
 	font-size: 95%;
 }
 
@@ -700,17 +710,12 @@ ul.question {
 	list-style-type: none;
 }
 
-ul.question li {
-	margin: 10px 0px 10px 0px;
-	padding: 0px 0px 0px 0px;
-}
 
 ul.question li div.paddingleft {
 	padding-left: 30px;
 }
 
-ul.tcecode{
-}
+ul.tcecode {}
 
 .hidden {
 	display: none;
@@ -740,14 +745,14 @@ td.numeric {
 div.scrollmenu {
 	float: left;
 	font-family: Arial, Helvetica, sans-serif;
-	height: 22px;
+	/* height: 22px; */
 	margin: 0 auto;
 	width: 100%;
 	color: #FFAA00;
 	font-size: 75%;
 	font-weight: bold;
 	text-decoration: none;
-	background: #003399;
+	/* background: #003399; */
 	border: 0;
 }
 
@@ -773,7 +778,7 @@ ul.menu {
 	padding: 0;
 }
 
-ul.menu li > ul {
+ul.menu li>ul {
 	display: none;
 	background-color: #003399;
 }
@@ -795,12 +800,14 @@ ul.menu li a:visited {
 	text-decoration: none;
 }
 
-ul.menu li a:hover, ul.menu li a:focus {
+ul.menu li a:hover,
+ul.menu li a:focus {
 	color: #FFAA00;
 	text-decoration: none;
 }
 
-ul.menu li:hover > ul, ul.menu *:focus + ul {
+ul.menu li:hover>ul,
+ul.menu *:focus+ul {
 	display: block;
 	position: absolute;
 	visibility: visible;
@@ -814,11 +821,12 @@ ul.menu li:hover > ul, ul.menu *:focus + ul {
 	z-index: 1;
 }
 
-ul.menu li:hover, ul.menu li.CSStoHighlight {
+ul.menu li:hover,
+ul.menu li.CSStoHighlight {
 	background-color: #003399;
 	color: #FFCC00;
 }
- 
+
 ul.menu ul li {
 	background-color: #003399;
 	float: left;
@@ -829,7 +837,8 @@ ul.menu ul li {
 	width: 100%;
 }
 
-ul.menu ul li:hover > ul, ul.menu ul *:focus + ul {
+ul.menu ul li:hover>ul,
+ul.menu ul *:focus+ul {
 	display: block;
 	position: absolute;
 	visibility: visible;
@@ -879,14 +888,14 @@ ul.menu ul.CSStoShow {
 }
 
 iframe.menu {
-	width:0px;
-	height:0px;
-	top:20px;
-	left:0px;
+	width: 0px;
+	height: 0px;
+	top: 20px;
+	left: 0px;
 	display: none;
 	visibility: hidden;
-	position:absolute;
-	z-index:-1;
+	position: absolute;
+	z-index: -1;
 }
 
 table.filemanager {
@@ -907,7 +916,7 @@ table.filemanager th {
 	background-color: #ddeeff;
 }
 
-table.filemanager tr{
+table.filemanager tr {
 	border: 1px solid #808080;
 }
 
@@ -922,8 +931,8 @@ hr.delimiter {
 	height: 10px;
 	margin: 15px 0 15px 0;
 	width: 100%;
-	display:block;
-	clear:both;
+	display: block;
+	clear: both;
 }
 
 hr.dashed {
@@ -931,30 +940,30 @@ hr.dashed {
 	border-bottom: none;
 	border-left: none;
 	border-right: none;
-	color:#ffffff;
+	color: #ffffff;
 }
 
 span.accesskey {
-	text-decoration:none;
-	font-weight:normal;
-	font-size:100%;
-	position:relative;
-	top:-0.2em;
+	text-decoration: none;
+	font-weight: normal;
+	font-size: 100%;
+	position: relative;
+	top: -0.2em;
 }
 
 .disabled {
-	background-color:#eeeeee !important;
-	color:#003060 !important;
+	background-color: #eeeeee !important;
+	color: #003060 !important;
 }
 
 .disablednum {
-	background-color:#eeeeee !important;
-	color:#003060 !important;
-	text-align:right !important;
+	background-color: #eeeeee !important;
+	color: #003060 !important;
+	text-align: right !important;
 }
 
 .disablednumg {
-	background-color:#eeeeee !important;
-	color:#006000 !important;
-	text-align:right !important;
+	background-color: #eeeeee !important;
+	color: #006000 !important;
+	text-align: right !important;
 }

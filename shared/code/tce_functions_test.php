@@ -100,7 +100,7 @@ function F_getUserTests()
                 }
                 $str .= '</td>' . K_NEWLINE;
                 // display various action links by status case
-                $str .= '<td style="text-align:center;">';
+                $str .= '<td style="">';
                 if (!$expired) {
                     switch ($test_status) {
                         case 0:{ // 0 = the test generation process is started but not completed
@@ -1047,6 +1047,7 @@ function F_createTest($test_id, $user_id)
     $test_answers_order_mode      = intval($testdata['test_answers_order_mode']);
     $random_questions             = ($test_random_questions_select or $test_random_questions_order);
     $sql_answer_position          = '';
+
     if (!$test_random_answers_order and ($test_answers_order_mode == 0)) {
         $sql_answer_position = ' AND answer_position>0';
     }

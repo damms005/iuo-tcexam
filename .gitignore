@@ -2,5 +2,5 @@ admin/config/
 admin/code/smart-omr
 shared/config/
 public/config/
-cache/jobs
-cache/logs
+cache/jobs/
+cache/logs/
