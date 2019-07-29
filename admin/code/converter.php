@@ -13,30 +13,46 @@ if (true) {
 
 <link rel="stylesheet" href="../../shared/jscripts/jquery-toast/jquery.toast.min.css" />
 
-<script src="../../shared/jscripts/jquery.js"></script>
+<!-- <script src="../../shared/jscripts/jquery-toast/jquery.toast.min.js"></script> -->
 <script src="../../shared/jscripts/tinymce/js/tinymce/tinymce.min.js"></script>
-<script src="../../shared/jscripts/jquery-toast/jquery.toast.min.js"></script>
+
+<script type="text/javascript">
+function downloadJSAtOnload() {
+    var element_1 = document.createElement("script");
+    element_1.src = "../../shared/jscripts/jquery-toast/jquery.toast.min.js";
+    document.body.appendChild(element_1);
+
+    setTimeout(() => {
+
+        $(function(){
+            tinymce.init({
+                selector: 'pre#importedExcel',
+                inline: true,
+                menubar: false,
+
+                height: 300,
+                max_height: 350,
+
+                plugins: "legacyoutput charmap code ",
+
+                //   visualaid,
+                //   removeformat, formats
+                //   cut, copy, paste, selectall, ,
+
+                toolbar: 'undo redo | bold italic underline | subscript superscript strikethrough | link image | charmap code'
+            });
+        });
+
+    }, 3000);
+}
+ if (window.addEventListener)
+ window.addEventListener("load", downloadJSAtOnload, false);
+ else if (window.attachEvent)
+ window.attachEvent("onload", downloadJSAtOnload);
+ else window.onload = downloadJSAtOnload;
+</script>
 
 <script>
-
-$(function(){
-    tinymce.init({
-        selector: 'pre#importedExcel',
-        inline: true,
-        menubar: false,
-
-        height: 300,
-        max_height: 350,
-
-        plugins: "legacyoutput charmap code ",
-
-        //   visualaid,
-        //   removeformat, formats
-        //   cut, copy, paste, selectall, ,
-
-        toolbar: 'undo redo | bold italic underline | subscript superscript strikethrough | link image | charmap code'
-    });
-});
 
 function validateTinymceEdit(tinymceData) {
 
