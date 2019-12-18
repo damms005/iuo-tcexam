@@ -374,9 +374,11 @@ function F_update_config_files($db_type, $db_host, $db_port, $db_user, $db_passw
  * @return void
  */
 function F_ensure_permissions_ok($file){
-	if (!posix_access(realpath($file), POSIX_R_OK | POSIX_W_OK)) {
-		$error = posix_get_last_error();
-		exit("<p>Cannot read/write file <i>" . realpath($file) . "</i> (error $error): " . posix_strerror($error) . "</p>");
+	if (PHP_OS_FAMILY === "Linux") {
+		if (!posix_access(realpath($file), POSIX_R_OK | POSIX_W_OK)) {
+			$error = posix_get_last_error();
+			exit("<p>Cannot read/write file <i>" . realpath($file) . "</i> (error $error): " . posix_strerror($error) . "</p>");
+		}
 	}
 }
 
