@@ -21,6 +21,11 @@ Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
 //============================================================+
 */
 
+
+SET autocommit = 0;
+
+START TRANSACTION;
+
 /* Tables */
 
 CREATE TABLE tce_sessions (
@@ -298,3 +303,4 @@ ALTER TABLE tce_test_subjects ADD Foreign Key (subjset_tsubset_id) references tc
 ALTER TABLE tce_testsslcerts ADD Foreign Key (tstssl_test_id) references tce_tests (test_id) ON DELETE cascade ON UPDATE no action;
 ALTER TABLE tce_testsslcerts ADD Foreign Key (tstssl_ssl_id) references tce_sslcerts (ssl_id) ON DELETE cascade ON UPDATE no action;
 
+COMMIT;
