@@ -22,7 +22,7 @@ Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
 */
 
 
-SET autocommit = 0
+SET autocommit = 0;
 
 START TRANSACTION;
 
