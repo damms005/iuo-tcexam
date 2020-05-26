@@ -5035,9 +5035,6 @@ table {
 
 .text-white {
 	color: #fff;
-}
-
-.text-white {
 	background-color: gray;
 	border-radius: 5px;
 	border: 1px solid pink;
