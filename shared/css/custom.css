@@ -5037,6 +5037,12 @@ table {
 	color: #fff;
 }
 
+.text-white {
+	background-color: gray;
+	border-radius: 5px;
+	border: 1px solid pink;
+}
+
 .text-red-darkest {
 	color: #3b0d0c;
 }
