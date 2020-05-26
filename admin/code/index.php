@@ -21,9 +21,9 @@
 
 /**
  * @file
- * Main page of Anchis & Kolbins CBT Administration Area.
- * @package com.tecnick.Anchis & Kolbins CBT.admin
- * @brief Anchis & Kolbins CBT Administration Area
+ * Main page of IUO CBT Administration Area.
+ * @package com.tecnick.IUO CBT.admin
+ * @brief IUO CBT Administration Area
  * @author Nicola Asuni
  * @since 2004-04-20
  */

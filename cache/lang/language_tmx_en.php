@@ -6,9 +6,9 @@
 $tmx['a_meta_charset']='UTF-8';
 $tmx['a_meta_dir']='ltr';
 $tmx['a_meta_language']='en';
-$tmx['d_admin_index']='This is the administration area of <a href="tce_page_info.php" title="about Anchis & Kolbins CBT">Anchis & Kolbins CBT</a>, is a platform and language independent user-friendly software to create, manage and perform online tests.<br /><br />From the menu you can access the different sections of the system:<ul><li><strong>users</strong><br />This sections contains the forms for <a href="tce_edit_user.php" title="User Management">insert and manage</a> users, <a href="tce_select_users.php" title="User Selection"> to select them</a> and to show the list of the ones currently <a href="tce_show_online_users.php" title="Online Users">online</a>.<br />Only the registered users granted a username and a password are entitled to access the public area of the system and perform the tests.<br />It is possible to specify different access levels for both the users and the different components and parts of the system (pages, forms, sections).<br />Anchis & Kolbins CBT also uses another security system to prevent unauthorized access based on checking the IP addresses.</li><li><strong>modules</strong><br />This section contains the forms to insert and modify test <a href="tce_edit_module.php" title="Modules Management">modules</a>, <a href="tce_edit_subject.php" title="Topic Management">topics</a>, the related <a href="tce_edit_question.php" title="Question Management">questions</a> and <a href="tce_edit_answer.php" title="Multiple-Answer Management">answers</a>.<br />You can select an unlimited number of topics that can be used together for a specific test, and for each topic you can define an unlimited number of questions and possible answers. Depending on the settings of the Random question and Random answer tick boxes, the system can randomly select questions and answers among the available ones.<br />Anchis & Kolbins CBT supports both multiple-answer questions and free-answer questions. The latter will be evaluated through a specific evaluation form <a href="tce_edit_rating.php" title="Answer evaluation"></a>, while the former will be automatically evaluated.<br />All the descriptions of tests, topics, questions and answers support a particular proprietary code (tcecode) that, by using a specific form, allows the use of images and text formatting.</li><li><strong>test</strong><br />This section includes a form to insert, generate and modify the different <a href="tce_edit_test.php" title="Test Management">tests</a>, a form to <a href="tce_edit_rating.php" title="Answer Evaluation">evaluate</a> the free answers and forms to show or generate PDF versions of the <a href="tce_show_result_allusers.php" title="Test Results Summary">results</a>, a detailed view of the <a href="tce_show_result_user.php" title="Test Results">users\' tests</a> and the <a href="tce_show_result_allusers.php" title="Question Statistics">statistics</a> of questions and answers used.<br />Anchis & Kolbins CBT can be instructed to select, on a random basis, the various questions and related available answers, so that all tests for the different users will be different from each other.<br />It is also possible to generate an arbitrary number of tests in PDF format so that they can be printed and used for a conventional exam.</li></ul>';
+$tmx['d_admin_index']='This is the administration area of <a href="tce_page_info.php" title="about IUO CBT">IUO CBT</a>, is a platform and language independent user-friendly software to create, manage and perform online tests.<br /><br />From the menu you can access the different sections of the system:<ul><li><strong>users</strong><br />This sections contains the forms for <a href="tce_edit_user.php" title="User Management">insert and manage</a> users, <a href="tce_select_users.php" title="User Selection"> to select them</a> and to show the list of the ones currently <a href="tce_show_online_users.php" title="Online Users">online</a>.<br />Only the registered users granted a username and a password are entitled to access the public area of the system and perform the tests.<br />It is possible to specify different access levels for both the users and the different components and parts of the system (pages, forms, sections).<br />IUO CBT also uses another security system to prevent unauthorized access based on checking the IP addresses.</li><li><strong>modules</strong><br />This section contains the forms to insert and modify test <a href="tce_edit_module.php" title="Modules Management">modules</a>, <a href="tce_edit_subject.php" title="Topic Management">topics</a>, the related <a href="tce_edit_question.php" title="Question Management">questions</a> and <a href="tce_edit_answer.php" title="Multiple-Answer Management">answers</a>.<br />You can select an unlimited number of topics that can be used together for a specific test, and for each topic you can define an unlimited number of questions and possible answers. Depending on the settings of the Random question and Random answer tick boxes, the system can randomly select questions and answers among the available ones.<br />IUO CBT supports both multiple-answer questions and free-answer questions. The latter will be evaluated through a specific evaluation form <a href="tce_edit_rating.php" title="Answer evaluation"></a>, while the former will be automatically evaluated.<br />All the descriptions of tests, topics, questions and answers support a particular proprietary code (tcecode) that, by using a specific form, allows the use of images and text formatting.</li><li><strong>test</strong><br />This section includes a form to insert, generate and modify the different <a href="tce_edit_test.php" title="Test Management">tests</a>, a form to <a href="tce_edit_rating.php" title="Answer Evaluation">evaluate</a> the free answers and forms to show or generate PDF versions of the <a href="tce_show_result_allusers.php" title="Test Results Summary">results</a>, a detailed view of the <a href="tce_show_result_user.php" title="Test Results">users\' tests</a> and the <a href="tce_show_result_allusers.php" title="Question Statistics">statistics</a> of questions and answers used.<br />IUO CBT can be instructed to select, on a random basis, the various questions and related available answers, so that all tests for the different users will be different from each other.<br />It is also possible to generate an arbitrary number of tests in PDF format so that they can be printed and used for a conventional exam.</li></ul>';
 $tmx['d_logout_desc']='click on the button to exit the system';
-$tmx['d_tcexam_desc']='Anchis & Kolbins CBT is software for managing and perform online tests.';
+$tmx['d_tcexam_desc']='IUO CBT is software for managing and perform online tests.';
 $tmx['h_add']='add current record to database';
 $tmx['h_add_image']='insert selected image into text';
 $tmx['h_add_object']='insert selected object into text';
@@ -52,7 +52,7 @@ $tmx['h_global_score']='if selected, overwrite the answers points with the point
 $tmx['h_group_name']='users\' group name';
 $tmx['h_guide']='help';
 $tmx['h_index']='main page';
-$tmx['h_info']='about Anchis & Kolbins CBT';
+$tmx['h_info']='about IUO CBT';
 $tmx['h_ip']='IP address of the computer from which data have been sent';
 $tmx['h_ip_range']='list of enabled IP addresses separated by commas (e.g.: 192.168.*.*,127.0.0.*,192.168.234.16-192.168.234.32,::ffff:c0a8:0110-::ffff:c0a8:0140)';
 $tmx['h_lastname']='User\'s last name (example: Smith, Palmer, ...)';
@@ -129,9 +129,9 @@ $tmx['hp_edit_user']='In this form you can manage the different users allowed to
 $tmx['hp_email_result']='Send results to users by email';
 $tmx['hp_import_xml_questions']='With this form you can import questions from an XML file.';
 $tmx['hp_import_xml_users']='With this form you can import users and groups from XML or TSV (tab delimited text) file. The file formats are the same as the ones obtained by exporting data from the Users Selection form.';
-$tmx['hp_login']='In order to access the different sections of Anchis & Kolbins CBT you must log in using the name and password provided to you by the system administrator';
+$tmx['hp_login']='In order to access the different sections of IUO CBT you must log in using the name and password provided to you by the system administrator';
 $tmx['hp_online_users']='This form shows the users currently logged';
-$tmx['hp_public_index']='This is the main page of Anchis & Kolbins CBT. From this page you can start or continue your tests';
+$tmx['hp_public_index']='This is the main page of IUO CBT. From this page you can start or continue your tests';
 $tmx['hp_result_questions']='This page shows statistical data for a selected test. By clicking on the column names you can change the display sequence of the table. By clicking on the line number you can access the modification page for the selected question.';
 $tmx['hp_result_user']='This page shows the details of the test for the user selected. The data in each line are: <br /> question number. [score] (user IP | viewing time in hh:mm:ss| time of last modification in hh:mm:ss| time to answer in mm:ss) <br />The symbol ® indicates a question correctly answered, while the answers chosen by the user are indicated by an \'x\'. The [PDF] button outputs the results in a PDF document.';
 $tmx['hp_select_all_questions']='In this form you can see and select all the questions and related answers for a specific topic.';
@@ -201,12 +201,12 @@ $tmx['t_group_select']='Group List';
 $tmx['t_help']='Help';
 $tmx['t_image_upload']='Add Image';
 $tmx['t_login_form']='Authentication';
-$tmx['t_main']='Anchis & Kolbins CBT';
+$tmx['t_main']='IUO CBT';
 $tmx['t_message']='MESSAGE';
 $tmx['t_online_users']='Users Online';
-$tmx['t_page_guide']='Anchis & Kolbins CBT :: Help';
-$tmx['t_page_info']='About Anchis & Kolbins CBT';
-$tmx['t_public_index']='Anchis & Kolbins CBT :: Test Execution';
+$tmx['t_page_guide']='IUO CBT :: Help';
+$tmx['t_page_info']='About IUO CBT';
+$tmx['t_public_index']='IUO CBT :: Test Execution';
 $tmx['t_questions_editor']='Question Management';
 $tmx['t_questions_list']='Questions List';
 $tmx['t_question_importer']='Question Importer';
@@ -416,7 +416,7 @@ $tmx['m_user_verification_sent']='a verification message has been sent to this a
 $tmx['m_user_registration_ok']='user successfully registered';
 $tmx['w_i_agree']='I agree to terms and agreements';
 $tmx['w_registration_verification']='Registration Verification';
-$tmx['m_email_registration']='<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"><body><p>This is an automated response to verify a <a href="#TCEXAMURL#">Anchis & Kolbins CBT</a> New User Registration Request.<br />Request verification for email #EMAIL# submitted by remote IP #USERIP#.<br />If this message has been sent in error, please disregard.<br /><br /><b>TO CONFIRM THE REGISTRATION USE THE FOLLOWING LINK:<br /><a href="#SUBSCRIBEURL#">#SUBSCRIBEURL#</a></b></p></body></html>';
+$tmx['m_email_registration']='<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"><body><p>This is an automated response to verify a <a href="#TCEXAMURL#">IUO CBT</a> New User Registration Request.<br />Request verification for email #EMAIL# submitted by remote IP #USERIP#.<br />If this message has been sent in error, please disregard.<br /><br /><b>TO CONFIRM THE REGISTRATION USE THE FOLLOWING LINK:<br /><a href="#SUBSCRIBEURL#">#SUBSCRIBEURL#</a></b></p></body></html>';
 $tmx['w_timer']='timer [sec]';
 $tmx['h_question_timer']='maximum number of seconds to display the question (0 = disable timer)';
 $tmx['w_fullscreen']='fullscreen';
@@ -507,7 +507,7 @@ $tmx['m_backup_completed']='backup has been successfully created';
 $tmx['m_restore_completed']='restore has been successfully created';
 $tmx['m_restore_confirm']='confirm restoring';
 $tmx['hp_edit_backups']='This page allows you to make and restore database backups (works only on POSIX systems with MySQL or PostgreSQL).
-Push the [backup] button to create a new Anchis & Kolbins CBT database dump in compressed SQL format (structure and data).
+Push the [backup] button to create a new IUO CBT database dump in compressed SQL format (structure and data).
 To restore an existing backup archive, select it and push the [restore] button.
 Note that before each restore the system automatically execute a new backup, so you can undo the operation.
 Backup files are stored on the "cache/backup" folder using the following syntax: YYYYMMDDhhmmss_tcexam_backup.sql.gz , where YYYYMMDDhhmmss are the digits of year (Y), month (M), day (D), hour (h), minutes (m), seconds (s).';
@@ -592,7 +592,7 @@ $tmx['h_answers_order_mode']='ordering mode for answers';
 $tmx['w_otpkey']='OTP key';
 $tmx['h_otpkey']='One Time Password secret key';
 $tmx['w_otp_qrcode']='OTP QR-Code';
-$tmx['m_otp_qrcode']='Anchis & Kolbins CBT uses a 2-step verification process that requires you to enter two pieces of information before you can access the system. The required information is the standard Anchis & Kolbins CBT password and the verification code generated by your smartphone. This prevents hackers from accessing your account if they only have your password or phone. However, it also means that you will always need to have your phone at hand whenever you want to login to your Anchis & Kolbins CBT Account.<br /><br />You must download and install the <a href="https://support.google.com/accounts/answer/1066447" title="Install Google Authenticator">Google Authenticator</a> app on your smartphone. When you have downloaded and installed the app you can use the following code, or scan the QR-Code:';
+$tmx['m_otp_qrcode']='IUO CBT uses a 2-step verification process that requires you to enter two pieces of information before you can access the system. The required information is the standard IUO CBT password and the verification code generated by your smartphone. This prevents hackers from accessing your account if they only have your password or phone. However, it also means that you will always need to have your phone at hand whenever you want to login to your IUO CBT Account.<br /><br />You must download and install the <a href="https://support.google.com/accounts/answer/1066447" title="Install Google Authenticator">Google Authenticator</a> app on your smartphone. When you have downloaded and installed the app you can use the following code, or scan the QR-Code:';
 $tmx['w_otpcode']='OTP code';
 $tmx['h_otpcode']='One Time Password code generated using your smartphone application';
 $tmx['m_login_brute_force']='You are trying to log too many times and too fast, please wait the following number of seconds before the next attempt:';
