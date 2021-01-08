@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: fa
-// DATE: 2015-06-19 16:46:33
+// DATE: 2020-01-03 12:04:57
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='گروه از بانک داده حذف شد';
 $tmx['m_group_updated']='اطلاعات کاربر بروزرسانی شد';
 $tmx['m_importing_complete']='واردات XML کامل گردید';
 $tmx['m_login_wrong']='نام کاربری / گذرواژه اشتباه';
-$tmx['m_mailerror_authenticate']='[SMTP] نتوانست تایید کند.';
-$tmx['m_mailerror_connect_host']='[SMTP] نتوانست به میزبان SMTP متصل شود.';
-$tmx['m_mailerror_data_not_accepted']='داده های [SMTP] مورد قبول واقع نشد.';
-$tmx['m_mailerror_encoding']='کدگذاری ناشناخته:';
-$tmx['m_mailerror_execute']='نتوانست اجرا کندCould not execute:';
-$tmx['m_mailerror_file_access']='به فایل دست نیافت:';
-$tmx['m_mailerror_file_open']='نتوانست فایل را بازکند:';
-$tmx['m_mailerror_from_failed']='عدم موفقیت مربوط به آدرس فرستنده:';
-$tmx['m_mailerror_instantiate']='عملکرد پست را نتوانست شروع کند.';
-$tmx['m_mailerror_mailer_not_supported']='برنامه پست الکترونیکی مورد حمایت نیست.';
-$tmx['m_mailerror_provide_address']='حداقل یک آدرس گیرنده را باید وارد کنید.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] عدم موفقیت در ارسال برای گیرنده های زیر:';
-$tmx['m_mailerror_signing']='خطای شناسائی: ';
-$tmx['m_mailerror_smtp_error']='خطای سرور SMTP: ';
-$tmx['m_mailerror_empty_message']='فیلد پیغام تهی است';
-$tmx['m_mailerror_invalid_address']='آدرس بی اعتبار';
-$tmx['m_mailerror_variable_set']='مقداردهی و یا برگداندن به مقدار اولیه متغییر مقدور نیست: ';
+$tmx['m_mailerror_authenticate']='خطای SMTP: احراز هویت با شکست مواجه شد.';
+$tmx['m_mailerror_connect_host']='خطای SMTP: اتصال به سرور SMTP برقرار نشد.';
+$tmx['m_mailerror_data_not_accepted']='خطای SMTP: داده‌ها نا‌درست هستند.';
+$tmx['m_mailerror_empty_message']='بخش متن پیام خالی است.';
+$tmx['m_mailerror_encoding']='کد‌گذاری نا‌شناخته: ';
+$tmx['m_mailerror_execute']='امکان اجرا وجود ندارد: ';
+$tmx['m_mailerror_file_access']='امکان دسترسی به فایل وجود ندارد: ';
+$tmx['m_mailerror_file_open']='خطای File: امکان بازکردن فایل وجود ندارد: ';
+$tmx['m_mailerror_from_failed']='آدرس فرستنده اشتباه است: ';
+$tmx['m_mailerror_instantiate']='امکان معرفی تابع ایمیل وجود ندارد.';
+$tmx['m_mailerror_invalid_address']='آدرس ایمیل معتبر نیست: ';
+$tmx['m_mailerror_mailer_not_supported']=' mailer پشتیبانی نمی‌شود.';
+$tmx['m_mailerror_provide_address']='باید حداقل یک آدرس گیرنده وارد کنید.';
+$tmx['m_mailerror_recipients_failed']='خطای SMTP: ارسال به آدرس گیرنده با خطا مواجه شد: ';
+$tmx['m_mailerror_signing']='خطا در امضا: ';
+$tmx['m_mailerror_smtp_connect_failed']='خطا در اتصال به SMTP.';
+$tmx['m_mailerror_smtp_error']='خطا در SMTP Server: ';
+$tmx['m_mailerror_variable_set']='امکان ارسال یا ارسال مجدد متغیر‌ها وجود ندارد: ';
+$tmx['m_mailerror_extension_missing']='افزونه موجود نیست: ';
 $tmx['m_new_window_link']='این لینک پنجره مرورگر جدیدی را باز میکند';
 $tmx['m_no_test_available']='هیچ آزمونی موجود نیست!';
 $tmx['m_process_completed']='روند کامل گردید';
@@ -594,7 +596,7 @@ $tmx['h_answers_order_mode']='مد ترتیبی برای پاسخ ها';
 $tmx['w_otpkey']='کلید OTP';
 $tmx['h_otpkey']='کلید یکبار مصرف رمز گذرواژه';
 $tmx['w_otp_qrcode']='کد QR OTP';
-$tmx['m_otp_qrcode']='TCExam از یک پورسه تایید هویت دومرحله ای استفاده میکند. برای دسترسی به سیستم شما باید دو چیز را وارد کنید.یکی گذرواژه استاندارد آزمون است و دیگری کد تایید   
+$tmx['m_otp_qrcode']='TCExam از یک پورسه تایید هویت دومرحله ای استفاده میکند. برای دسترسی به سیستم شما باید دو چیز را وارد کنید.یکی گذرواژه استاندارد آزمون است و دیگری کد تایید
 هویتی تولید شده توسط برنامه موبایل شما است. با این روش هکرها در صورتی که فقط گذرواژه شما را داشته باشند نمیتوانند به حساب کاربری شما دستیابی داشته باشند. البته با این روش شما نیز هرگاه بخواهید وارد سیستم شوید باید موبایل تان در دسترستان باشد.<br /><br />شما باید برنامه <a href="https://support.google.com/accounts/answer/1066447" title="Install Google Authenticator">Google Authenticator</a> دانلود و بر روی موبایل خود نصب کنید. پس از دانلود و نصب برنامه میتوانید کد زیر را وارد برنامه کنید و یا کد QR زیر را به داخل موبایلتان اسکن کنید:';
 $tmx['w_otpcode']='کد OTP';
 $tmx['h_otpcode']='کد یکبار مصرف تولید شده بوسیله برنامه گوشی شما';

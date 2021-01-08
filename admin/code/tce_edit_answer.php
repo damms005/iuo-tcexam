@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_edit_answer.php
 // Begin       : 2004-04-27
-// Last Update : 2018-07-06
+// Last Update : 2020-05-06
 //
 // Description : Edit answers.
 //
@@ -15,7 +15,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -159,8 +159,7 @@ if ($answer_id > 0) {
             // check user's authorization for parent module
             if ((!F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $m['subject_module_id'], 'module_user_id'))
                 and (!F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $m['question_subject_id'], 'subject_user_id'))) {
-                F_print_error('ERROR', $l['m_authorization_denied']);
-                    exit;
+                F_print_error('ERROR', $l['m_authorization_denied'], true);
             }
         }
     } else {
@@ -197,6 +196,7 @@ switch ($menu_mode) {
             <?php
             F_submit_button('forcedelete', $l['w_delete'], $l['h_delete']);
             F_submit_button('cancel', $l['w_cancel'], $l['h_cancel']);
+            echo F_getCSRFTokenField().K_NEWLINE;
             ?>
             </div>
             </form>
@@ -777,9 +777,9 @@ if (K_ENABLE_ANSWER_EXPLANATION) {
     echo '<span class="label">'.K_NEWLINE;
     echo '<label for="answer_explanation">'.$l['w_explanation'].'</label>'.K_NEWLINE;
     echo '<br />'.K_NEWLINE;
-    $showexplanationarea = 'javascript:if(document.getElementById(\'explanationarea\').style.display==\'none\'){document.getElementById(\'explanationarea\').style.display=\'block\';document.getElementById(\'showexplanationarea\').style.display=\'none\';document.getElementById(\'hideexplanationarea\').style.display=\'block\';}';
+    $showexplanationarea = 'javascript:if(document.getElementById(\'explanationarea\').style.display==\'none\'){document.getElementById(\'explanationarea\').style.display=\'block\';document.getElementById(\'showexplanationarea\').style.display=\'none\';document.getElementById(\'hideexplanationarea\').style.display=\'block\';}; return false;';
     echo '<span id="showexplanationarea"><a class="xmlbutton" href="#" onclick="'.$showexplanationarea.'" title="'.$l['w_show'].'">'.$l['w_show'].' &rarr;</a></span>';
-    $hideexplanationarea = 'javascript:if(document.getElementById(\'explanationarea\').style.display==\'block\'){document.getElementById(\'explanationarea\').style.display=\'none\';document.getElementById(\'showexplanationarea\').style.display=\'block\';document.getElementById(\'hideexplanationarea\').style.display=\'none\';}';
+    $hideexplanationarea = 'javascript:if(document.getElementById(\'explanationarea\').style.display==\'block\'){document.getElementById(\'explanationarea\').style.display=\'none\';document.getElementById(\'showexplanationarea\').style.display=\'block\';document.getElementById(\'hideexplanationarea\').style.display=\'none\';}; return false;';
     echo '<span id="hideexplanationarea" style="display:none;">';
     echo '<a href="#" title="'.$l['h_preview'].'" class="xmlbutton" onclick="previewWindow=window.open(\'tce_preview_tcecode.php?tcexamcode=\'+encodeURIComponent(document.getElementById(\'form_answereditor\').answer_explanation.value),\'previewWindow\',\'dependent,height=500,width=500,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\'); return false;">'.$l['w_preview'].'</a>'.K_NEWLINE;
     echo '<a class="xmlbutton" href="#" onclick="'.$hideexplanationarea.'" title="'.$l['w_hide'].'">'.$l['w_hide'].'</a> ';
@@ -890,7 +890,7 @@ echo F_decode_tcecode($answer_description);
 echo '&nbsp;'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
-
+echo F_getCSRFTokenField().K_NEWLINE;
 echo '</form>'.K_NEWLINE;
 echo '</div>'.K_NEWLINE;
 

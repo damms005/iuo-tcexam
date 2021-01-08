@@ -20,7 +20,7 @@ PLEASE CONTACT INFO@TECNICK.COM TO PURCHASE A LICENSE.
 * Support - Help:
 	Please use support Issues at https://github.com/tecnickcom/tcexam
 * Software License:
-	* Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+	* Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 	* See LICENSE.TXT file for more information.
 
 
@@ -35,7 +35,7 @@ TCExam includes some third-party software components that are not strictly requi
 * **PHPMailer**
     * Full Featured Email Transfer Class for PHP.
     * Author: Brent R. Matzelle (bmatzelle@yahoo.com)
-    * Homepage: http://phpmailer.sourceforge.net/
+    * Homepage: https://github.com/PHPMailer/PHPMailer
     * License: LGPL (GNU LESSER GENERAL PUBLIC LICENSE)
     * Location: /shared/phpmailer/
 

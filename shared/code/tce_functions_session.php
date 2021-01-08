@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_functions_session.php
 // Begin       : 2001-09-26
-// Last Update : 2017-04-22
+// Last Update : 2020-05-06
 //
 // Description : User-level session storage functions.
 //
@@ -15,7 +15,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2018  Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -221,7 +221,7 @@ function getClientFingerprint()
  */
 function getNewSessionID()
 {
-    return md5(getPasswordHash(uniqid(microtime().getmypid().getClientFingerprint().K_RANDOM_SECURITY.session_id(), true)));
+    return md5(getPasswordHash(uniqid(microtime().getClientFingerprint().K_RANDOM_SECURITY.session_id(), true)));
 }
 
 /**
@@ -244,6 +244,38 @@ function getPasswordHash($password)
 function checkPassword($password, $hash)
 {
     return password_verify($password, $hash);
+}
+
+/**
+ * Generate unencoded CSRF token string
+ * 
+ * @return string
+ */
+function getPlainCSRFToken()
+{
+    $inc = get_included_files();
+    return $inc[0].session_id().K_RANDOM_SECURITY.getClientFingerprint();
+}
+
+/**
+ * Check the CSRF token
+ * @param $token (string) tocken to check
+ * 
+ * @return boolean
+ */
+function checkCSRFToken($token)
+{
+    return checkPassword(getPlainCSRFToken(), $token);
+}
+
+/**
+ * Generate CSRF token
+ * 
+ * @return string
+ */
+function F_getCSRFToken()
+{
+    return getPasswordHash(getPlainCSRFToken());
 }
 
 // ------------------------------------------------------------

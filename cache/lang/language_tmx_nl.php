@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: nl
-// DATE: 2015-06-19 16:46:46
+// DATE: 2020-01-03 12:05:22
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -118,7 +118,7 @@ $tmx['h_usered_email']='gebruikers e-mailadres (bijv.: name@example.com)';
 $tmx['h_view_details']='toont details';
 $tmx['h_tsv_export']='export data naar TSV (TAB /komma gescheiden tekstbestand)';
 $tmx['h_xml_export']='export data naar XML';
-$tmx['hp_edit_answer']='Hier kunt u alle mogelijke antwoorden voor een vraag beheren. U kunt elk aantal juiste of foute antwoorden toevoegen voor elke vraag; tijdens een test wordt automatisch slechts een van de juiste antwoorden in de lijst van mogelijke antwoorden getoond. U kunt geen antwoord wijzigen of weghalen die bij een reeds gedane test hoort. U kunt het wel uitschakelen met [verwijder]. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Fnswer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false anwser.';
+$tmx['hp_edit_answer']='Hier kunt u alle mogelijke antwoorden voor een vraag beheren. U kunt elk aantal juiste of foute antwoorden toevoegen voor elke vraag; tijdens een test wordt automatisch slechts een van de juiste antwoorden in de lijst van mogelijke antwoorden getoond. U kunt geen antwoord wijzigen of weghalen die bij een reeds gedane test hoort. U kunt het wel uitschakelen met [verwijder]. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Answer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false answer.';
 $tmx['hp_edit_group']='Hier kunt de gebruikersgroepen beheren.';
 $tmx['hp_edit_question']='Hier kunt u vragen van een topic beheren. U kunt geen vraag wijzigen of weghalen van een reeds gedane test, u kunt het uitschakelen met [verwijder]. Legenda: [+] (voor de naam) Ingeschakeld; [-] Uitgeschakeld; [S] MCSA - Meerkeuze -een goed antwoord vraag; [M] MCMA - Meerkeuze - meerdere antwoorden goed vraag; [T] TEXT - Free answer; [O] ORDER - Ordering Answers.';
 $tmx['hp_edit_rating']='Hier kunt u punten voor open antwoorden toekennen. Bekijk gegevens van een gebruiker met \'gebruikers data\'. Met \'shows all\' kunt u reeds ge-evalueerde antwoorden bekijken en corrigeren';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='groep is verwijderd';
 $tmx['m_group_updated']='gebruikersdata zijn herzien';
 $tmx['m_importing_complete']='XML import voltooid';
 $tmx['m_login_wrong']='foutieve gebruiker / wachtwoord';
-$tmx['m_mailerror_authenticate']='[SMTP] Inlog foutief.';
-$tmx['m_mailerror_connect_host']='[SMTP] SMTP host onbereikbaar.';
-$tmx['m_mailerror_data_not_accepted']='[SMTP] Data niet aanvaard.';
-$tmx['m_mailerror_encoding']='onbekende code:';
-$tmx['m_mailerror_execute']='onuitvoerbaar:';
-$tmx['m_mailerror_file_access']='bestand niet toegankelijk:';
-$tmx['m_mailerror_file_open']='bestand niet te openen:';
-$tmx['m_mailerror_from_failed']='adres foutief:';
-$tmx['m_mailerror_instantiate']='e-mailfunctie onbruikbaar';
-$tmx['m_mailerror_mailer_not_supported']='e-Mailer niet geschikt.';
-$tmx['m_mailerror_provide_address']='Tenminste 1 ontvanger-e-mailadres.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] ontvangers onbruikbaar:';
-$tmx['m_mailerror_signing']='Signing Error: ';
-$tmx['m_mailerror_smtp_error']='SMTP server error: ';
-$tmx['m_mailerror_empty_message']='Message body empty';
-$tmx['m_mailerror_invalid_address']='Invalid address';
-$tmx['m_mailerror_variable_set']='Cannot set or reset variable: ';
+$tmx['m_mailerror_authenticate']='SMTP-fout: authenticatie mislukt.';
+$tmx['m_mailerror_connect_host']='SMTP-fout: kon niet verbinden met SMTP-host.';
+$tmx['m_mailerror_data_not_accepted']='SMTP-fout: data niet geaccepteerd.';
+$tmx['m_mailerror_empty_message']='Berichttekst is leeg';
+$tmx['m_mailerror_encoding']='Onbekende codering: ';
+$tmx['m_mailerror_execute']='Kon niet uitvoeren: ';
+$tmx['m_mailerror_file_access']='Kreeg geen toegang tot bestand: ';
+$tmx['m_mailerror_file_open']='Bestandsfout: kon bestand niet openen: ';
+$tmx['m_mailerror_from_failed']='Het volgende afzendersadres is mislukt: ';
+$tmx['m_mailerror_instantiate']='Kon mailfunctie niet initialiseren.';
+$tmx['m_mailerror_invalid_address']='Ongeldig adres: ';
+$tmx['m_mailerror_mailer_not_supported']=' mailer wordt niet ondersteund.';
+$tmx['m_mailerror_provide_address']='Er moet minstens één ontvanger worden opgegeven.';
+$tmx['m_mailerror_recipients_failed']='SMTP-fout: de volgende ontvangers zijn mislukt: ';
+$tmx['m_mailerror_signing']='Signeerfout: ';
+$tmx['m_mailerror_smtp_connect_failed']='SMTP Verbinding mislukt.';
+$tmx['m_mailerror_smtp_error']='SMTP-serverfout: ';
+$tmx['m_mailerror_variable_set']='Kan de volgende variabele niet instellen of resetten: ';
+$tmx['m_mailerror_extension_missing']='Extensie afwezig: ';
 $tmx['m_new_window_link']='nu wordt een nieuwe pagina geopend in uw browser';
 $tmx['m_no_test_available']='er is nog geen test!';
 $tmx['m_process_completed']='proces volbracht';
@@ -628,7 +630,7 @@ $tmx['w_sslcerts']='SSL certificates';
 $tmx['t_sslcerts']='SSL Certificates';
 $tmx['w_sslcert']='SSL certificate';
 $tmx['hp_import_ssl_certificates']='With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.';
-$tmx['m_ssl_certificate_required']='To acccess this page you need a valid SSL certificate client.';
+$tmx['m_ssl_certificate_required']='To access this page you need a valid SSL certificate client.';
 $tmx['w_graph']='graph';
 
 // --- EOF ---
