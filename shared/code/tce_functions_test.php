@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_functions_test.php
 // Begin       : 2004-05-28
-// Last Update : 2016-03-15
+// Last Update : 2020-05-06
 //
 // Description : Functions to handle test generation, status
 //               and user access.
@@ -16,7 +16,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2013 Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -455,7 +455,7 @@ function F_testInfoLink($test_id, $link_name = '')
     $onclickinfo .= 'return false;';
     $str .= '<a href="tce_popup_test_info.php?testid=' . $test_id . '" onclick="' . $onclickinfo . '" title="' . $l['m_new_window_link'] . '">';
     if (strlen($link_name) > 0) {
-        $str .= $link_name;
+        $str .= unhtmlentities(strip_tags($link_name));
     } else {
         $str .= $l['w_info'];
     }
@@ -477,12 +477,15 @@ function F_printTestInfo($test_id, $showip = false)
     $str     = ''; //string to return
     $boolval = array($l['w_no'], $l['w_yes']);
     //$ordmode = Array($l['w_position'], $l['w_alphabetic'], $l['w_id']);
-    $sql = 'SELECT * FROM ' . K_TABLE_TESTS . ' WHERE test_id=' . $test_id . '';
+    $sql = 'SELECT * FROM '.K_TABLE_TESTS.' WHERE test_id='.$test_id.' LIMIT 1';
     if ($r = F_db_query($sql, $db)) {
         if ($m = F_db_fetch_array($r)) {
-            $str .= '<h1>' . htmlspecialchars($m['test_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '</h1>' . K_NEWLINE;
-            $str .= '<div class="tcecontentbox">' . F_decode_tcecode($m['test_description']) . '<br /><br /></div>' . K_NEWLINE;
-            $str .= '<div class="tceformbox">' . K_NEWLINE;
+            if (!F_isValidTestUser($test_id, $_SESSION['session_user_ip'], $m['test_ip_range'])) {
+                return '';
+            }
+            $str .= '<h1>'.htmlspecialchars($m['test_name'], ENT_NOQUOTES, $l['a_meta_charset']).'</h1>'.K_NEWLINE;
+            $str .= '<div class="tcecontentbox">'.F_decode_tcecode($m['test_description']).'<br /><br /></div>'.K_NEWLINE;
+            $str .= '<div class="tceformbox">'.K_NEWLINE;
             $str .= F_twoColRow($l['w_time_begin'], $l['h_time_begin'], $m['test_begin_time']);
             $str .= F_twoColRow($l['w_time_end'], $l['h_time_end'], $m['test_end_time']);
             $str .= F_twoColRow($l['w_test_time'], $l['h_test_time'], $m['test_duration_time'] . ' ' . $l['w_minutes']);
@@ -2170,7 +2173,8 @@ function F_updateTestComment($test_id, $testcomment)
 function F_testLoginForm($faction, $fid, $fmethod, $fenctype, $test_id)
 {
     global $l;
-    require_once '../config/tce_config.php';
+    require_once('../config/tce_config.php');
+    require_once('../../shared/code/tce_functions_form.php');
     $str = '';
     $str .= '<div class="container">' . K_NEWLINE;
     $str .= '<div class="tceformbox">' . K_NEWLINE;
@@ -2181,13 +2185,14 @@ function F_testLoginForm($faction, $fid, $fmethod, $fenctype, $test_id)
     $str .= '<div class="row">' . K_NEWLINE;
     $str .= '<input type="submit" class="" name="login" id="login" value="' . $l['w_login'] . '" title="' . $l['h_login_button'] . '" />' . K_NEWLINE;
     // the following field is used to check if the form has been submitted
-    $str .= '<input type="hidden" name="testpswaction" id="testpswaction" value="login" />' . K_NEWLINE;
-    $str .= '<input type="hidden" name="testid" id="testid" value="' . intval($test_id) . '" />' . K_NEWLINE;
-    $str .= '</div>' . K_NEWLINE;
-    $str .= '</form>' . K_NEWLINE;
-    $str .= '</div>' . K_NEWLINE;
-    $str .= '<div class="pagehelp">' . $l['hp_test_password'] . '</div>' . K_NEWLINE;
-    $str .= '</div>' . K_NEWLINE;
+    $str .= '<input type="hidden" name="testpswaction" id="testpswaction" value="login" />'.K_NEWLINE;
+    $str .= '<input type="hidden" name="testid" id="testid" value="'.intval($test_id).'" />'.K_NEWLINE;
+    $str .= '</div>'.K_NEWLINE;
+    $str .= F_getCSRFTokenField().K_NEWLINE;
+    $str .= '</form>'.K_NEWLINE;
+    $str .= '</div>'.K_NEWLINE;
+    $str .= '<div class="pagehelp">'.$l['hp_test_password'].'</div>'.K_NEWLINE;
+    $str .= '</div>'.K_NEWLINE;
     return $str;
 }
 

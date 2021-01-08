@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: ms
-// DATE: 2015-06-19 16:46:45
+// DATE: 2020-01-03 12:05:20
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -118,7 +118,7 @@ $tmx['h_usered_email']='emel pengguna alamat (e.g.: name@example.com)';
 $tmx['h_view_details']='menunjukkan butiran';
 $tmx['h_tsv_export']='data eksport untuk TSV (Tab delimited fail teks)';
 $tmx['h_xml_export']='data eksport kepada XML';
-$tmx['hp_edit_answer']='Dengan bentuk anda boleh mengurus semua jawapan mungkin untuk soalan berkait terpilih. Anda dapat menambah satu jumlah arbitrari betul dan kesilapan menjawab bagi setiap soal; sepanjang ujian sistem itu akan secara automatik memilih hanya satu daripada jawapan betul dan ia akan menunjukkan ia dalam senarai itu jawapan mungkin. Tidak boleh anda mengubah suai atau memadamkan satu jawapan itulah berpisah satu ujian sudah melaksanakan, dalam kes ini anda boleh baru sahaja melumpuhkan ia dengan menggunakan butang [memadamkan]. Legenda: [+] Dibolehkan; [-] Kurang Upaya. Legenda untuk pertanyaan: [S] MCSA - Soalan Choice Single Answer berbilang; [Sistem M] MCMA - Soalan Choice Multiple Answer berbilang; [T] TEKS - Free Fnswer; [O] PERINTAH - Jawapan Pesanan. Legenda untuk jawapan: [T] jawapan benar; [F] palsu anwser.';
+$tmx['hp_edit_answer']='Dengan bentuk anda boleh mengurus semua jawapan mungkin untuk soalan berkait terpilih. Anda dapat menambah satu jumlah arbitrari betul dan kesilapan menjawab bagi setiap soal; sepanjang ujian sistem itu akan secara automatik memilih hanya satu daripada jawapan betul dan ia akan menunjukkan ia dalam senarai itu jawapan mungkin. Tidak boleh anda mengubah suai atau memadamkan satu jawapan itulah berpisah satu ujian sudah melaksanakan, dalam kes ini anda boleh baru sahaja melumpuhkan ia dengan menggunakan butang [memadamkan]. Legenda: [+] Dibolehkan; [-] Kurang Upaya. Legenda untuk pertanyaan: [S] MCSA - Soalan Choice Single Answer berbilang; [Sistem M] MCMA - Soalan Choice Multiple Answer berbilang; [T] TEKS - Free Answer; [O] PERINTAH - Jawapan Pesanan. Legenda untuk jawapan: [T] jawapan benar; [F] palsu answer.';
 $tmx['hp_edit_group']='Dalam bentuk anda boleh mengurus kumpulan pengguna lain itu.';
 $tmx['hp_edit_question']='Dengan bentuk anda boleh mengurus soalan lain itu berkaitan ke tajuk itu terpilih. Tidak boleh anda mengubah suai atau memadamkan satu soalan itulah berpisah satu ujian sudah melaksanakan, dalam kes ini anda boleh baru sahaja melumpuhkan ia dengan menggunakan butang [memadamkan]. Legenda: [ ] Dibolehkan; [-] Kurang Upaya; [S] MCSA - Soalan Choice Single Answer berbilang; [Sistem M] MCMA - Soalan Choice Multiple Answer berbilang; [T] TEKS - Jawapan bebas; [O] PERINTAH - Jawapan Pesanan.';
 $tmx['hp_edit_rating']='Dalam bentuk anda dapat menentukan titik-titik untuk bebas jawapan-jawapan. Anda dapat melihat data pengguna dengan pemilihan bidang \'data pengguna\'. Bidang \'menunjukkan semua\' membolehkan anda bagi melihat dan betul juga jawapan telah dinilaikan ';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='kumpulan telah disingkirkan dari pangkalan data';
 $tmx['m_group_updated']='pengguna data telah dikemaskinikan';
 $tmx['m_importing_complete']='XML mengimport siap';
 $tmx['m_login_wrong']='pengguna salah / kata laluan';
-$tmx['m_mailerror_authenticate']='[SMTP] Tidak dapat mengesahkan.';
-$tmx['m_mailerror_connect_host']='[SMTP] Tidak dapat disambungkan kepada tuan rumah SMTP.';
-$tmx['m_mailerror_data_not_accepted']='[SMTP] Data tidak menerima pakai.';
-$tmx['m_mailerror_encoding']='Tidak diketahui pengekodan:';
-$tmx['m_mailerror_execute']='Tidak dapat melaksanakan:';
-$tmx['m_mailerror_file_access']='Tidak dapat fail capaian:';
-$tmx['m_mailerror_file_open']='Tidak dapat fail terbuka:';
-$tmx['m_mailerror_from_failed']='Ekoran alamat From gagal:';
-$tmx['m_mailerror_instantiate']='Tidak dapat instantiate fungsi mel.';
-$tmx['m_mailerror_mailer_not_supported']='Mailer sedang tak tersokong.';
-$tmx['m_mailerror_provide_address']='Anda harus memberi sekurang-kurangnya satu penerima emel alamat.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] Ekoran penerima gagal:';
-$tmx['m_mailerror_signing']='Signing Error: ';
-$tmx['m_mailerror_smtp_error']='SMTP server error: ';
-$tmx['m_mailerror_empty_message']='Message body empty';
-$tmx['m_mailerror_invalid_address']='Invalid address';
-$tmx['m_mailerror_variable_set']='Cannot set or reset variable: ';
+$tmx['m_mailerror_authenticate']='Ralat SMTP: Tidak dapat pengesahan.';
+$tmx['m_mailerror_connect_host']='Ralat SMTP: Tidak dapat menghubungi hos pelayan SMTP.';
+$tmx['m_mailerror_data_not_accepted']='Ralat SMTP: Data tidak diterima oleh pelayan.';
+$tmx['m_mailerror_empty_message']='Tiada isi untuk mesej';
+$tmx['m_mailerror_encoding']='Pengekodan tidak diketahui: ';
+$tmx['m_mailerror_execute']='Tidak dapat melaksanakan: ';
+$tmx['m_mailerror_file_access']='Tidak dapat mengakses fail: ';
+$tmx['m_mailerror_file_open']='Ralat Fail: Tidak dapat membuka fail: ';
+$tmx['m_mailerror_from_failed']='Berikut merupakan ralat dari alamat e-mel: ';
+$tmx['m_mailerror_instantiate']='Tidak dapat memberi contoh fungsi e-mel.';
+$tmx['m_mailerror_invalid_address']='Alamat emel tidak sah: ';
+$tmx['m_mailerror_mailer_not_supported']=' jenis penghantar emel tidak disokong.';
+$tmx['m_mailerror_provide_address']='Anda perlu menyediakan sekurang-kurangnya satu alamat e-mel penerima.';
+$tmx['m_mailerror_recipients_failed']='Ralat SMTP: Penerima e-mel berikut telah gagal: ';
+$tmx['m_mailerror_signing']='Ralat pada tanda tangan: ';
+$tmx['m_mailerror_smtp_connect_failed']='SMTP Connect() telah gagal.';
+$tmx['m_mailerror_smtp_error']='Ralat pada pelayan SMTP: ';
+$tmx['m_mailerror_variable_set']='Tidak boleh menetapkan atau menetapkan semula pembolehubah: ';
+$tmx['m_mailerror_extension_missing']='Sambungan hilang: ';
 $tmx['m_new_window_link']='hubungan akan membuka satu tingkap penyemak imbas baru';
 $tmx['m_no_test_available']='terdapat tidak ujian boleh didapati!';
 $tmx['m_process_completed']='proses menamatkan';
@@ -627,7 +629,7 @@ $tmx['w_sslcerts']='SSL certificates';
 $tmx['t_sslcerts']='SSL Certificates';
 $tmx['w_sslcert']='SSL certificate';
 $tmx['hp_import_ssl_certificates']='With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.';
-$tmx['m_ssl_certificate_required']='To acccess this page you need a valid SSL certificate client.';
+$tmx['m_ssl_certificate_required']='To access this page you need a valid SSL certificate client.';
 $tmx['w_graph']='graph';
 
 // --- EOF ---

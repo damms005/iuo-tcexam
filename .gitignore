@@ -1,8 +1,5 @@
 admin/config/
 shared/config/
 public/config/
-<<<<<<< HEAD
 cache/logs/
-=======
 .vscode/
->>>>>>> fix-gui-question-randomization-checkbox

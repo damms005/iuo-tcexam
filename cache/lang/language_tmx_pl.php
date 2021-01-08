@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: pl
-// DATE: 2015-06-19 16:46:46
+// DATE: 2020-01-03 12:05:23
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -84,7 +84,7 @@ $tmx['h_questions_unanswered']='pytania bez odpowiedzi';
 $tmx['h_questions_undisplayed']='pytania nie wyświetlone';
 $tmx['h_questions_unrated']='questions not rated';
 $tmx['h_random_answers']='if selected, extracts randomly the multiple answers related to each question';
-$tmx['h_random_questions']='if selected, extracts randomly the answers related to each selected topic';
+$tmx['h_random_questions']='if selected, extracts randomly the questions related to each selected topic';
 $tmx['h_regcode']='numer rejestracji użytkownika';
 $tmx['h_regdate']='data rejestracji użytkownika';
 $tmx['h_result']='pokaż wyniki testu';
@@ -118,7 +118,7 @@ $tmx['h_usered_email']='adres e-mail użytkownika (np.: nazwa@example.com)';
 $tmx['h_view_details']='pokazuje szczegóły';
 $tmx['h_tsv_export']='eksportuje dane do TSV (Tab delimited text file)';
 $tmx['h_xml_export']='eksportuje dane do XML';
-$tmx['hp_edit_answer']='With this form you can manage all possible answers related to the question selected. You can add an arbitrary number of correct and wrong answers for each question; during the test the system will automatically select only one of the correct answers and it will show it in the list of possible answers. You cannot modify or delete an answer that is part of a test already performed, in this case you can just disable it by using the button [delete]. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Fnswer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false anwser.';
+$tmx['hp_edit_answer']='With this form you can manage all possible answers related to the question selected. You can add an arbitrary number of correct and wrong answers for each question; during the test the system will automatically select only one of the correct answers and it will show it in the list of possible answers. You cannot modify or delete an answer that is part of a test already performed, in this case you can just disable it by using the button [delete]. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Answer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false answer.';
 $tmx['hp_edit_group']='Na tej formie możesz zarządzać grupami użytkowników.';
 $tmx['hp_edit_question']='With this form you can manage the different questions related to the topic selected. You cannot modify or delete a question that is part of a test already performed, in this case you can just disable it by using the button [delete]. Legend: [+] Enabled; [-] Disabled; [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free answer; [O] ORDER - Ordering Answers.';
 $tmx['hp_edit_rating']='In this form you can specify the points for the free answers. You can see the user\'s data by selecting the field \'user data\'. The field \'shows all\' enables you to see and correct also the answers already evaluated';
@@ -138,7 +138,7 @@ $tmx['hp_select_all_questions']='In this form you can see and select all the que
 $tmx['hp_select_users']='In this form you can see and select the registered users. You can change the visualization order clicking on the column names.';
 $tmx['hp_sending_in_progress']='Email sending in progress. Please wait while the sending process completes.';
 $tmx['hp_test_execute']='This page allows to perform the selected test.';
-$tmx['hp_test_info']='Shows informations for the selected test.';
+$tmx['hp_test_info']='Shows information for the selected test.';
 $tmx['hp_test_results']='This page shows the results of the selected test. The results are related just to the questions with multiple answers.';
 $tmx['m_authorization_denied']='AUTORYZACJA ODRZUCONA!!!';
 $tmx['m_databasempty']='baza danych jest pusta!';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='grupa została usunięta';
 $tmx['m_group_updated']='zaktualizowano';
 $tmx['m_importing_complete']='importowanie XML zakończone';
 $tmx['m_login_wrong']='zła nazwa użytkownika / hasło';
-$tmx['m_mailerror_authenticate']='[SMTP] nie mogę się autentykować.';
-$tmx['m_mailerror_connect_host']='[SMTP] nie mogę się połączyć z serwerem SMTP.';
-$tmx['m_mailerror_data_not_accepted']='[SMTP] Dane nie zaakceptowane.';
-$tmx['m_mailerror_encoding']='Nieznane kodowanie:';
-$tmx['m_mailerror_execute']='Nie mogę wykonać:';
-$tmx['m_mailerror_file_access']='Nie mam dostępu do pliku:';
-$tmx['m_mailerror_file_open']='Nie mogę otworzyć pliku:';
-$tmx['m_mailerror_from_failed']='The following From addresses failed:';
-$tmx['m_mailerror_instantiate']='Could not instantiate mail function.';
-$tmx['m_mailerror_mailer_not_supported']='Mailer is not supported.';
-$tmx['m_mailerror_provide_address']='You must provide at least one recipient email address.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] The following recipients failed:';
-$tmx['m_mailerror_signing']='Signing Error: ';
-$tmx['m_mailerror_smtp_error']='SMTP server error: ';
-$tmx['m_mailerror_empty_message']='Message body empty';
-$tmx['m_mailerror_invalid_address']='Invalid address';
-$tmx['m_mailerror_variable_set']='Cannot set or reset variable: ';
+$tmx['m_mailerror_authenticate']='Błąd SMTP: Nie można przeprowadzić uwierzytelnienia.';
+$tmx['m_mailerror_connect_host']='Błąd SMTP: Nie można połączyć się z wybranym hostem.';
+$tmx['m_mailerror_data_not_accepted']='Błąd SMTP: Dane nie zostały przyjęte.';
+$tmx['m_mailerror_empty_message']='Wiadomość jest pusta.';
+$tmx['m_mailerror_encoding']='Nieznany sposób kodowania znaków: ';
+$tmx['m_mailerror_execute']='Nie można uruchomić: ';
+$tmx['m_mailerror_file_access']='Brak dostępu do pliku: ';
+$tmx['m_mailerror_file_open']='Nie można otworzyć pliku: ';
+$tmx['m_mailerror_from_failed']='Następujący adres Nadawcy jest nieprawidłowy: ';
+$tmx['m_mailerror_instantiate']='Nie można wywołać funkcji mail(). Sprawdź konfigurację serwera.';
+$tmx['m_mailerror_invalid_address']='Nie można wysłać wiadomości, następujący adres Odbiorcy jest nieprawidłowy: ';
+$tmx['m_mailerror_mailer_not_supported']='Wybrana metoda wysyłki wiadomości nie jest obsługiwana.';
+$tmx['m_mailerror_provide_address']='Należy podać prawidłowy adres email Odbiorcy.';
+$tmx['m_mailerror_recipients_failed']='Błąd SMTP: Następujący odbiorcy są nieprawidłowi: ';
+$tmx['m_mailerror_signing']='Błąd podpisywania wiadomości: ';
+$tmx['m_mailerror_smtp_connect_failed']='SMTP Connect() zakończone niepowodzeniem.';
+$tmx['m_mailerror_smtp_error']='Błąd SMTP: ';
+$tmx['m_mailerror_variable_set']='Nie można ustawić lub zmodyfikować zmiennej: ';
+$tmx['m_mailerror_extension_missing']='Brakujące rozszerzenie: ';
 $tmx['m_new_window_link']='ten link otwiera nowe okno przeglądarki';
 $tmx['m_no_test_available']='aktualnie nie ma żadnych aktywnych testów!';
 $tmx['m_process_completed']='proces zakończony';
@@ -627,7 +629,7 @@ $tmx['w_sslcerts']='SSL certificates';
 $tmx['t_sslcerts']='SSL Certificates';
 $tmx['w_sslcert']='SSL certificate';
 $tmx['hp_import_ssl_certificates']='With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.';
-$tmx['m_ssl_certificate_required']='To acccess this page you need a valid SSL certificate client.';
+$tmx['m_ssl_certificate_required']='To access this page you need a valid SSL certificate client.';
 $tmx['w_graph']='graph';
 
 // --- EOF ---

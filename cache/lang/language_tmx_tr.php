@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: tr
-// DATE: 2015-06-19 16:46:50
+// DATE: 2020-01-03 12:05:32
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -118,7 +118,7 @@ $tmx['h_usered_email']='kullanicinin email adresi (e.g.: isim@example.com)';
 $tmx['h_view_details']='detaylari goster';
 $tmx['h_tsv_export']='veriyi TSV\'ye aktar (sinirli etiketli metin dosyasi)';
 $tmx['h_xml_export']='veriyi XML\'e aktar';
-$tmx['hp_edit_answer']='Bu form ile secilmis sorularla ilgili butun olasi cevaplari yonetebilirsiniz. istege gore dogru ve yanlis cevaplari her soru icin ekleyebilirsiniz; test sirasinda sistem otomatik olarak sadece bir dogru cevap secer ve o cevap olasi cevaplar listesinde gosterilir. Zaten icra edilmis testin parcalari olan cevaplari degistiremezsiniz, bu durumda siz sedece buton (delete) kullanarak gecersiz kilabilirsiniz. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Fnswer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false anwser.';
+$tmx['hp_edit_answer']='Bu form ile secilmis sorularla ilgili butun olasi cevaplari yonetebilirsiniz. istege gore dogru ve yanlis cevaplari her soru icin ekleyebilirsiniz; test sirasinda sistem otomatik olarak sadece bir dogru cevap secer ve o cevap olasi cevaplar listesinde gosterilir. Zaten icra edilmis testin parcalari olan cevaplari degistiremezsiniz, bu durumda siz sedece buton (delete) kullanarak gecersiz kilabilirsiniz. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Answer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false answer.';
 $tmx['hp_edit_group']='Bu formun icinde farkli kullanicilarin gruplarini yonetebilirsiniz.';
 $tmx['hp_edit_question']='Bu formda farkli sorularla ilgili konu secimini yonetebilirsiniz. Zaten icra edilen testin parcasi olan testin sorusunu degistiremez ya da silemzsiniz, bu durumda siz sadece butona (delete) basarak gecersiz kilabilirsiniz. Aciklayici bilgiler: [+] Gecerli; [-] Gecersiz; [S] CSTC - Coklu Secenek Tekli Cevap sorulari; [M] CSCC - Coklu Secenek Coklu Cevap sorulari; [T] TEXT - Free answer; [O] ORDER - Ordering Answers.';
 $tmx['hp_edit_rating']='Bu formda serbest cevaplandirilabilinen sorularin puanlarini acikca belirleyebilirsiniz. \'user data\' (kullanici verisi) alanindan secilen kullanicilarin verisini gorebilirsiniz. \'shows all\' (hepsini goster) alani zaten degerlendirilmis cevaplari gorebilmenize ve duzeltmenize olanak saglar.';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='grup veri tabinidan silinmis';
 $tmx['m_group_updated']='kullanici verisi guncellestirilmis';
 $tmx['m_importing_complete']='XML cikartma tamamlandi';
 $tmx['m_login_wrong']='yanlis Kullanici / Sifre';
-$tmx['m_mailerror_authenticate']='[SMTP] Kimlik doğrulama yapılamadı.';
-$tmx['m_mailerror_connect_host']='[SMTP] SMTP sunucusuna baglanilamadi.';
-$tmx['m_mailerror_data_not_accepted']='[SMTP] veri kabul edilmedi.';
-$tmx['m_mailerror_encoding']='Bilinmeyen kodlama:';
-$tmx['m_mailerror_execute']='Uygulanamiyor:';
-$tmx['m_mailerror_file_access']='Girilemeyen dosya:';
-$tmx['m_mailerror_file_open']='Acilamayan dosya:';
-$tmx['m_mailerror_from_failed']='gelecek adersler iptal edildi:';
-$tmx['m_mailerror_instantiate']='E-posta fonksiyonu kullanılamıyor.';
-$tmx['m_mailerror_mailer_not_supported']='Mail kaldirilamadi.';
-$tmx['m_mailerror_provide_address']='Mutlaka en az birtani alici email adres edinmelisiniz.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] Gelecek alicilar basarisiz oldu:';
-$tmx['m_mailerror_signing']='Signing Error: ';
-$tmx['m_mailerror_smtp_error']='SMTP server error: ';
-$tmx['m_mailerror_empty_message']='Message body empty';
-$tmx['m_mailerror_invalid_address']='Invalid address';
-$tmx['m_mailerror_variable_set']='Cannot set or reset variable: ';
+$tmx['m_mailerror_authenticate']='SMTP Hatası: Oturum açılamadı.';
+$tmx['m_mailerror_connect_host']='SMTP Hatası: SMTP sunucusuna bağlanılamadı.';
+$tmx['m_mailerror_data_not_accepted']='SMTP Hatası: Veri kabul edilmedi.';
+$tmx['m_mailerror_empty_message']='Mesajın içeriği boş';
+$tmx['m_mailerror_encoding']='Bilinmeyen karakter kodlama: ';
+$tmx['m_mailerror_execute']='Çalıştırılamadı: ';
+$tmx['m_mailerror_file_access']='Dosyaya erişilemedi: ';
+$tmx['m_mailerror_file_open']='Dosya Hatası: Dosya açılamadı: ';
+$tmx['m_mailerror_from_failed']='Belirtilen adreslere gönderme başarısız: ';
+$tmx['m_mailerror_instantiate']='Örnek e-posta fonksiyonu oluşturulamadı.';
+$tmx['m_mailerror_invalid_address']='Geçersiz e-posta adresi: ';
+$tmx['m_mailerror_mailer_not_supported']=' e-posta kütüphanesi desteklenmiyor.';
+$tmx['m_mailerror_provide_address']='En az bir alıcı e-posta adresi belirtmelisiniz.';
+$tmx['m_mailerror_recipients_failed']='SMTP Hatası: Belirtilen alıcılara ulaşılamadı: ';
+$tmx['m_mailerror_signing']='İmzalama hatası: ';
+$tmx['m_mailerror_smtp_connect_failed']='SMTP connect() fonksiyonu başarısız.';
+$tmx['m_mailerror_smtp_error']='SMTP sunucu hatası: ';
+$tmx['m_mailerror_variable_set']='Değişken ayarlanamadı ya da sıfırlanamadı: ';
+$tmx['m_mailerror_extension_missing']='Eklenti bulunamadı: ';
 $tmx['m_new_window_link']='bu link bir taryici pencere acacak';
 $tmx['m_no_test_available']='mevcut test yok!';
 $tmx['m_process_completed']='islem tamamlandi';
@@ -629,7 +631,7 @@ $tmx['w_sslcerts']='SSL certificates';
 $tmx['t_sslcerts']='SSL Certificates';
 $tmx['w_sslcert']='SSL certificate';
 $tmx['hp_import_ssl_certificates']='With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.';
-$tmx['m_ssl_certificate_required']='To acccess this page you need a valid SSL certificate client.';
+$tmx['m_ssl_certificate_required']='To access this page you need a valid SSL certificate client.';
 $tmx['w_graph']='graph';
 
 // --- EOF ---
