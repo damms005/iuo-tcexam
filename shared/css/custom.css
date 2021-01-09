@@ -1,4 +1,5 @@
 /**
+ * This file contains both custom styles and TailwindCSS styles
  * This injects Tailwind's base styles, which is a combination of
  * Normalize.css and some additional base styles.
  *
@@ -14,6 +15,140 @@
 
 /* Document
    ========================================================================== */
+
+
+/****************************************************************
+***********C U S T O M    S T Y L E S    S T A R T S ************
+****************************************************************/
+
+
+@import 'custom.css';
+@import 'bootstrap.min.css';
+@import 'pretty-checkbox.min.css';
+@import 'materialdesignicons.min.css';
+@import 'animate.css';
+
+/* header (logo + timer) ------------ */
+div.header {
+	width: 100%;
+	height: 40px;
+	position: relative;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	background-color: white;
+	position: relative;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* header logo ------------ */
+div.header div.left {
+	float: none;
+	height: 150px;
+	width: 100%;
+	background-color: white;
+	margin: 0px;
+	padding: 0px;
+	text-align: left;
+}
+
+/* header banner ------------ */
+div.header div.right {
+	background-color: white;
+	border: 0px none;
+	float: right;
+	height: 25px;
+	margin: 0px 0px 0px 0px;
+	margin-top: -130px;
+	padding: 0px 0px 0px 0px;
+	text-align: right;
+	width: 400px;
+}
+
+div.header div.right input {
+	background-color: white;
+	border: 0px none;
+	color: #003399;
+	font-size: 100%;
+	font-weight: bold;
+	text-align: right;
+	width: 155px;
+}
+
+div.message {
+	background-color: #99ccff;
+	font-size: 95%;
+	font-weight: bold;
+	margin: 0px 0px 0px 0px;
+	padding: 3px 3px 3px 3px;
+	width: 100%;
+}
+
+label.timerlabel {
+	color: white;
+}
+
+
+#userLcd {
+	float: right;
+	background-color: white;
+	border: 1px solid silver;
+	border-radius: 3px;
+	margin: 4px;
+}
+
+#cssmenu:after,
+#cssmenu>ul:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+#cssmenu {
+	margin-top: 7%;
+	width: auto;
+	border-bottom: 3px solid #47c9af;
+	font-family: Raleway, sans-serif;
+	line-height: 1;
+	padding-left: 50px;
+}
+
+#cssmenu ul {
+	background: #ffffff;
+}
+
+#cssmenu>ul>li {
+	float: left;
+}
+
+#cssmenu>ul>li>a {
+	z-index: 2;
+	padding: 18px 25px 12px 25px;
+	font-size: 15px;
+	font-weight: 400;
+	text-decoration: none;
+	color: #444444;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-ms-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+	margin-right: -4px;
+}
+
+#cssmenu>ul>li.active>a,
+#cssmenu>ul>li:hover>a,
+#cssmenu>ul>li>a:hover {
+	color: #ffffff;
+}
+
+/****************************************************************
+************C U S T O M    S T Y L E S    E N D S ***************
+****************************************************************/
 
 /**
  * 1. Correct the line height in all browsers.

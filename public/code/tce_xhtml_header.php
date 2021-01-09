@@ -83,6 +83,15 @@ echo '<meta name="reply-to" content="'.htmlspecialchars($thispage_reply, ENT_COM
 echo '<meta name="keywords" content="'.htmlspecialchars($thispage_keywords, ENT_COMPAT, $l['a_meta_charset']).'" />'.K_NEWLINE;
 echo '<link rel="stylesheet" href="'.$thispage_style.'" type="text/css" />'.K_NEWLINE;
 echo '<link rel="shortcut icon" href="'.$thispage_icon.'" />'.K_NEWLINE;
+
+/****************************************************************
+***********C U S T O M    S T Y L E S    S T A R T S ************
+****************************************************************/
+require __DIR__ . "/../../shared/code/tce_custom_ui.php";
+/****************************************************************
+************C U S T O M    S T Y L E S    E N D S ***************
+****************************************************************/
+
 // calendar
 if (isset($enable_calendar) and $enable_calendar) {
     echo '<style type="text/css">@import url('.K_PATH_SHARED_JSCRIPTS.'jscalendar/calendar-blue.css);</style>'.K_NEWLINE;
