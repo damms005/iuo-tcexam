@@ -67,9 +67,6 @@ if (!isset($thispage_style) or empty($thispage_style)) {
         $thispage_style = K_SITE_STYLE;
     }
 }
-if (!isset($custom_style) or empty($custom_style)) {
-    $custom_style = K_TCEXAM_STYLE_CUSTOM;
-}
 
 echo '<'.'?'.'xml version="1.0" encoding="'.$l['a_meta_charset'].'" '.'?'.'>'.K_NEWLINE;
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.K_NEWLINE;
