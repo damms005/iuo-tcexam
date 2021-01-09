@@ -41,11 +41,11 @@ $(function () {
 		}
 	})
 
-	//unstyled buttons, and button-like elements
+	//un-styled buttons, and button-like elements
 	let stylable = ['buttongreen', 'xmlbutton', 'styledbutton'];
-	$("input[type='submit'] , .xmlbutton , .testlist a.buttongreen , .styledbutton").each(function (index, el) {
+	$("input[type='submit'] , button[title='calendar'] , .xmlbutton , .testlist a.buttongreen , .styledbutton").each(function (index, el) {
 		if ((!!$(el).attr('class')) == false || $(el).attr('class') == '' || stylable.indexOf(($(el).attr('class')) >= 0)) {
-			$(el).removeClass('xmlbutton').addClass('border-blue ' + default_border + ' bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 cursor-pointer')
+			$(el).removeClass('xmlbutton').addClass('border-blue ' + default_border + ' bg-white hover:bg-blue text-blue-dark hover:text-white hover:no-underline hover:rounded rounded no-underline p-2 mt-1 mb-1 mr-1 mx-1 cursor-pointer')
 		}
 	})
 
