@@ -346,10 +346,12 @@ if ($pagelevel) { // pagelevel=0 means access to anonymous user
     // pagelevel >= 1
     if ($_SESSION['session_user_level'] < $pagelevel) { //check user level
         if($logged){
-            echo "<div style='background: red; color: white; margin-top: 20px; margin-bottom: 20px; padding:10'>You do not have access to the required page. You may visit the public page: it is accessible to all access levels</div>";
+            echo "<div style='background: red; color: white; margin-top: 20px; margin-bottom: 20px; padding:10'>You do not have access to the required page. <a href='". K_PATH_HOST . K_PATH_TCEXAM ."'>Click here to go to the public page</a></div>";
+            exit;
+        } else {
+            // To gain access to a specific resource, the user's level must be equal or greater to the one specified for the requested resource.
+            F_login_form(); //display login form
         }
-        // To gain access to a specific resource, the user's level must be equal or greater to the one specified for the requested resource.
-        F_login_form(); //display login form
     }
 }
 
