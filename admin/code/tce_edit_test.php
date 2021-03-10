@@ -456,14 +456,7 @@ break;
                 F_stripslashes_formfields();
                 break;
             }
-            if ($formstatus = F_check_form_fields()) {
-                // check referential integrity (NOTE: mysql do not support "ON UPDATE" constraint)
-                if (!F_check_unique(K_TABLE_TEST_USER, 'testuser_test_id=' . $test_id . '')) {
-                    F_print_error('WARNING', $l['m_update_restrict']);
-                    $formstatus = false;
-                    F_stripslashes_formfields();
-                    break;
-                }
+
                 // check if name is unique
                 if (!F_check_unique(K_TABLE_TESTS, 'test_name=\'' . $test_name . '\'', 'test_id', $test_id)) {
                     F_print_error('WARNING', $l['m_duplicate_name']);
@@ -727,7 +720,6 @@ break;
                         F_display_db_error();
                     }
                 }
-            }
             break;
         }
 
