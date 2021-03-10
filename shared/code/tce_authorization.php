@@ -71,6 +71,7 @@ if ($rs = F_db_query($sqls, $db)) {
             F_display_db_error();
         }
     } else { // session do not exist so, create new anonymous session
+        $_SESSION['is_anonymous_user']           = true;
         $_SESSION['session_hash']           = $fingerprintkey;
         $_SESSION['session_user_id']        = 1;
         $_SESSION['session_user_name']      = '- [' . substr($PHPSESSID, 12, 8) . ']';

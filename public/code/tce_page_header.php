@@ -64,6 +64,7 @@ echo '<div class="body">' . K_NEWLINE;
                     echo "</td>";
                 }
                 echo "<td>";
+                    if(!array_key_exists('is_anonymous_user', $_SESSION)) {
                     echo "<span>
                                 <span>
                                     (" . @$_SESSION['session_user_name'] . ")
@@ -81,6 +82,7 @@ echo '<div class="body">' . K_NEWLINE;
                                     " . @$_SESSION['session_user_year_level'] . " LEVEL
                                 </span>
                             </span>";
+                        }
                 echo "</td>";
             echo "</tr>";
         echo "</table>";
