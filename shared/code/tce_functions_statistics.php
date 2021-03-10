@@ -72,25 +72,11 @@ function F_getArrayStatistics($data)
             }
 
             $stats['mean'][$set] = $stats['sum'][$set] / $stats['number'][$set];
-
-            $pre_adding = @$dataset[(@$stats['number'][$set] / 2)];
-            $adding     = @$dataset[@((@$stats['number'][$set] / 2) - 1)];
-
-            if (!is_numeric($adding)) {
-                $adding = 0;
-            }
-
-            if (!is_numeric($pre_adding)) {
-                $pre_adding = 0;
-            }
-
-
-            if (($stats['number'][$set] % 2) == 0) {
-                $stats['median'][$set] =
-                    ($pre_adding + ((integer) $adding)
-                ) / 2;
+            $nsdiv = (int)($stats['number'][$set] / 2);
+            if (($nsdiv > 0) && (($stats['number'][$set] % 2) == 0)) {
+                $stats['median'][$set] = (((float)$dataset[$nsdiv] + (float)$dataset[($nsdiv - 1)]) / 2);
             } else {
-                $stats['median'][$set] = $dataset[(($stats['number'][$set] - 1) / 2)];
+                $stats['median'][$set] = (float)$dataset[(($stats['number'][$set] - 1) / 2)];
             }
 
             $freq = array_count_values($datastr);

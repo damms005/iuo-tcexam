@@ -2,7 +2,7 @@
 //============================================================+
 // File name   : tce_show_result_user.php
 // Begin       : 2004-06-10
-// Last Update : 2018-09-05
+// Last Update : 2020-05-06
 //
 // Description : Display test results for specified user.
 //
@@ -15,7 +15,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -54,8 +54,7 @@ if (isset($_REQUEST['test_id']) and ($_REQUEST['test_id'] > 0)) {
     $test_id = intval($_REQUEST['test_id']);
     // check user's authorization
     if (!F_isAuthorizedUser(K_TABLE_TESTS, 'test_id', $test_id, 'test_user_id')) {
-        F_print_error('ERROR', $l['m_authorization_denied']);
-        exit;
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
     }
     $filter .= '&amp;test_id=' . $test_id . '';
 } else {
@@ -70,8 +69,7 @@ if (isset($_REQUEST['testuser_id'])) {
 if (isset($_REQUEST['user_id'])) {
     $user_id = intval($_REQUEST['user_id']);
     //if (!F_isAuthorizedEditorForUser($user_id)) {
-    //    F_print_error('ERROR', $l['m_authorization_denied']);
-    //    exit;
+    //	F_print_error('ERROR', $l['m_authorization_denied'], true);
     //}
     $filter .= '&amp;user_id=' . $user_id;
 } else {
@@ -91,20 +89,21 @@ if (isset($_POST['lock'])) {
 
 switch ($menu_mode) {
     case 'delete':{
-            F_stripslashes_formfields();
-            // ask confirmation
-            F_print_error('WARNING', $l['m_delete_confirm']);
-            echo '<div class="confirmbox">' . K_NEWLINE;
-            echo '<form action="' . $_SERVER['SCRIPT_NAME'] . '" method="post" enctype="multipart/form-data" id="form_delete">' . K_NEWLINE;
-            echo '<div>' . K_NEWLINE;
-            echo '<input type="hidden" name="testuser_id" id="testuser_id" value="' . $testuser_id . '" />' . K_NEWLINE;
-            F_submit_button('forcedelete', $l['w_delete'], $l['h_delete']);
-            F_submit_button('cancel', $l['w_cancel'], $l['h_cancel']);
-            echo '</div>' . K_NEWLINE;
-            echo '</form>' . K_NEWLINE;
-            echo '</div>' . K_NEWLINE;
-            break;
-        }
+        F_stripslashes_formfields();
+        // ask confirmation
+        F_print_error('WARNING', $l['m_delete_confirm']);
+        echo '<div class="confirmbox">'.K_NEWLINE;
+        echo '<form action="'.$_SERVER['SCRIPT_NAME'].'" method="post" enctype="multipart/form-data" id="form_delete">'.K_NEWLINE;
+        echo '<div>'.K_NEWLINE;
+        echo '<input type="hidden" name="testuser_id" id="testuser_id" value="'.$testuser_id.'" />'.K_NEWLINE;
+        F_submit_button('forcedelete', $l['w_delete'], $l['h_delete']);
+        F_submit_button('cancel', $l['w_cancel'], $l['h_cancel']);
+        echo '</div>'.K_NEWLINE;
+        echo F_getCSRFTokenField().K_NEWLINE;
+        echo '</form>'.K_NEWLINE;
+        echo '</div>'.K_NEWLINE;
+        break;
+    }
 
     case 'forcedelete':{
             F_stripslashes_formfields(); // Delete
@@ -262,8 +261,8 @@ if ($r = F_db_query($sql, $db)) {
 echo '</select>' . K_NEWLINE;
 
 // link for user selection popup
-$jsaction = 'selectWindow=window.open(\'tce_select_tests_popup.php?cid=test_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';
-echo '<a href="#" onclick="' . $jsaction . '" class="xmlbutton" title="' . $l['w_select'] . '">...</a>';
+$jsaction = 'selectWindow=window.open(\'tce_select_tests_popup.php?cid=test_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\'); return false;';
+echo '<a href="#" onclick="'.$jsaction.'" class="xmlbutton" title="'.$l['w_select'].'">...</a>';
 
 echo '</span>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
@@ -385,8 +384,8 @@ if (isset($teststat) and !empty($teststat)) {
 
     echo '</div>' . K_NEWLINE;
 }
-
-echo '</form>' . K_NEWLINE;
+echo F_getCSRFTokenField().K_NEWLINE;
+echo '</form>'.K_NEWLINE;
 
 echo '</div>' . K_NEWLINE;
 

@@ -176,8 +176,8 @@ echo '</datalist>' . K_NEWLINE;
 // echo '</select>'.K_NEWLINE;
 
 // link for user selection popup
-$jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';
-echo '<a href="#" onclick="' . $jsaction . '" class="xmlbutton" title="' . $l['w_select'] . '">...</a>';
+$jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\'); return false;';
+echo '<a href="#" onclick="'.$jsaction.'" class="xmlbutton" title="'.$l['w_select'].'">...</a>';
 
 echo '</span>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
@@ -203,10 +203,10 @@ echo '<div class="row">' . K_NEWLINE;
 echo '<br />' . K_NEWLINE;
 // show upload button
 F_submit_button('upload', $l['w_upload'], $l['h_submit_file']);
-echo '</div>' . K_NEWLINE;
-
-echo '</form>' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
+echo '</div>'.K_NEWLINE;
+echo F_getCSRFTokenField().K_NEWLINE;
+echo '</form>'.K_NEWLINE;
+echo '</div>'.K_NEWLINE;
 
 // hide unused file upload fields
 echo '<script type="text/javascript">' . K_NEWLINE;

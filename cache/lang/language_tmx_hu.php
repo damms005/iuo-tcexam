@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: hu
-// DATE: 2015-06-19 16:46:38
+// DATE: 2020-01-03 12:05:06
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='a csoport törlése sikeres volt';
 $tmx['m_group_updated']='a csoport adatainak frissítése sikeres';
 $tmx['m_importing_complete']='az XML importálása sikeres volt';
 $tmx['m_login_wrong']='rossz felhasználói név / jelszó';
-$tmx['m_mailerror_authenticate']='[SMTP] Nem lehet azonosítani.';
-$tmx['m_mailerror_connect_host']='[SMTP] Nem lehet kapcsolódni az SMTP szerverhez.';
-$tmx['m_mailerror_data_not_accepted']='[SMTP] Adat elutasítva.';
-$tmx['m_mailerror_encoding']='Ismeretlen kódolás:';
-$tmx['m_mailerror_execute']='Nem lehet végrehajtani:';
-$tmx['m_mailerror_file_access']='Nem lehet elérni a fájlt:';
-$tmx['m_mailerror_file_open']='Nem lehet megnyitni a fájlt:';
-$tmx['m_mailerror_from_failed']='A következő From címek nem működtek:';
-$tmx['m_mailerror_instantiate']='Nem lehet használni a levélküldési funkciót.';
-$tmx['m_mailerror_mailer_not_supported']='A levelezés nem támogatott.';
-$tmx['m_mailerror_provide_address']='Legalább egy e-mail címet meg kell adni.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] A következő e-mail címek tévesek, hibásak:';
-$tmx['m_mailerror_signing']='Aláírás Hiba: ';
-$tmx['m_mailerror_smtp_error']='SMTP szerver hiba: ';
-$tmx['m_mailerror_empty_message']='Üres levéltörzs';
-$tmx['m_mailerror_invalid_address']='Valótlan cím';
-$tmx['m_mailerror_variable_set']='Változó beállítása vagy visszaállítása nem lehetséges: ';
+$tmx['m_mailerror_authenticate']='SMTP hiba: az azonosítás sikertelen.';
+$tmx['m_mailerror_connect_host']='SMTP hiba: nem lehet kapcsolódni az SMTP-szerverhez.';
+$tmx['m_mailerror_data_not_accepted']='SMTP hiba: adatok visszautasítva.';
+$tmx['m_mailerror_empty_message']='Üres az üzenettörzs.';
+$tmx['m_mailerror_encoding']='Ismeretlen kódolás: ';
+$tmx['m_mailerror_execute']='Nem lehet végrehajtani: ';
+$tmx['m_mailerror_file_access']='A következő fájl nem elérhető: ';
+$tmx['m_mailerror_file_open']='Fájl hiba: a következő fájlt nem lehet megnyitni: ';
+$tmx['m_mailerror_from_failed']='A feladóként megadott következő cím hibás: ';
+$tmx['m_mailerror_instantiate']='A PHP mail() függvényt nem sikerült végrehajtani.';
+$tmx['m_mailerror_invalid_address']='Érvénytelen cím: ';
+$tmx['m_mailerror_mailer_not_supported']=' a mailer-osztály nem támogatott.';
+$tmx['m_mailerror_provide_address']='Legalább egy címzettet fel kell tüntetni.';
+$tmx['m_mailerror_recipients_failed']='SMTP hiba: a címzettként megadott következő címek hibásak: ';
+$tmx['m_mailerror_signing']='Hibás aláírás: ';
+$tmx['m_mailerror_smtp_connect_failed']='Hiba az SMTP-kapcsolatban.';
+$tmx['m_mailerror_smtp_error']='SMTP-szerver hiba: ';
+$tmx['m_mailerror_variable_set']='A következő változók beállítása nem sikerült: ';
+$tmx['m_mailerror_extension_missing']='Bővítmény hiányzik: ';
 $tmx['m_new_window_link']='Új böngésző ablak megnyitása';
 $tmx['m_no_test_available']='most nincs elérhető teszt!';
 $tmx['m_process_completed']='a folyamat befejeződött';
@@ -629,7 +631,7 @@ $tmx['w_sslcerts']='SSL certificates';
 $tmx['t_sslcerts']='SSL Certificates';
 $tmx['w_sslcert']='SSL certificate';
 $tmx['hp_import_ssl_certificates']='With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.';
-$tmx['m_ssl_certificate_required']='To acccess this page you need a valid SSL certificate client.';
+$tmx['m_ssl_certificate_required']='To access this page you need a valid SSL certificate client.';
 $tmx['w_graph']='graph';
 
 // --- EOF ---

@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: br
-// DATE: 2015-06-19 16:46:25
+// DATE: 2020-01-03 12:04:47
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -84,7 +84,7 @@ $tmx['h_questions_unanswered']='perguntas não respondidas';
 $tmx['h_questions_undisplayed']='perguntas não visualizadas';
 $tmx['h_questions_unrated']='perguntas não avaliadas';
 $tmx['h_random_answers']='se selecionado, extrei aleatóriamente as múltiplas respostas relacionadas com cada questão';
-$tmx['h_random_questions']='se selecionada, extrei aleatóriamente as respostas realcionads com cada tópico escolhido';
+$tmx['h_random_questions']='se selecionada, extrei aleatóriamente as preguntas realcionads com cada tópico escolhido';
 $tmx['h_regcode']='matrícula, número de registro do usuário';
 $tmx['h_regdate']='data de registro do usuário';
 $tmx['h_result']='mostra os resultados do teste';
@@ -162,23 +162,25 @@ $tmx['m_group_deleted']='o grupo foi removido da base de dados';
 $tmx['m_group_updated']='os dados do usuário foram atualizados';
 $tmx['m_importing_complete']='importação do XML completada';
 $tmx['m_login_wrong']='none de usuário / senha incorreto';
-$tmx['m_mailerror_authenticate']='[SMTP] Impossível Autenticar.';
-$tmx['m_mailerror_connect_host']='[SMTP] Impossível conectar-se ao servidor SMTP.';
-$tmx['m_mailerror_data_not_accepted']='[SMTP] Dados não aceitos.';
-$tmx['m_mailerror_encoding']='Codificação desconhecida:';
-$tmx['m_mailerror_execute']='Impossível Executar:';
-$tmx['m_mailerror_file_access']='Impossível acessar o arquivo:';
-$tmx['m_mailerror_file_open']='Impossível abrir o arquivo:';
-$tmx['m_mailerror_from_failed']='O seguinte endereço de Origem falhou:';
-$tmx['m_mailerror_instantiate']='Impossível iniciar a função de e-mail.';
-$tmx['m_mailerror_mailer_not_supported']='Envio de e-mail não suportado.';
+$tmx['m_mailerror_authenticate']='Erro de SMTP: Não foi possível autenticar.';
+$tmx['m_mailerror_connect_host']='Erro de SMTP: Não foi possível conectar ao servidor SMTP.';
+$tmx['m_mailerror_data_not_accepted']='Erro de SMTP: Dados rejeitados.';
+$tmx['m_mailerror_empty_message']='Mensagem vazia';
+$tmx['m_mailerror_encoding']='Codificação desconhecida: ';
+$tmx['m_mailerror_execute']='Não foi possível executar: ';
+$tmx['m_mailerror_file_access']='Não foi possível acessar o arquivo: ';
+$tmx['m_mailerror_file_open']='Erro de Arquivo: Não foi possível abrir o arquivo: ';
+$tmx['m_mailerror_from_failed']='Os seguintes remetentes falharam: ';
+$tmx['m_mailerror_instantiate']='Não foi possível instanciar a função mail.';
+$tmx['m_mailerror_invalid_address']='Endereço de e-mail inválido: ';
+$tmx['m_mailerror_mailer_not_supported']=' mailer não é suportado.';
 $tmx['m_mailerror_provide_address']='Você deve informar pelo menos um destinatário.';
-$tmx['m_mailerror_recipients_failed']='[SMTP] Os seguintes destinatários geraram erro:';
+$tmx['m_mailerror_recipients_failed']='Erro de SMTP: Os seguintes destinatários falharam: ';
 $tmx['m_mailerror_signing']='Erro de Assinatura: ';
-$tmx['m_mailerror_smtp_error']='erro no servidor SMTP: ';
-$tmx['m_mailerror_empty_message']='Corpo da mensagem em branco';
-$tmx['m_mailerror_invalid_address']='Endereço inválido';
-$tmx['m_mailerror_variable_set']='Não é possível definir ou redefinir variável: ';
+$tmx['m_mailerror_smtp_connect_failed']='SMTP Connect() falhou.';
+$tmx['m_mailerror_smtp_error']='Erro de servidor SMTP: ';
+$tmx['m_mailerror_variable_set']='Não foi possível definir ou redefinir a variável: ';
+$tmx['m_mailerror_extension_missing']='Extensão não existe: ';
 $tmx['m_new_window_link']='este link abrirá uma nova janela de navegação';
 $tmx['m_no_test_available']='Não há testes disponíveis.';
 $tmx['m_process_completed']='processo completo';
@@ -626,7 +628,7 @@ $tmx['w_sslcerts']='SSL certificates';
 $tmx['t_sslcerts']='SSL Certificates';
 $tmx['w_sslcert']='SSL certificate';
 $tmx['hp_import_ssl_certificates']='With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.';
-$tmx['m_ssl_certificate_required']='To acccess this page you need a valid SSL certificate client.';
+$tmx['m_ssl_certificate_required']='To access this page you need a valid SSL certificate client.';
 $tmx['w_graph']='graph';
 
 // --- EOF ---

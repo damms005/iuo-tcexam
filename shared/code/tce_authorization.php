@@ -425,8 +425,6 @@ if (isset($_POST['testpswaction']) and ($_POST['testpswaction'] == 'login') and 
 
 function load_custom_ui()
 {
-
-    var_dump( K_TCEXAM_STYLE_CUSTOM);
     if (!isset($custom_style) or empty($custom_style)) {
         $custom_style = K_TCEXAM_STYLE_CUSTOM;
     }

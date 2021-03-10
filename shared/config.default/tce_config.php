@@ -2,13 +2,13 @@
 //============================================================+
 // File name   : tce_config.php
 // Begin       : 2002-02-24
-// Last Update : 2019-04-30
+// Last Update : 2020-04-01
 //
 // Description : Shared configuration file.
 //
 // Author: Nicola Asuni
 //
-// (c) Copyright 2004-2019:
+// (c) Copyright 2004-2020:
 //               Nicola Asuni
 //               Tecnick.com LTD
 //               UK
@@ -16,7 +16,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2019 Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -32,7 +32,7 @@
 /**
  * TCExam version (do not change).
  */
-define('K_TCEXAM_VERSION', '14.1.10');
+define ('K_TCEXAM_VERSION', file_get_contents('../../VERSION'));
 
 /**
  * 2-letters code for default language.
@@ -60,8 +60,8 @@ define('K_AVAILABLE_LANGUAGES', serialize(array(
     'es' => 'Spanish',
     'fa' => 'Farsi',
     'fr' => 'French',
-    'hi' => 'Hindi',
     'he' => 'Hebrew',
+    'hi' => 'Hindi',
     'hu' => 'Hungarian',
     'id' => 'Indonesian',
     'it' => 'Italian',
@@ -73,6 +73,7 @@ define('K_AVAILABLE_LANGUAGES', serialize(array(
     'ro' => 'Romanian',
     'ru' => 'Russian',
     'tr' => 'Turkish',
+    'ur' => 'Urdu',
     'vn' => 'Vietnamese'
 )));
 
@@ -303,7 +304,7 @@ if (PHP_VERSION_ID < 50300) {
 // --- get 'post', 'get' and 'cookie' variables
 foreach ($_REQUEST as $postkey => $postvalue) {
     if (($postkey[0] != '_') and (!preg_match('/[A-Z]/', $postkey[0]))) {
-        if (!function_exists('get_magic_quotes_gpc') or !get_magic_quotes_gpc()) {
+        if (!function_exists('get_magic_quotes_gpc') or (PHP_VERSION_ID >= 70400) or !get_magic_quotes_gpc()) {
             $postvalue = addSlashesArray($postvalue);
             $_REQUEST[$postkey] = $postvalue;
             if (isset($_GET[$postkey])) {

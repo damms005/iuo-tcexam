@@ -2,7 +2,8 @@
 //============================================================+
 // File name   : tce_show_result_allusers.php
 // Begin       : 2004-06-10
-// Last Update : 2018-09-01
+// Last Update : 2020-05-06
+//
 // Description : Display test results summary for all users.
 //
 // Author: Nicola Asuni
@@ -14,7 +15,7 @@
 //               info@tecnick.com
 //
 // License:
-//    Copyright (C) 2004-2018 Nicola Asuni - Tecnick.com LTD
+//    Copyright (C) 2004-2020 Nicola Asuni - Tecnick.com LTD
 //    See LICENSE.TXT file for more information.
 //============================================================+
 
@@ -58,8 +59,7 @@ if (isset($_REQUEST['test_id']) and ($_REQUEST['test_id'] > 0)) {
     $test_id = intval($_REQUEST['test_id']);
     // check user's authorization
     if (!F_isAuthorizedUser(K_TABLE_TESTS, 'test_id', $test_id, 'test_user_id')) {
-        F_print_error('ERROR', $l['m_authorization_denied']);
-        exit;
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
     }
     $filter .= '&amp;test_id=' . $test_id . '';
     $test_group_ids = F_getTestGroups($test_id);
@@ -243,8 +243,8 @@ if ($r = F_db_query($sql, $db)) {
 echo '</select>' . K_NEWLINE;
 
 // link for user selection popup
-$jsaction = 'selectWindow=window.open(\'tce_select_tests_popup.php?cid=test_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';
-echo '<a href="#" onclick="' . $jsaction . '" class="xmlbutton" title="' . $l['w_select'] . '">...</a>';
+$jsaction = 'selectWindow=window.open(\'tce_select_tests_popup.php?cid=test_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\'); return false;';
+echo '<a href="#" onclick="'.$jsaction.'" class="xmlbutton" title="'.$l['w_select'].'">...</a>';
 
 echo '</span>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
@@ -332,8 +332,8 @@ echo '</datalist>' . K_NEWLINE;
 // echo '</select>'.K_NEWLINE;
 
 // link for user selection popup
-$jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\');return false;';
-echo '<a href="#" onclick="' . $jsaction . '" class="xmlbutton" title="' . $l['w_select'] . '">...</a>';
+$jsaction = 'selectWindow=window.open(\'tce_select_users_popup.php?cid=user_id\', \'selectWindow\', \'dependent, height=600, width=800, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no\'); return false;';
+echo '<a href="#" onclick="'.$jsaction.'" class="xmlbutton" title="'.$l['w_select'].'">...</a>';
 
 echo '</span>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
@@ -587,13 +587,13 @@ if (isset($_REQUEST['sel'])) {
     }
 }
 
-echo '<input type="hidden" name="sel" id="sel" value="1" />' . K_NEWLINE;
-echo '<input type="hidden" name="order_field" id="order_field" value="' . $order_field . '" />' . K_NEWLINE;
-echo '<input type="hidden" name="orderdir" id="orderdir" value="' . $orderdir . '" />' . K_NEWLINE;
-echo '<input type="hidden" name="itemcount" id="itemcount" value="' . $itemcount . '>" />' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
-
-echo '</form>' . K_NEWLINE;
+echo '<input type="hidden" name="sel" id="sel" value="1" />'.K_NEWLINE;
+echo '<input type="hidden" name="order_field" id="order_field" value="'.$order_field.'" />'.K_NEWLINE;
+echo '<input type="hidden" name="orderdir" id="orderdir" value="'.$orderdir.'" />'.K_NEWLINE;
+echo '<input type="hidden" name="itemcount" id="itemcount" value="'.$itemcount.'>" />'.K_NEWLINE;
+echo '</div>'.K_NEWLINE;
+echo F_getCSRFTokenField().K_NEWLINE;
+echo '</form>'.K_NEWLINE;
 
 echo '</div>' . K_NEWLINE;
 

@@ -257,21 +257,11 @@ div.header div.left {
 div.header div.right {
 	border: 0px none;
 	text-align: right;
-<<<<<<< HEAD
-<<<<<<< Updated upstream
 	width: 400px;
-=======
-	/* width: 400px; */
-=======
->>>>>>> ui-revamp
 	position: absolute;
 	margin: 13px 2px auto auto;
 	right: 2px;
 	z-index: 2;
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> ui-revamp
 }
 
 
