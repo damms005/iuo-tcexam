@@ -41,8 +41,6 @@
 /**
  */
 
-register_shutdown_function('load_custom_ui');
-
 require_once '../config/tce_config.php';
 require_once '../../shared/code/tce_functions_authorization.php';
 require_once '../../shared/code/tce_functions_session.php';

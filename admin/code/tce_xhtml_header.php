@@ -84,6 +84,15 @@ echo '<meta name="keywords" content="'.htmlspecialchars($thispage_keywords, ENT_
 echo '<link rel="stylesheet" href="'.$thispage_style.'" type="text/css" />'.K_NEWLINE;
 // echo '<link rel="stylesheet" href="'. K_BOOTSTRAP_CSS .'" type="text/css" />'.K_NEWLINE;
 echo '<link rel="shortcut icon" href="'.$thispage_icon.'" />'.K_NEWLINE;
+
+/****************************************************************
+***********C U S T O M    S T Y L E S    S T A R T S ************
+****************************************************************/
+require __DIR__ . "/../../shared/code/tce_custom_ui.php";
+/****************************************************************
+************C U S T O M    S T Y L E S    E N D S ***************
+****************************************************************/
+
 // calendar
 
 /****************************************************************
