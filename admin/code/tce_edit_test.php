@@ -646,13 +646,12 @@ break;
                             F_display_db_error(false);
                         }
                     }
+                }else {
+                    echo "
+                    <b>
+                        <code>Possible error: no user group(s) to take this test. Please set 'groups' options</code>
+                    </b>";
                 }
-            }else {
-            	echo "
-				<b>
-					<code>Possible error: no user group(s) to take this test. Please set 'groups' options</code>
-				</b>";
-            }
 
                 // update authorized SSL certificates
                 if (!empty($sslcerts)) {
@@ -720,6 +719,7 @@ break;
                         F_display_db_error();
                     }
                 }
+            }
             break;
         }
 
