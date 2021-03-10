@@ -360,7 +360,9 @@ if ((K_AUTH_SSL_LEVEL !== false) and (K_AUTH_SSL_LEVEL <= $pagelevel)) {
 if ($pagelevel) { // pagelevel=0 means access to anonymous user
     // pagelevel >= 1
     if ($_SESSION['session_user_level'] < $pagelevel) { //check user level
-        echo "<div style='background: red; color: white; margin-top: 20px; margin-bottom: 20px; padding:10'>You do not have access to the required page. Please login to the public page</div>";
+        if($logged){
+            echo "<div style='background: red; color: white; margin-top: 20px; margin-bottom: 20px; padding:10'>You do not have access to the required page. You may visit the public page: it is accessible to all access levels</div>";
+        }
         // To gain access to a specific resource, the user's level must be equal or greater to the one specified for the requested resource.
         F_login_form(); //display login form
     }
