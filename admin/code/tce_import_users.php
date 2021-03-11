@@ -604,7 +604,11 @@ function F_import_tsv_users($tsvfile)
 		throw new Exception("Cannot prepare statement: {$connection_for_data_update_without_password->error}");
 	}
 
-	$password = getPasswordHash($userdata[2]);
+	$connection_for_data_insertion->begin_transaction();
+	$connection_for_data_update_with_password->begin_transaction();
+	$connection_for_data_update_without_password->begin_transaction();
+
+	$password = null;
 
 	$new_addition = 0;
 	$updates      = 0;
@@ -617,6 +621,11 @@ function F_import_tsv_users($tsvfile)
 		$userdata = array_map(function ($value) {
 			return $value ? trim($value) : null;
 		}, $userdata);
+
+		//hashing takes significant time when run multiple times. Password is same for all users @IUO
+		if (is_null($password)) {
+			$password = getPasswordHash($userdata[2]);
+		}
 
 		// set some default values
 		if (empty($userdata[4])) {
@@ -664,8 +673,8 @@ function F_import_tsv_users($tsvfile)
 			if (can_add_this_record($existing_user_data)) {
 				if (!empty($userdata[2])) {
 					$stmt_update_with_password->bind_param(str_repeat('s', 19),
-						$userdata[1],
 						$password,
+						$userdata[1],
 						$userdata[3],
 						$userdata[4],
 						$userdata[5],
@@ -722,7 +731,7 @@ function F_import_tsv_users($tsvfile)
 
 			$stmt->bind_param(str_repeat('s', count($userdata)),
 				$userdata[1],
-				$userdata[2],
+				$password,
 				$userdata[3],
 				$userdata[4],
 				$userdata[5],
@@ -746,6 +755,10 @@ function F_import_tsv_users($tsvfile)
 			}
 		}
 	}
+
+	$connection_for_data_insertion->commit();
+	$connection_for_data_update_with_password->commit();
+	$connection_for_data_update_without_password->commit();
 
 	echo "
 	<pre>New additions: $new_addition</pre>
