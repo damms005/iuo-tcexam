@@ -216,7 +216,7 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                     $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
                     $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
                     $_SESSION['session_user_passport'] = $m['user_passport'];
-                    $_SESSION['session_user_department'] = $departments[ $m['user_department']];
+                    $_SESSION['session_user_department'] = $m['user_department'];
                     $_SESSION['session_user_year_level'] = $year_level[$m['user_year_level']];
                     $_SESSION['session_test_login'] = '';
                     // read client cookie
@@ -252,7 +252,7 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                                 $_SESSION['session_user_firstname'] = urlencode($md['user_firstname']);
                                 $_SESSION['session_user_lastname'] = urlencode($md['user_lastname']);
                                 $_SESSION['session_user_passport'] = $md['user_passport'];
-                                $_SESSION['session_user_department'] =$departments[ $md['user_department']];
+                                $_SESSION['session_user_department'] = $md['user_department'];
                                 $_SESSION['session_user_year_level'] =$year_level[ $md['user_year_level']];
                                 $_SESSION['session_last_visit'] = 0;
                                 $_SESSION['session_test_login'] = '';
@@ -312,7 +312,7 @@ if (isset($_POST['logaction']) and ($_POST['logaction'] == 'login') and isset($_
                             $_SESSION['session_user_firstname'] = urlencode($altusr['user_firstname']);
                             $_SESSION['session_user_lastname'] = urlencode($altusr['user_lastname']);
                             $_SESSION['session_user_passport'] = $altusr['user_passport'];
-                            $_SESSION['session_user_department'] =$departments[ $altusr['user_department']];
+                            $_SESSION['session_user_department'] = $altusr['user_department'];
                             $_SESSION['session_user_year_level'] =$year_level[ $altusr['user_year_level']];
                             $_SESSION['session_last_visit'] = 0;
                             $_SESSION['session_test_login'] = '';

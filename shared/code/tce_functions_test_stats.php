@@ -1066,7 +1066,7 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_test.php');
     require_once('../../shared/code/tce_functions_statistics.php');
-    global $db, $l, $departments, $colleges, $year_level;
+    global $db, $l, $year_level;
     $test_id = intval($test_id);
     $group_id = intval($group_id);
     $user_id = intval($user_id);
@@ -1172,8 +1172,8 @@ function F_getAllUsersTestStat($test_id, $group_id = 0, $user_id = 0, $startdate
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_lastname'] = $mr['user_lastname'];
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_firstname'] = $mr['user_firstname'];
 
-            $data['testuser']['\''.$mr['testuser_id'].'\'']['user_department'] = $departments[ $mr['user_department']];
-            $data['testuser']['\''.$mr['testuser_id'].'\'']['user_college'] =$colleges[ $mr['user_college']];
+            $data['testuser']['\''.$mr['testuser_id'].'\'']['user_department'] = $mr['user_department'];
+            $data['testuser']['\''.$mr['testuser_id'].'\'']['user_college'] =get_college_for_department($mr['user_department']);
             $data['testuser']['\''.$mr['testuser_id'].'\'']['user_year_level'] = $year_level[$mr['user_year_level']];
 
             $data['testuser']['\''.$mr['testuser_id'].'\'']['total_score'] = $mr['total_score'];

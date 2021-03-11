@@ -63,7 +63,7 @@ function F_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $group_
  */
 function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $group_id = 0, $andwhere = '', $searchterms = '')
 {
-    global $l, $db, $colleges, $departments, $year_level;
+    global $l, $db, $year_level;
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_page.php');
     require_once('../../shared/code/tce_functions_form.php');
@@ -171,8 +171,8 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars($m['user_regnumber'], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 echo '<td>&nbsp;'.$m['user_level'].'</td>'.K_NEWLINE;
 
-                echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(@$colleges[$m['user_college']], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
-                echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(@$departments[$m['user_department']], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
+                echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(get_college_for_department($m['user_department']), ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
+                echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars($m['user_department'], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
                 echo '<td style="text-align:'.$txtalign.';">&nbsp;'.htmlspecialchars(@$year_level[$m['user_year_level']], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;
 
                 echo '<td>&nbsp;'.htmlspecialchars($m['user_regdate'], ENT_NOQUOTES, $l['a_meta_charset']).'</td>'.K_NEWLINE;

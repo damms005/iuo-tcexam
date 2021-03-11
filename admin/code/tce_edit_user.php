@@ -505,8 +505,7 @@ echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '',
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
 
-echo getFormRowSelectBox('user_department', 'department', '', '', $user_department, $departments);
-echo getFormRowSelectBox('user_college', 'college', '', '', $user_college, $colleges);
+echo getFormRowSelectBox('user_department', 'department', '', '', $user_department, get_departments());
 echo getFormRowSelectBox('user_year_level', 'year level', '', '', $user_level, $year_level);
 echo getFormRowTextInput('user_passport', 'passport', '', '', $user_passport, '', 255, false, false, false);
 

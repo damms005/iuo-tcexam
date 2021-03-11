@@ -61,7 +61,7 @@ echo F_tsv_export_users();
  */
 function F_tsv_export_users()
 {
-    global $l, $db, $departments, $colleges, $year_level ;
+    global $l, $db, $year_level ;
     require_once('../config/tce_config.php');
 
     $tsv = ''; // TSV data to be returned
@@ -110,8 +110,8 @@ function F_tsv_export_users()
             $tsv .= K_TAB.$m['user_ip'];
             $tsv .= K_TAB.$m['user_firstname'];
             $tsv .= K_TAB.$m['user_lastname'];
-            $tsv .= K_TAB.$departments[ $m['user_department']];
-            $tsv .= K_TAB.$colleges[ $m['user_college']];
+            $tsv .= K_TAB.$m['user_department'];
+            $tsv .= K_TAB.get_college_for_department($m['user_department']);
             $tsv .= K_TAB.$year_level[ $m['user_year_level']];
             $tsv .= K_TAB.$m['user_passport'];
             $tsv .= K_TAB.substr($m['user_birthdate'], 0, 10);

@@ -96,7 +96,6 @@ code, pre{
 		<tr>
 			<td>
 				<form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" id="form_importusers">
-
 				<div class="row">
 				<span class="label">
 				<label for="userfile"><?php echo $l['w_upload_file']; ?></label>
@@ -125,14 +124,13 @@ code, pre{
 				</div>
 
 				<div class="row">
-				<?php
+                    <?php
 // show buttons by case
 F_submit_button("upload", $l['w_upload'], $l['h_submit_file']);
 echo F_getCSRFTokenField() . K_NEWLINE;
 ?>
-
+                    <span>Note that any existing user (matched by any of user_name, user_regnumber, or user_ssn) will be updated with the new data. Password field is updated only if it is specified (i.e. you cannot "remove" user password by simply specifying blank value in the uploaded file)</span>
 				</div>
-
 				</form>
 			</td>
 		</tr>
@@ -151,10 +149,10 @@ echo F_getCSRFTokenField() . K_NEWLINE;
 		</tr>
 		<tr>
 			<td>
-				<pre style="text-align:left">Allowed colleges ('as is')<?php print_r($colleges);?></pre>
+				<pre style="text-align:left">Allowed colleges ('as is')<?php print_r(get_colleges());?></pre>
 			</td>
 			<td>
-				<pre style="text-align:left">Allowed departments ('as is')<?php print_r($departments);?></pre>
+				<pre style="text-align:left">Allowed departments ('as is')<?php print_r(get_departments());?></pre>
             </td>
 		</tr>
 	</table>
@@ -533,7 +531,7 @@ class XMLUserImporter
  */
 function F_import_tsv_users($tsvfile)
 {
-	global $l, $db, $colleges, $departments, $year_level;
+	global $db, $year_level;
 	require_once '../config/tce_config.php';
 
 	// get file content as array
@@ -542,31 +540,105 @@ function F_import_tsv_users($tsvfile)
 		return false;
 	}
 
-	// for each row
+	//first row us description. Pop it off
+	array_shift($tsvrows);
+
+	$resource = F_db_query("SELECT `user_id`, `user_level`, `user_name`, `user_regnumber`, `user_ssn` FROM " . K_TABLE_USERS, $db);
+
+	if ($resource === false) {
+		F_display_db_error(false);
+		return false;
+	}
+
+	$existing_users_keyed_by_ssn       = [];
+	$existing_users_keyed_by_user_id   = [];
+	$existing_users_keyed_by_usernames = [];
+	$existing_users_keyed_by_regnumber = [];
+
+	populate_existing_users($resource, $existing_users_keyed_by_ssn, $existing_users_keyed_by_user_id, $existing_users_keyed_by_usernames, $existing_users_keyed_by_regnumber);
+
+	$update_statement_with_password    = get_record_update_query_with_password();
+	$update_statement_without_password = get_record_update_query_without_password();
+
+	$data_insertion_prepared_statement = 'INSERT INTO ' . K_TABLE_USERS . ' (
+		user_name,
+		user_password,
+		user_email,
+		user_regdate,
+		user_ip,
+		user_firstname,
+		user_lastname,
+		user_college,
+		user_department,
+		user_year_level,
+		user_passport,
+		user_birthdate,
+		user_birthplace,
+		user_regnumber,
+		user_ssn,
+		user_level,
+		user_verifycode,
+		user_otpkey
+		)
+		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+
+	if (!$connection_for_data_insertion = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
+		die('<h2>Unable to connect to the database!</h2>');
+	}
+	if (!$connection_for_data_update_with_password = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
+		die('<h2>Unable to connect to the database!</h2>');
+	}
+	if (!$connection_for_data_update_without_password = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
+		die('<h2>Unable to connect to the database!</h2>');
+	}
+
+	if (($stmt = $connection_for_data_insertion->prepare($data_insertion_prepared_statement)) === false) {
+		throw new Exception("Cannot prepare statement: {$connection_for_data_insertion->error}");
+	}
+
+	if (($stmt_update_with_password = $connection_for_data_update_with_password->prepare($update_statement_with_password)) === false) {
+		throw new Exception("Cannot prepare statement: {$connection_for_data_update_with_password->error}");
+	}
+
+	if (($stmt_update_without_password = $connection_for_data_update_without_password->prepare($update_statement_without_password)) === false) {
+		throw new Exception("Cannot prepare statement: {$connection_for_data_update_without_password->error}");
+	}
+
+	$password = getPasswordHash($userdata[2]);
+
 	$new_addition = 0;
 	$updates      = 0;
+	$row_count    = 0;
 	foreach ($tsvrows as $item => $rowdata) {
-		// get user data into array
+		$row_count++;
+
 		$userdata = explode("\t", $rowdata);
+
+		$userdata = array_map(function ($value) {
+			return $value ? trim($value) : null;
+		}, $userdata);
 
 		// set some default values
 		if (empty($userdata[4])) {
 			$userdata[4] = date(K_TIMESTAMP_FORMAT);
 		}
 
-		if (empty($userdata[5])) {
-			$userdata[5] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
-		}
+		$userdata[5] = 'n/a';
 
 		//group
 		$userdata[19] = 'students';
 
 		//transformations
-		$userdata[8]  = get_item_index($userdata[8], $colleges);
-		$userdata[9]  = get_item_index($userdata[9], $departments);
+		$userdata[9]  = $userdata[9];
 		$userdata[10] = get_item_index($userdata[10], $year_level);
 
-		// user level
+		if (!empty($userdata[9])) {
+			if (!is_valid_department($userdata[9])) {
+				F_print_error('error', "Invalid department: '{$userdata[9]}'");
+				return false;
+			}
+		}
+
 		if (!isset($userdata[16]) or (strlen($userdata[16]) == 0)) {
 			$userdata[16] = 1;
 		}
@@ -584,171 +656,93 @@ function F_import_tsv_users($tsvfile)
 				break;
 			}
 		}
-		// check if user already exist
-		$sql = 'SELECT user_id,user_level
-			FROM ' . K_TABLE_USERS . '
-			WHERE user_name=\'' . F_escape_sql($db, $userdata[1]) . '\'';
-		$sql .= (empty($userdata[14])) ? "" : ' OR user_regnumber=' . F_empty_to_null($userdata[14]);
-		$sql .= (empty($userdata[15])) ? "" : ' OR user_ssn=' . F_empty_to_null($userdata[15]);
-		$sql .= ' LIMIT 1';
 
-		//var_dump($sql);
+		if (user_already_exists($userdata, $existing_users_keyed_by_usernames, $existing_users_keyed_by_regnumber, $existing_users_keyed_by_ssn, $userdata)) {
+			$updates++;
+			$existing_user_data = get_existing_user($userdata, $existing_users_keyed_by_usernames, $existing_users_keyed_by_regnumber, $existing_users_keyed_by_ssn);
+			$user_id            = $existing_user_data['user_id'];
+			if (can_add_this_record($existing_user_data)) {
+				if (!empty($userdata[2])) {
+					$stmt_update_with_password->bind_param(str_repeat('s', 19),
+						$userdata[1],
+						$password,
+						$userdata[3],
+						$userdata[4],
+						$userdata[5],
+						$userdata[6],
+						$userdata[7],
+						$userdata[8],
+						$userdata[9],
+						$userdata[10],
+						$userdata[11],
+						$userdata[12],
+						$userdata[13],
+						$userdata[14],
+						$userdata[15],
+						$userdata[16],
+						$userdata[17],
+						$userdata[18],
+						$user_id);
 
-		if ($r = F_db_query($sql, $db)) {
-			if ($m = F_db_fetch_array($r)) {
-				// the user has been added already
-				$updates++;
-				$user_id = $m['user_id'];
-				if (($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) or ($_SESSION['session_user_level'] > $m['user_level'])) {
-					//update user data
-					$sqlu = 'UPDATE ' . K_TABLE_USERS . ' SET
-						user_name=\'' . F_escape_sql($db, $userdata[1]) . '\',';
-					// update password only if it is specified
-					if (!empty($userdata[2])) {
-						$sqlu .= ' user_password=\'' . F_escape_sql($db, getPasswordHash($userdata[2])) . '\',';
-					}
-					$sqlu .= '
-						user_email=' . F_empty_to_null($userdata[3]) . ',
-						user_regdate=\'' . F_escape_sql($db, $userdata[4]) . '\',
-						user_ip=\'' . F_escape_sql($db, $userdata[5]) . '\',
-						user_firstname=' . F_empty_to_null($userdata[6]) . ',
-						user_lastname=' . F_empty_to_null($userdata[7]) . ',
-
-                        user_college=' . F_empty_to_null($userdata[8]) . ',
-                        user_department=' . F_empty_to_null($userdata[9]) . ',
-                        user_year_level=' . F_empty_to_null($userdata[10]) . ',
-                        user_passport=' . F_empty_to_null($userdata[11]) . ',
-
-						user_birthdate=' . F_empty_to_null($userdata[12]) . ',
-						user_birthplace=' . F_empty_to_null($userdata[13]) . ',
-						user_regnumber=' . F_empty_to_null($userdata[14]) . ',
-						user_ssn=' . F_empty_to_null($userdata[15]) . ',
-						user_level=\'' . intval($userdata[16]) . '\',
-						user_verifycode=' . F_empty_to_null($userdata[17]) . ',
-						user_otpkey=' . F_empty_to_null($userdata[18]) . '
-						WHERE user_id=' . $user_id . '';
-					//var_dump($sqlu);
-					if (!$ru = F_db_query($sqlu, $db)) {
-						F_display_db_error(false);
-						return false;
+					if ($stmt_update_with_password->execute() === false) {
+						throw new Exception("Error running query: {$stmt_update_with_password->error} (row {$row_count})");
 					}
 				} else {
-					// no user is updated, so empty groups
-					$userdata[19] = '';
+					$stmt_update_without_password->bind_param(str_repeat('s', count($userdata)),
+						$userdata[1],
+						$userdata[3],
+						$userdata[4],
+						$userdata[5],
+						$userdata[6],
+						$userdata[7],
+						$userdata[8],
+						$userdata[9],
+						$userdata[10],
+						$userdata[11],
+						$userdata[12],
+						$userdata[13],
+						$userdata[14],
+						$userdata[15],
+						$userdata[16],
+						$userdata[17],
+						$userdata[18],
+						$user_id);
+
+					if ($stmt_update_without_password->execute() === false) {
+						throw new Exception("Error running query: {$stmt_update_without_password->error} (row {$row_count})");
+					}
 				}
 			} else {
-				// add new user
-				$new_addition++;
-				$sqlu = 'INSERT INTO ' . K_TABLE_USERS . ' (
-					user_name,
-					user_password,
-					user_email,
-					user_regdate,
-					user_ip,
-					user_firstname,
-					user_lastname,
-                    user_college,
-                    user_department,
-                    user_year_level,
-                    user_passport,
-					user_birthdate,
-					user_birthplace,
-					user_regnumber,
-					user_ssn,
-					user_level,
-					user_verifycode,
-					user_otpkey
-					) VALUES (
-					\'' . F_escape_sql($db, $userdata[1]) . '\',
-					\'' . F_escape_sql($db, getPasswordHash($userdata[2])) . '\',
-					' . F_empty_to_null($userdata[3]) . ',
-					\'' . F_escape_sql($db, $userdata[4]) . '\',
-					\'' . F_escape_sql($db, $userdata[5]) . '\',
-					' . F_empty_to_null($userdata[6]) . ',
-					' . F_empty_to_null($userdata[7]) . ',
-					' . F_empty_to_null($userdata[8]) . ',
-					' . F_empty_to_null($userdata[9]) . ',
-					' . F_empty_to_null($userdata[10]) . ',
-					' . F_empty_to_null($userdata[11]) . ',
-					' . F_empty_to_null($userdata[12]) . ',
-					' . F_empty_to_null($userdata[13]) . ',
-					' . F_empty_to_null($userdata[14]) . ',
-					' . F_empty_to_null($userdata[15]) . ',
-					' . intval($userdata[16]) . ',
-					' . F_empty_to_null($userdata[17]) . ',
-					' . F_empty_to_null($userdata[18]) . '
-					)';
-				//var_dump($sqlu);
-				if (!$ru = F_db_query($sqlu, $db)) {
-					F_display_db_error(false);
-					return false;
-				} else {
-					$user_id = F_db_insert_id($db, K_TABLE_USERS, 'user_id');
-				}
+				// no user is updated, so empty groups
+				$userdata[19] = '';
 			}
 		} else {
-			F_display_db_error(false);
-			return false;
-		}
+			// add new user
+			$new_addition++;
 
-		// user's groups
-		if (!empty($userdata[19])) {
-			$groups = preg_replace("/[\r\n]+/", '', $userdata[19]);
-			$groups = explode(',', addslashes($groups));
-			while (list($key, $group_name) = each($groups)) {
-				$group_name = F_escape_sql($db, $group_name);
-				// check if group already exist
-				$sql = 'SELECT group_id
-					FROM ' . K_TABLE_GROUPS . '
-					WHERE group_name=\'' . $group_name . '\'
-					LIMIT 1';
-				if ($r = F_db_query($sql, $db)) {
-					if ($m = F_db_fetch_array($r)) {
-						// the group already exist
-						$group_id = $m['group_id'];
-					} else {
-						// create a new group
-						$sqli = 'INSERT INTO ' . K_TABLE_GROUPS . ' (
-							group_name
-							) VALUES (
-							\'' . $group_name . '\'
-							)';
-						if (!$ri = F_db_query($sqli, $db)) {
-							F_display_db_error(false);
-							return false;
-						} else {
-							$group_id = F_db_insert_id($db, K_TABLE_GROUPS, 'group_id');
-						}
-					}
-				} else {
-					F_display_db_error(false);
-					return false;
-				}
-				// check if user-group already exist
-				$sqls = 'SELECT *
-					FROM ' . K_TABLE_USERGROUP . '
-					WHERE usrgrp_group_id=\'' . $group_id . '\'
-						AND usrgrp_user_id=\'' . $user_id . '\'
-					LIMIT 1';
-				if ($rs = F_db_query($sqls, $db)) {
-					if (!$ms = F_db_fetch_array($rs)) {
-						// associate group to user
-						$sqlg = 'INSERT INTO ' . K_TABLE_USERGROUP . ' (
-							usrgrp_user_id,
-							usrgrp_group_id
-							) VALUES (
-							' . $user_id . ',
-							' . $group_id . '
-							)';
-						if (!$rg = F_db_query($sqlg, $db)) {
-							F_display_db_error(false);
-							return false;
-						}
-					}
-				} else {
-					F_display_db_error(false);
-					return false;
-				}
+			$stmt->bind_param(str_repeat('s', count($userdata)),
+				$userdata[1],
+				$userdata[2],
+				$userdata[3],
+				$userdata[4],
+				$userdata[5],
+				$userdata[6],
+				$userdata[7],
+				$userdata[8],
+				$userdata[9],
+				$userdata[10],
+				$userdata[11],
+				$userdata[12],
+				$userdata[13],
+				$userdata[14],
+				$userdata[15],
+				$userdata[16],
+				$userdata[17],
+				$userdata[18]
+			);
+
+			if ($stmt->execute() === false) {
+				throw new Exception("Error running query: {$stmt->error} (row {$row_count})");
 			}
 		}
 	}
@@ -761,6 +755,19 @@ function F_import_tsv_users($tsvfile)
 	return true;
 }
 
+function can_add_this_record($user_data)
+{
+	return (($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) or ($_SESSION['session_user_level'] > $user_data['user_level']));
+}
+
+/**
+ * Returns the index of $item in $stack
+ *
+ * @param mixed $item
+ * @param array $stack
+ *
+ * @return void
+ */
 function get_item_index($item, $stack)
 {
 	$index = array_search($item, $stack);
@@ -768,6 +775,111 @@ function get_item_index($item, $stack)
 		$index = 0; //default
 	}
 	return $index;
+}
+
+function is_valid_department($department)
+{
+	return in_array($department, get_departments());
+}
+
+function user_already_exists(array $userdata, array $existing_users_keyed_by_usernames, array $existing_users_keyed_by_regnumber, array $existing_users_keyed_by_ssn)
+{
+	if (array_key_exists($userdata[1], $existing_users_keyed_by_usernames)) {
+		return true;
+	}
+
+	if (!empty($userdata[14]) && !empty($existing_users_keyed_by_regnumber)) {
+		if (array_key_exists($userdata[14], $existing_users_keyed_by_regnumber)) {
+			return true;
+		}
+	}
+
+	if (!empty($userdata[15]) && !empty($existing_users_keyed_by_ssn)) {
+		if (array_key_exists($userdata[15], $existing_users_keyed_by_ssn)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function get_existing_user(array $userdata, array $existing_users_keyed_by_usernames, array $existing_users_keyed_by_regnumber, array $existing_users_keyed_by_ssn)
+{
+	if (array_key_exists($userdata[1], $existing_users_keyed_by_usernames)) {
+		return $existing_users_keyed_by_usernames[$userdata[1]];
+	}
+
+	if (!empty($userdata[14]) && !empty($existing_users_keyed_by_regnumber)) {
+		if (array_key_exists($userdata[14], $existing_users_keyed_by_regnumber)) {
+			return $existing_users_keyed_by_regnumber[$userdata[14]];
+		}
+	}
+
+	if (!empty($userdata[15]) && !empty($existing_users_keyed_by_ssn)) {
+		if (array_key_exists($userdata[15], $existing_users_keyed_by_ssn)) {
+			return $existing_users_keyed_by_ssn[$userdata[15]];
+		}
+	}
+
+	throw new Exception("User not found");
+}
+
+function populate_existing_users($resource, &$existing_users_keyed_by_ssn, &$existing_users_keyed_by_user_id, &$existing_users_keyed_by_usernames, &$existing_users_keyed_by_regnumber)
+{
+	while ($existing_user = F_db_fetch_assoc($resource)) {
+		if (!empty($existing_user['user_id'])) {
+			$existing_users_keyed_by_user_id[$existing_user['user_id']] = $existing_user;
+		}
+
+		if (!empty($existing_user['user_ssn'])) {
+			$existing_users_keyed_by_ssn[$existing_user['user_ssn']] = $existing_user;
+		}
+
+		if (!empty($existing_user['user_name'])) {
+			$existing_users_keyed_by_usernames[$existing_user['user_name']] = $existing_user;
+		}
+
+		if (!empty($existing_user['user_regnumber'])) {
+			$existing_users_keyed_by_regnumber[$existing_user['user_regnumber']] = $existing_user;
+		}
+
+	}
+}
+
+function get_record_update_query_with_password()
+{
+	return 'UPDATE ' . K_TABLE_USERS . ' SET ' . implode(',', get_users_table_structure()) . ' WHERE user_id=?';
+}
+
+function get_record_update_query_without_password()
+{
+	$meta_schema = get_users_table_structure();
+	array_shift($meta_schema);
+	return 'UPDATE ' . K_TABLE_USERS . ' SET ' . implode(',', $meta_schema) . ' WHERE user_id=?';
+}
+
+function get_users_table_structure()
+{
+	return [
+		'user_password=?',
+		'user_name=?',
+		'user_email=?',
+		'user_regdate=?',
+		'user_ip=?',
+		'user_firstname=?',
+		'user_lastname=?',
+		'user_college=?',
+		'user_department=?',
+		'user_year_level=?',
+		'user_passport=?',
+		'user_birthdate=?',
+		'user_birthplace=?',
+		'user_regnumber=?',
+		'user_ssn=?',
+		'user_level=?',
+		'user_verifycode=?',
+		'user_otpkey=?',
+	];
 }
 
 //============================================================+
