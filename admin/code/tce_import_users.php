@@ -593,15 +593,18 @@ function F_import_tsv_users($tsvfile)
 	}
 
 	if (($stmt = $connection_for_data_insertion->prepare($data_insertion_prepared_statement)) === false) {
-		throw new Exception("Cannot prepare statement: {$connection_for_data_insertion->error}");
+		F_print_error('error', "Cannot prepare statement: {$connection_for_data_insertion->error}");
+		return false;
 	}
 
 	if (($stmt_update_with_password = $connection_for_data_update_with_password->prepare($update_statement_with_password)) === false) {
-		throw new Exception("Cannot prepare statement: {$connection_for_data_update_with_password->error}");
+		F_print_error('error', "Cannot prepare statement: {$connection_for_data_update_with_password->error}");
+		return false;
 	}
 
 	if (($stmt_update_without_password = $connection_for_data_update_without_password->prepare($update_statement_without_password)) === false) {
-		throw new Exception("Cannot prepare statement: {$connection_for_data_update_without_password->error}");
+		F_print_error('error', "Cannot prepare statement: {$connection_for_data_update_without_password->error}");
+		return false;
 	}
 
 	$connection_for_data_insertion->begin_transaction();
@@ -694,10 +697,11 @@ function F_import_tsv_users($tsvfile)
 						$user_id);
 
 					if ($stmt_update_with_password->execute() === false) {
-						throw new Exception("Error running query: {$stmt_update_with_password->error} (row {$row_count})");
+						F_print_error('error', "Error running query: {$stmt_update_with_password->error} (row {$row_count})");
+						return false;
 					}
 				} else {
-					$stmt_update_without_password->bind_param(str_repeat('s', count($userdata)),
+					$stmt_update_without_password->bind_param(str_repeat('s', 18),
 						$userdata[1],
 						$userdata[3],
 						$userdata[4],
@@ -718,7 +722,8 @@ function F_import_tsv_users($tsvfile)
 						$user_id);
 
 					if ($stmt_update_without_password->execute() === false) {
-						throw new Exception("Error running query: {$stmt_update_without_password->error} (row {$row_count})");
+						F_print_error('error', "Error running query: {$stmt_update_without_password->error} (row {$row_count})");
+						return false;
 					}
 				}
 			} else {
@@ -729,7 +734,7 @@ function F_import_tsv_users($tsvfile)
 			// add new user
 			$new_addition++;
 
-			$stmt->bind_param(str_repeat('s', count($userdata)),
+			$stmt->bind_param(str_repeat('s', 18),
 				$userdata[1],
 				$password,
 				$userdata[3],
@@ -751,7 +756,8 @@ function F_import_tsv_users($tsvfile)
 			);
 
 			if ($stmt->execute() === false) {
-				throw new Exception("Error running query: {$stmt->error} (row {$row_count})");
+				F_print_error('error', "Error running query: {$stmt->error} (row {$row_count})");
+				return false;
 			}
 		}
 	}
@@ -834,6 +840,7 @@ function get_existing_user(array $userdata, array $existing_users_keyed_by_usern
 		}
 	}
 
+	F_print_error('error', 'User not found');
 	throw new Exception("User not found");
 }
 
