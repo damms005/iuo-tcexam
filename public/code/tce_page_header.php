@@ -64,7 +64,7 @@ echo '<div class="body">' . K_NEWLINE;
                     echo "</td>";
                 }
                 echo "<td>";
-                    if(!array_key_exists('is_anonymous_user', $_SESSION)) {
+                        if(array_key_exists('session_user_lastname', $_SESSION)) {
                     echo "<span>
                                 <span>
                                     (" . @$_SESSION['session_user_name'] . ")
