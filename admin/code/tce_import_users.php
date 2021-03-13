@@ -606,10 +606,12 @@ function F_import_tsv_users($tsvfile)
 		F_print_error('error', "Cannot prepare statement: {$connection_for_data_update_without_password->error}");
 		return false;
 	}
+	// MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT
+	// MYSQLI_TRANS_START_READ_WRITE
 
-	$connection_for_data_insertion->begin_transaction();
-	$connection_for_data_update_with_password->begin_transaction();
-	$connection_for_data_update_without_password->begin_transaction();
+	$connection_for_data_insertion->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+	$connection_for_data_update_with_password->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+	$connection_for_data_update_without_password->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 	$password = null;
 
