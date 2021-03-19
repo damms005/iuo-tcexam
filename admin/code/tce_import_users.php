@@ -550,6 +550,11 @@ function F_import_tsv_users($tsvfile)
 		return false;
 	}
 
+	/**
+	 * Groups cached as a key-value pair of group_id => group_name
+	 * @var array
+	 */
+	$existing_user_groups              = get_existing_user_groups();
 	$existing_users_keyed_by_ssn       = [];
 	$existing_users_keyed_by_user_id   = [];
 	$existing_users_keyed_by_usernames = [];
@@ -557,10 +562,18 @@ function F_import_tsv_users($tsvfile)
 
 	populate_existing_users($resource, $existing_users_keyed_by_ssn, $existing_users_keyed_by_user_id, $existing_users_keyed_by_usernames, $existing_users_keyed_by_regnumber);
 
-	$update_statement_with_password    = get_record_update_query_with_password();
-	$update_statement_without_password = get_record_update_query_without_password();
+	/***************************************************
+	 ************** START: query strings ***************
+	/***************************************************/
+	$update_with_password_query_string    = get_record_update_query_with_password();
+	$update_without_password_query_string = get_record_update_query_without_password();
+	$upsert_for_users_groups_query_string = "INSERT INTO " . K_TABLE_USERGROUP . "
+	(
+		usrgrp_user_id, usrgrp_group_id
+	)
+	VALUES ( ?,? ) ";
 
-	$data_insertion_prepared_statement = 'INSERT INTO ' . K_TABLE_USERS . ' (
+	$data_insertion_prepared_query_string = 'INSERT INTO ' . K_TABLE_USERS . ' (
 		user_name,
 		user_password,
 		user_email,
@@ -581,7 +594,13 @@ function F_import_tsv_users($tsvfile)
 		user_otpkey
 		)
 		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+	/***************************************************
+	 ************** END: query strings *****************
+	/***************************************************/
 
+	/***************************************************
+	 ********* START: required db connections **********
+	/***************************************************/
 	if (!$connection_for_data_insertion = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
 		die('<h2>Unable to connect to the database!</h2>');
 	}
@@ -591,27 +610,49 @@ function F_import_tsv_users($tsvfile)
 	if (!$connection_for_data_update_without_password = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
 		die('<h2>Unable to connect to the database!</h2>');
 	}
+	if (!$connection_for_users_groups_upsert = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
+		die('<h2>Unable to connect to the database!</h2>');
+	}
+	/***************************************************
+	 ********** END: required db connections ***********
+	/***************************************************/
 
-	if (($stmt = $connection_for_data_insertion->prepare($data_insertion_prepared_statement)) === false) {
+	/***************************************************
+	 ********* START: prepare the statements ***********
+	/***************************************************/
+	if (($stmt = $connection_for_data_insertion->prepare($data_insertion_prepared_query_string)) === false) {
 		F_print_error('error', "Cannot prepare statement: {$connection_for_data_insertion->error}");
 		return false;
 	}
 
-	if (($stmt_update_with_password = $connection_for_data_update_with_password->prepare($update_statement_with_password)) === false) {
+	if (($stmt_update_with_password = $connection_for_data_update_with_password->prepare($update_with_password_query_string)) === false) {
 		F_print_error('error', "Cannot prepare statement: {$connection_for_data_update_with_password->error}");
 		return false;
 	}
 
-	if (($stmt_update_without_password = $connection_for_data_update_without_password->prepare($update_statement_without_password)) === false) {
+	if (($stmt_update_without_password = $connection_for_data_update_without_password->prepare($update_without_password_query_string)) === false) {
 		F_print_error('error', "Cannot prepare statement: {$connection_for_data_update_without_password->error}");
 		return false;
 	}
-	// MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT
-	// MYSQLI_TRANS_START_READ_WRITE
 
+	if (($stmt_for_users_groups_upsert = $connection_for_users_groups_upsert->prepare($upsert_for_users_groups_query_string)) === false) {
+		F_print_error('error', "Cannot prepare statement: {$connection_for_data_update_without_password->error}");
+		return false;
+	}
+	/***************************************************
+	 ********** END: prepare the statements ************
+	/***************************************************/
+
+	/***************************************************
+	 ************** START: transactions ****************
+	/***************************************************/
 	$connection_for_data_insertion->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 	$connection_for_data_update_with_password->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 	$connection_for_data_update_without_password->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+	$connection_for_users_groups_upsert->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+	/***************************************************
+	 *************** END: transactions *****************
+	/***************************************************/
 
 	$password = null;
 
@@ -762,10 +803,35 @@ function F_import_tsv_users($tsvfile)
 				return false;
 			}
 		}
+
+		if (!empty($userdata[19])) {
+			$groups = preg_replace("/[\r\n]+/", '', $userdata[19]);
+			$groups = explode(',', addslashes($groups));
+			foreach ($groups as $group_name) {
+				if (group_exist($group_name, $existing_user_groups)) {
+					continue;
+				}
+
+				if (!add_new_group_and_update_cache($group_name, $existing_user_groups)) {
+					return;
+				}
+
+				$group_id = get_group_id($group_name, $existing_user_groups);
+
+				$stmt_for_users_groups_upsert->bind_param('ii',
+					$user_id, $group_id);
+
+				if ($stmt_update_with_password->execute() === false) {
+					F_print_error('error', "Error running query: {$stmt_update_with_password->error} (row {$row_count})");
+					return false;
+				}
+			}
+		}
 	}
 
 	$connection_for_data_insertion->commit();
 	$connection_for_data_update_with_password->commit();
+	$connection_for_data_update_without_password->commit();
 	$connection_for_data_update_without_password->commit();
 
 	echo "
@@ -846,6 +912,84 @@ function get_existing_user(array $userdata, array $existing_users_keyed_by_usern
 	throw new Exception("User not found");
 }
 
+/**
+ * Returns all groups currently in the database
+ *
+ * @return array a key-value pair of group_id => group_name
+ */
+function get_existing_user_groups(): array
+{
+	global $db;
+
+	$sql = 'SELECT group_name, group_id FROM ' . K_TABLE_GROUPS;
+
+	$existing_groups = [];
+
+	if ($r = F_db_query($sql, $db)) {
+		while ($group = F_db_fetch_assoc($r)) {
+			$existing_groups[$group['group_id']] = $group['group_name'];
+		}
+	}
+
+	return $existing_groups;
+}
+
+/**
+ *
+ * @param string $groups a key-value pair of group_id => group_name
+ *
+ * @return bool
+ */
+function get_group_id(string $group_name, array $groups): string
+{
+	if (!in_array($group_name, $groups)) {
+		throw new \Exception("The group name does not exist in the array");
+	}
+
+	return array_search($group_name, $groups);
+}
+
+/**
+ * To make importing faster, we keep a cache
+ * of existing user groups. Hence, when we add a new group, we
+ * must update the cache too.
+ * The cache should be a key-value pair of group_id => group_name
+ *
+ * @return bool
+ */
+function add_new_group_and_update_cache($group_name, &$groups_cache): bool
+{
+	if (!$connection_for_data_insertion = @F_db_connect(K_DATABASE_HOST, K_DATABASE_PORT, K_DATABASE_USER_NAME, K_DATABASE_USER_PASSWORD, K_DATABASE_NAME)) {
+		die('<h2>Unable to connect to the database!</h2>');
+	}
+
+	$insertion_prepared_statement_for_groups = "INSERT INTO " . K_TABLE_GROUPS . " ( group_name )
+	VALUES ( ? )";
+
+	if (($stmt = $connection_for_data_insertion->prepare($insertion_prepared_statement_for_groups)) === false) {
+		F_print_error('error', "Cannot prepare statement: {$connection_for_data_insertion->error}");
+		return false;
+	}
+
+	$stmt->bind_param('s', $group_name);
+
+	if ($stmt->execute() === false) {
+		F_print_error('error', "Error running query: {$stmt->error} (row {$row_count})");
+		return false;
+	}
+
+	$group_id = F_db_insert_id($connection_for_data_insertion);
+
+	if (empty($group_id)) {
+		F_print_error('error', "Cannot get id of last group insertion operation");
+		return false;
+	}
+
+	$groups_cache[$group_id] = $group_name;
+
+	return true;
+}
+
 function populate_existing_users($resource, &$existing_users_keyed_by_ssn, &$existing_users_keyed_by_user_id, &$existing_users_keyed_by_usernames, &$existing_users_keyed_by_regnumber)
 {
 	while ($existing_user = F_db_fetch_assoc($resource)) {
@@ -902,6 +1046,17 @@ function get_users_table_structure()
 		'user_verifycode=?',
 		'user_otpkey=?',
 	];
+}
+
+function display_last_database_error_and_quit()
+{
+	F_display_db_error(false);
+	throw new Exception("Error in database operation (error already displayed to user)");
+}
+
+function group_exist($group_name, $existing_user_groups)
+{
+	return (in_array($group_name, $existing_user_groups));
 }
 
 //============================================================+
