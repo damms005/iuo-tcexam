@@ -814,7 +814,7 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_firstname'].'</td>'.K_NEWLINE;
 
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_department'].'</td>'.K_NEWLINE;
-            $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_college'].'</td>'.K_NEWLINE;
+            $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.get_college_for_department($tu['user_department']).'</td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_year_level'].'</td>'.K_NEWLINE;
         }
 

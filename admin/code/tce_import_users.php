@@ -571,7 +571,8 @@ function F_import_tsv_users($tsvfile)
 	(
 		usrgrp_user_id, usrgrp_group_id
 	)
-	VALUES ( ?,? ) ";
+	VALUES ( ?,? )
+	ON DUPLICATE KEY UPDATE usrgrp_user_id = VALUES(usrgrp_user_id) ";
 
 	$data_insertion_prepared_query_string = 'INSERT INTO ' . K_TABLE_USERS . ' (
 		user_name,
@@ -680,8 +681,9 @@ function F_import_tsv_users($tsvfile)
 
 		$userdata[5] = 'n/a';
 
-		//group
-		$userdata[19] = 'students';
+		//ensure user belongs to a group (no ordinary user can access exams without
+		//belonging to a group, and no exam can be set without specifying the eligible groups)
+		$userdata[19] = empty($userdata[19]) ? 'students' : $userdata[19];
 
 		//transformations
 		$userdata[9]  = $userdata[9];
@@ -802,25 +804,26 @@ function F_import_tsv_users($tsvfile)
 				F_print_error('error', "Error running query: {$stmt->error} (row {$row_count})");
 				return false;
 			}
+
+			$user_id = F_db_insert_id($connection_for_data_insertion, K_TABLE_USERS, 'user_id');
 		}
 
 		if (!empty($userdata[19])) {
 			$groups = preg_replace("/[\r\n]+/", '', $userdata[19]);
 			$groups = explode(',', addslashes($groups));
 			foreach ($groups as $group_name) {
-				if (group_exist($group_name, $existing_user_groups)) {
-					continue;
-				}
+				if (!group_exist($group_name, $existing_user_groups)) {
 
-				if (!add_new_group_and_update_cache($group_name, $existing_user_groups)) {
-					return;
+					if (!add_new_group_and_update_cache($group_name, $existing_user_groups)) {
+						return;
+					}
 				}
 
 				$group_id = get_group_id($group_name, $existing_user_groups);
 
 				$stmt_for_users_groups_upsert->bind_param('ii', $user_id, $group_id);
 
-				if ($stmt_update_with_password->execute() === false) {
+				if ($stmt_for_users_groups_upsert->execute() === false) {
 					F_print_error('error', "Error running query: {$stmt_update_with_password->error} (row {$row_count})");
 					return false;
 				}
@@ -831,7 +834,7 @@ function F_import_tsv_users($tsvfile)
 	$connection_for_data_insertion->commit();
 	$connection_for_data_update_with_password->commit();
 	$connection_for_data_update_without_password->commit();
-	$connection_for_data_update_without_password->commit();
+	$connection_for_users_groups_upsert->commit();
 
 	echo "
 	<pre>New additions: $new_addition</pre>
@@ -977,7 +980,7 @@ function add_new_group_and_update_cache($group_name, &$groups_cache): bool
 		return false;
 	}
 
-	$group_id = F_db_insert_id($connection_for_data_insertion);
+	$group_id = F_db_insert_id($connection_for_data_insertion, K_TABLE_GROUPS, 'group_id');
 
 	if (empty($group_id)) {
 		F_print_error('error', "Cannot get id of last group insertion operation");
