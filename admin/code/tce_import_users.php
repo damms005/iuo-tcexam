@@ -818,8 +818,7 @@ function F_import_tsv_users($tsvfile)
 
 				$group_id = get_group_id($group_name, $existing_user_groups);
 
-				$stmt_for_users_groups_upsert->bind_param('ii',
-					$user_id, $group_id);
+				$stmt_for_users_groups_upsert->bind_param('ii', $user_id, $group_id);
 
 				if ($stmt_update_with_password->execute() === false) {
 					F_print_error('error', "Error running query: {$stmt_update_with_password->error} (row {$row_count})");
@@ -974,7 +973,7 @@ function add_new_group_and_update_cache($group_name, &$groups_cache): bool
 	$stmt->bind_param('s', $group_name);
 
 	if ($stmt->execute() === false) {
-		F_print_error('error', "Error running query: {$stmt->error} (row {$row_count})");
+		F_print_error('error', "Error running query: {$stmt->error}");
 		return false;
 	}
 
