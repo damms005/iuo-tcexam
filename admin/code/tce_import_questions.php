@@ -156,6 +156,9 @@ F_submit_button('upload', $l['w_upload'], $l['h_submit_file']);
 echo '</div>'.K_NEWLINE;
 echo F_getCSRFTokenField().K_NEWLINE;
 echo '</form>'.K_NEWLINE;
+
+echo "<a href='converter.php'>converter</a>";
+
 echo '</div>'.K_NEWLINE;
 
 echo '</div>' . K_NEWLINE;
@@ -361,7 +364,7 @@ function F_TSVQuestionImporter_Process($lines_in_file)
                             if ($current_question_id == 0) {
                                 exit("Errorneous content @1");
                             }
-                            continue;
+                            break;
                         }
                     } else {
                         F_display_db_error();

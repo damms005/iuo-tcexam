@@ -212,6 +212,11 @@ function toastAlert( message ){
 </form>
 
 <?php
+    echo "Supported tags: <pre>";
+    print_r( array_map(function($entry){
+        return "&lt;{$entry}&gt;&lt;/{$entry}&gt;";
+    }, array_keys( get_supported_html_tags())) );
+    echo "</pre>";
 }
 
 //now handle uploaded file if any
@@ -245,12 +250,14 @@ if (isset($_FILES['questions_file'])) {
         $cols = explode("\t", $this_line);
         $cols = array_map("trim_it", $cols);
 
+        $col_count = 7;
+
         if ($z_index_line_number == 0) {
-            if (count($cols) < 7) {
+            if (count($cols) < $col_count) {
                 echo "<pre>";
                 print_r($cols);
                 echo "</pre>";
-                exit('First row does not contain appropriate headers: e.g. questions and options headers [' . count($cols) . ' cols in "' . implode('-', $cols) . '"]');
+                exit("Headers are incomplete. {$col_count} headers expected, got only' . count($cols) . ' headers ('" . implode('-', $cols) . "'). You need the 'questions' column, 'question type' column, then 'options' and 'answer' columns");
             }
 
             continue;
@@ -408,7 +415,7 @@ if (isset($_FILES['questions_file'])) {
 
         <form id="transferForm" enctype="multipart/form-data" action="tce_import_questions.php" method="POST" >
         <textarea width='1' height='1' style="width: 1px; height: 1px" name="uploadable_module" >
-        <?php echo replace_html_tags_with_tinymce_tages($_POST['transfer_box']); ?>
+        <?php echo replace_html_tags_with_tinymce_tags($_POST['transfer_box']); ?>
         </textarea>
         </form>
 
@@ -495,16 +502,9 @@ function report_line($cols, $index)
     echo "}</pre>";
 }
 
-function replace_html_tags_with_tinymce_tages($stuff)
+function replace_html_tags_with_tinymce_tags($stuff)
 {
-    $tcexam_html_tags_map = [
-        'b'   => ['b', 'strong'],
-        'i'   => ['i', 'em'],
-        'u'   => ['u'],
-        's'   => ['strike'],
-        'sup' => ['sup'],
-        'sub' => ['sub'],
-    ];
+    $tcexam_html_tags_map = get_supported_html_tags();
 
     foreach ($tcexam_html_tags_map as $tnymce_tag => $html_tags) {
         foreach ($html_tags as $html_tag) {

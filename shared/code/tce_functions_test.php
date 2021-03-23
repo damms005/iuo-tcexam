@@ -1570,7 +1570,7 @@ function F_updateQuestionLog($test_id, $testlog_id, $answpos = array(), $answer_
     if ($answer_changed or ($oldtext != $answer_text)) {
         if (strlen($answer_text) > 0) {
             $unanswered   = false;
-            $answer_score = 'NULL';
+            $answer_score = NULL;
             // check exact answers score
             $sql = 'SELECT *
 				FROM ' . K_TABLE_ANSWERS . '

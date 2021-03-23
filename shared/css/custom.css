@@ -55,7 +55,7 @@ div.header div.left {
 
 /* header banner ------------ */
 div.header div.right {
-	background-color: white;
+	background-color: transparent;
 	border: 0px none;
 	float: right;
 	height: 25px;
@@ -64,6 +64,10 @@ div.header div.right {
 	padding: 0px 0px 0px 0px;
 	text-align: right;
 	width: 400px;
+}
+
+div.header div.right form {
+	background-color: white;
 }
 
 div.header div.right input {

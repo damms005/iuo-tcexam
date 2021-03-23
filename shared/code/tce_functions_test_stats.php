@@ -761,6 +761,7 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
         $ret .= F_select_table_header_element('user_name', $nextorderdir, $l['h_login_name'], $l['w_user'], $order_field, $filter);
         $ret .= F_select_table_header_element('user_lastname', $nextorderdir, $l['h_lastname'], $l['w_lastname'], $order_field, $filter);
         $ret .= F_select_table_header_element('user_firstname', $nextorderdir, $l['h_firstname'], $l['w_firstname'], $order_field, $filter);
+        $ret .= F_select_table_header_element('user_reg_number', $nextorderdir, 'reg_number', 'reg_number', $order_field, $filter);
         $ret .= F_select_table_header_element('user_department', $nextorderdir, 'department','department', $order_field, $filter);
         $ret .= F_select_table_header_element('user_college', $nextorderdir, 'college', 'college', $order_field, $filter);
         $ret .= F_select_table_header_element('user_year_level', $nextorderdir, 'level', 'level', $order_field, $filter);
@@ -812,6 +813,7 @@ function F_printTestResultStat($data, $nextorderdir, $order_field, $filter, $pub
             $ret .= '<td style="text-align:'.$tdalign.';"><a href="tce_edit_user.php?user_id='.$tu['user_id'].'">'.$tu['user_name'].'</a></td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_lastname'].'</td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_firstname'].'</td>'.K_NEWLINE;
+            $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_regnumber'].'</td>'.K_NEWLINE;
 
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.$tu['user_department'].'</td>'.K_NEWLINE;
             $ret .= '<td style="text-align:'.$tdalign.';">&nbsp;'.get_college_for_department($tu['user_department']).'</td>'.K_NEWLINE;

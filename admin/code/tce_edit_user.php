@@ -174,7 +174,7 @@ switch ($menu_mode) { // process submitted data
 				user_password=\''.F_escape_sql($db, $user_password).'\',
 				user_regnumber='.F_empty_to_null($user_regnumber).',
                 user_department='.F_empty_to_null($user_department).',
-                user_college='.F_empty_to_null($user_college).',
+                user_college=null,
                 user_year_level='.F_empty_to_null($user_year_level).',
                 user_passport='.F_empty_to_null($user_passport).',
                 user_firstname='.F_empty_to_null($user_firstname).',
@@ -294,7 +294,7 @@ switch ($menu_mode) { // process submitted data
 				\''.F_escape_sql($db, $user_password).'\',
 				'.F_empty_to_null($user_regnumber).',
                 '.F_empty_to_null($user_department).',
-                '.F_empty_to_null($user_college).',
+                null,
                 '.F_empty_to_null($user_year_level).',
                 '.F_empty_to_null($user_passport).',
 				'.F_empty_to_null($user_firstname).',
@@ -391,7 +391,7 @@ if ($formstatus) {
                     $user_password = $m['user_password'];
                     $user_regnumber = $m['user_regnumber'];
                     $user_department = $m['user_department'];
-                    $user_college = $m['user_college'];
+                    $user_college = get_college_for_department( $m['user_department']);
                     $user_year_level = $m['user_year_level'];
                     $user_passport = $m['user_passport'];
                     $user_firstname = $m['user_firstname'];
